@@ -1,0 +1,11 @@
+<html>
+    <body>
+        <h3>Dear ${volunteerName} ${volunteerLastname}</h3>
+        <div>
+            <p>Invite you to be volunteer for ${touristName} and show around Vilnius.
+            <br>Press <bold>'I can'</bold>, if you are interested!</p>
+            <button>I can</button>
+            <p>Thanks</p>
+        </div>
+    </body>
+</html>
