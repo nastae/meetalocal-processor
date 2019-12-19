@@ -1,0 +1,16 @@
+<html>
+<head></head>
+<body>
+    <p>Hello, ${name},</p>
+    <p>Deja, mums nepavyko rasti savanorio susitikimui nurodytu laiku. Galbūt Jums tiktų kitas laikas? Prašome papildyti informaciją čia:</p>
+    <form action="" method="put">
+      Susitikimo data: <input type="date" name="date"><br>
+      <button type="submit" name="send">Siųsti</button>
+    </form>
+    <br>
+    <p>If you have any further questions, please contact Tourist Information Centre (Pilies St. 2):</p>
+    <p>+370 5 262 9660</p>
+    <p>tic@vilnius.lt</p><br>
+    <p>Susisieksime netrukus!</p>
+</body>
+</html>

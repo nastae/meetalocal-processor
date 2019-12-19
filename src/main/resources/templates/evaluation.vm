@@ -1,0 +1,9 @@
+<html>
+<head></head>
+<body>
+    <p>Hello, ${name},</p><br>
+    <p>Tikimės, kad susitikimas su vietiniu praėjo puikiai, ir būtumėm dėkingi, jei pasidalintumėte savo patirtimi čia:</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfPb7q5plW3nHLIujggcGOJG0hYlco-bi3n45AlMiRYdiYv1g/viewform?usp=sf_link">write a feedback</a><br>
+    <p>Hope to see you in Vilnius again!</p>
+</body>
+</html>

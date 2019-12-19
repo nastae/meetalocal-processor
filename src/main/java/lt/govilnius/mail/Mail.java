@@ -6,10 +6,10 @@ public class Mail {
     private String subject;
     private String templateName;
 
-    public Mail(String to, String subject, String templateName) {
+    public Mail(String to, String subject) {//, String templateName
         this.to = to;
         this.subject = subject;
-        this.templateName = templateName;
+//        this.templateName = templateName;
     }
 
     public String getTo() {

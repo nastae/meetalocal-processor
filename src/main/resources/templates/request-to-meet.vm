@@ -1,0 +1,43 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+     $('.btn-can').on("click",function(){
+         $.ajax({
+             url: 'https://meet-a-local-262500.appspot.com/agreement/${id}/true',
+             type: 'GET',
+             success:function(){
+                 console.log("success");
+                 alert('test');
+             }
+         });
+     });$('.btn-not-can').on("click",function(){
+         $.ajax({
+             url: 'https://meet-a-local-262500.appspot.com/agreement/${id}/false',
+             type: 'GET',
+             success:function(){
+                 console.log("success");
+                 alert('test');
+             }
+         });
+     });
+    </script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+    <body>
+        <p>Sveiki,</p><br>
+        <p>Gavome naują registraciją susitikimui – ${month} ${day} d., ${time}</b></p>
+        <p>Informacija apie turistą:</p>
+        <p>Vardas: ${name}</p>
+        <p>Lytis: ${gender}</p>
+        <p>Amžius: ${age}</p>
+        <p>Turistų skaičius: ${peopleCount}</p>
+        <p>Pomėgiai: ${hobbies}</p>
+        <p>Pageidavimai: ${preferences}</p><br>
+        <p>Prašome patvirtinti, jeigu (ar) turite galimybę dalyvauti susitikime.</p>
+        <button type="button" class="btn-can btn btn-primary">Galiu</button>&emsp;
+        <button type="button" class="btn-not-can btn btn-primary">Negaliu</button><br>
+        <br>
+        <p>Susisieksime netrukus!</p>
+    </body>
+</html>

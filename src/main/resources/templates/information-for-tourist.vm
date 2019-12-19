@@ -1,0 +1,15 @@
+<html>
+<head></head>
+<body>
+    <p>Hello, ${name},</p><br>
+    <p>Jūsų susitikimas patvirtintas!</b></p><br>
+    <p>We will be waiting for you at the Tourist Information Centre, Pilies St. 2 (${day} ${month}, ${time}).</p><br>
+    <p>Your local friend will be ${meetFriend}</p>
+    <p>Tel. nr: ${phoneNumber}</p>
+    <p>Email: ${email}</p><br>
+    <p>If you have any further questions, please contact Tourist Information Centre (Pilies St. 2):</p>
+    <p>+370 5 262 9660</p>
+    <p>tic@vilnius.lt</p><br>
+    <p>Have a great time 😊</p>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<html>
+<head></head>
+<body>
+    <p>Sveiki,</p><br>
+    <p>Susitikimas patvirtintas!</b></p><br>
+    <p>Turistai Jūsų lauks turizmo informacijos centre, Pilies g. 2 (${month} ${day} d., ${time})</p><br>
+    <p>Kontaktai:</p>
+    <p>Vardas: ${meetFriend}</p>
+    <p>Telefono numeris: ${phoneNumber}</p>
+    <p>El. paštas: ${email}</p><br>
+    <p>Smagaus susitikimo!</p>
+</body>
+</html>

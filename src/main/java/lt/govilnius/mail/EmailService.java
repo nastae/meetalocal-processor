@@ -1,8 +1,8 @@
 package lt.govilnius.mail;
 
-import lt.govilnius.models.Person;
+import java.util.Map;
 
 public interface EmailService {
 
-    void send(Mail mail, Person volunteer, Person tourist);
+    void send(Mail mail, Map model, String templateLocation);
 }
