@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Go Vilnius - meet a local</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet"href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"crossorigin="anonymous">
+    <link href="../static/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body class="body-background">
+<div class="container">
+    <div class="row d-flex justify-content-center mx-auto">
+        <div class="col-md-6 col-xs-12 div-style">
+            <div class="d-flex justify-content-center mx-auto main-label" >
+                <h2>Do you agree to meet with the volunteer <span th:text="${volunteertName}" th:remove="tag">Name</span>?</h2>
+            </div>
+            <form action="#" th:action="@{/action/volunteer/can}" th:object="${actionAgreement}" method="post">
+                <input hidden name='id' th:value='${id}'/>
+                <div class="form-group justify-content-center d-flex">
+                    <button type="submit" class="btn btn-primary button-submit">Yes</button>
+                </div>
+            </form>
+            <form action="#" th:action="@{/action/response}" method="post">
+                <div class="form-group justify-content-center d-flex">
+                    <button type="submit" class="btn btn-primary button-submit">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

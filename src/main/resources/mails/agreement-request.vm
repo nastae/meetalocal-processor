@@ -1,0 +1,53 @@
+<html>
+<head>
+</head>
+    <body>
+        <p>Sveiki,</p><br>
+        <p>Gavome naują registraciją susitikimui – ${month} ${day} d., ${time}</b></p>
+        <p>Informacija apie turistą:</p>
+        <p>Vardas: ${name}</p>
+        <p>Lytis:
+        #if( $gender == 'FEMALE' )
+          moteris
+        #else
+          vyras
+        #end
+        </p>
+        <p>Amžius: ${age}</p>
+        <p>Turistų skaičius: ${peopleCount}</p>
+        <p>Pageidavimai: ${preferences}</p><br>
+        <p>Prašome patvirtinti, jeigu (ar) turite galimybę dalyvauti susitikime.</p>
+        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
+          <tr>
+              <td>
+                  <table cellspacing="0" cellpadding="0">
+                      <tr>
+                          <td style="border-radius: 2px;" bgcolor="#ED2939">
+                              <a href="${canLink}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
+                                  Galiu
+                              </a>
+                          </td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+        </table>
+        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline; padding-left: 25px;">
+          <tr>
+              <td>
+                  <table cellspacing="0" cellpadding="0">
+                      <tr>
+                          <td style="border-radius: 2px;" bgcolor="#ED2939">
+                              <a href="${cannotLink}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
+                                  Negaliu
+                              </a>
+                          </td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+        </table>
+        <br>
+        <p>Susisieksime netrukus!</p>
+    </body>
+</html>
