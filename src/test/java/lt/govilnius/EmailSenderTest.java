@@ -96,7 +96,10 @@ public class EmailSenderTest {
     }
 
     public static Volunteer sampleVolunteer() {
-        return new Volunteer("Test", "Test", new Date(2000, 1, 1),
+        return new Volunteer(
+                new Timestamp(2019, 1, 1, 1, 1, 1, 1),
+                new Timestamp(2019, 1, 1, 1, 1, 1, 2),
+                "Test", "Test", new Date(2000, 1, 1),
                 null,"meetalocaltest@gmail.com", null,
                 "Spain", 26, Gender.MALE,
                 "none", true, null);

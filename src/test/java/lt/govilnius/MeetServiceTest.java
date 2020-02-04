@@ -88,7 +88,7 @@ public class MeetServiceTest {
         List<Meet> meets = meetService.getAll();
         Volunteer newVolunteer = volunteerRepository.findAll().get(0);
 
-        Meet meet = meetService.addVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
+        Meet meet = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
         Assert.assertEquals(meet.getVolunteer().getId(), newVolunteer.getId());
     }
 
@@ -98,16 +98,16 @@ public class MeetServiceTest {
         volunteerRepository.save(sampleVolunteer());
         List<Meet> meets = meetService.getAll();
         Volunteer newVolunteer = volunteerRepository.findAll().get(0);
-        Meet meet = meetService.addVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
+        Meet meet = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
 
-        Either<Exception, Meet> meetEither = meetService.addVolunteer(meets.get(0).getId(), newVolunteer.getId());
+        Either<Exception, Meet> meetEither = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId());
         Assert.assertTrue(meetEither.isLeft());
         Assert.assertFalse(meetEither.left().isEmpty());
     }
 
     @Test
     public void addVolunteer_NotExistingMeet_ShouldNotBeAdded() {
-        Either<Exception, Meet> meetEither = meetService.addVolunteer(0L, 0L);
+        Either<Exception, Meet> meetEither = meetService.setVolunteer(0L, 0L);
         Assert.assertTrue(meetEither.isLeft());
         Assert.assertFalse(meetEither.left().isEmpty());
     }

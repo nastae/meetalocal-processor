@@ -36,7 +36,7 @@ public class MeetService {
         }
     }
 
-    public Either<Exception, Meet> addVolunteer(Long id, Long volunteerId) {
+    public Either<Exception, Meet> setVolunteer(Long id, Long volunteerId) {
         final Optional<Meet> optionalMeet = meetRepository.findById(id);
         if (optionalMeet.isPresent()) {
             final Meet meet = optionalMeet.get();

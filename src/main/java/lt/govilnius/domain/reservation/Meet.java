@@ -52,7 +52,7 @@ public class Meet {
     @Enumerated(EnumType.STRING)
     private AgeGroup ageGroup;
 
-    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetLanguage> languages;
 
     private String preferences;
@@ -66,7 +66,7 @@ public class Meet {
     @JoinColumn(name="volunteer", nullable=true)
     private Volunteer volunteer;
 
-    @OneToMany(mappedBy = "meet")
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER)
     private Set<MeetEngagement> meetEngagements;
 
     public Meet() {}

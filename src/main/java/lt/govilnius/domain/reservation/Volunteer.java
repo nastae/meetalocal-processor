@@ -3,6 +3,7 @@ package lt.govilnius.domain.reservation;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,14 @@ public class Volunteer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "volunteer_id")
     private Long id;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "changed_at")
+    private Timestamp changedAt;
 
     private String name;
     private String surname;
@@ -25,7 +33,7 @@ public class Volunteer implements Serializable {
     private String email;
 
     @Column(nullable = true)
-    @OneToMany(mappedBy="volunteer")
+    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<VolunteerLanguage> languages;
 
     private String additionalLanguages;
@@ -37,19 +45,21 @@ public class Volunteer implements Serializable {
 
     private String description;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    @Column(name = "active", nullable = false)
+    private Boolean active = true;
 
-    @OneToMany(mappedBy = "volunteer")
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
     public Volunteer() {
     }
 
-    public Volunteer(String name, String surname, Date dateOfBirth,
+    public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
                      String additionalLanguages, Integer age, Gender gender,
-                     String description, Boolean isActive, Set<MeetEngagement> meetEngagements) {
+                     String description, Boolean active, Set<MeetEngagement> meetEngagements) {
+        this.createdAt = createdAt;
+        this.changedAt = changedAt;
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -60,7 +70,7 @@ public class Volunteer implements Serializable {
         this.age = age;
         this.gender = gender;
         this.description = description;
-        this.isActive = isActive;
+        this.active = active;
         this.meetEngagements = meetEngagements;
     }
 
@@ -153,11 +163,11 @@ public class Volunteer implements Serializable {
     }
 
     public Boolean getActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public Set<MeetEngagement> getMeetEngagements() {
@@ -166,5 +176,21 @@ public class Volunteer implements Serializable {
 
     public void setMeetEngagements(Set<MeetEngagement> meetEngagements) {
         this.meetEngagements = meetEngagements;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getChangedAt() {
+        return changedAt;
+    }
+
+    public void setChangedAt(Timestamp changedAt) {
+        this.changedAt = changedAt;
     }
 }
