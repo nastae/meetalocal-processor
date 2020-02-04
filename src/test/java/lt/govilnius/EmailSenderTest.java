@@ -91,17 +91,21 @@ public class EmailSenderTest {
                 "meetalocaltest@gmail.com", "123000", "Test", "Test",
                 "Vilnius", new Date(2019, 2, 2), new Time(12, 12, 26),
                 1, 26, Gender.MALE,
-                AgeGroup.JUNIOR_ADULTS, new HashSet<>(), "none",
+                AgeGroup.YOUTH, new HashSet<>(), "none",
                 "comments", Status.NEW, null, new HashSet<>());
     }
 
     public static Volunteer sampleVolunteer() {
+        return sampleVolunteer(Gender.MALE, 26);
+    }
+
+    public static Volunteer sampleVolunteer(Gender gender, Integer age) {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "Test", "Test", new Date(2000, 1, 1),
                 null,"meetalocaltest@gmail.com", null,
-                "Spain", 26, Gender.MALE,
+                "Spain", age, gender,
                 "none", true, null);
     }
 }

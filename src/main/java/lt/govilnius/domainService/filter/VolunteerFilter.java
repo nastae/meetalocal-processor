@@ -16,11 +16,13 @@ public class VolunteerFilter {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    public List<Volunteer> filterByForm(Meet form) {
+    public List<Volunteer> filterByMeet(Meet meet) {
         return volunteerRepository
                 .findAll()
                 .stream()
-                .filter((v) -> v.getGender().equals(form.getGender()))
+                .filter(v -> v.getGender().equals(meet.getGender()))
+                .filter(v -> meet.getAgeGroup().getFrom() <= v.getAge()
+                        && v.getAge() <= meet.getAgeGroup().getTo())
                 .collect(toList());
     }
 }
