@@ -2,6 +2,13 @@ package lt.govilnius.repository.reservation;
 
 import lt.govilnius.domain.reservation.MeetEngagement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface MeetEngagementRepository extends JpaRepository<MeetEngagement, Long> {
+import java.util.List;
+
+public interface MeetEngagementRepository extends JpaRepository<MeetEngagement, Long>,
+        CrudRepository<MeetEngagement, Long> {
+
+    List<MeetEngagement> findByMeetId(Long id);
+    List<MeetEngagement> findByVolunteerId(Long id);
 }
