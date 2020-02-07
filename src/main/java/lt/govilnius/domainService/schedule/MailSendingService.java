@@ -1,6 +1,7 @@
 package lt.govilnius.domainService.schedule;
 
 import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
 import lt.govilnius.domainService.mail.Mail;
@@ -33,6 +34,9 @@ public class MailSendingService {
     @Autowired
     private EmailSender emailSender;
 
+    @Autowired
+    private VolunteerFilter volunteerFilter;
+
     @Value("${website.url}")
     private String websiteUrl;
 
@@ -53,7 +57,10 @@ public class MailSendingService {
             LOGGER.info("Process the new meet with id " + meet.getId());
             meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
             meetService.edit(meet.getId(), meet);
-            emailSender.send(new Mail(meet.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+            final List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
+            volunteers.forEach(volunteer -> {
+                emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+            });
         });
     }
 
