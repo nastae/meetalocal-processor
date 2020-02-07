@@ -1,7 +1,9 @@
 package lt.govilnius;
 
 import io.atlassian.fugue.Either;
-import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.Status;
+import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.facadeService.reservation.MeetService;
 import lt.govilnius.repository.reservation.MeetRepository;
 import lt.govilnius.repository.reservation.VolunteerRepository;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,17 +44,39 @@ public class MeetServiceTest {
     @Test
     public void create_Meet_ShouldBeCreated() {
         Meet meet = sampleMeet();
-        Meet newMeet = meetService.create(meet).right().get();
+        Meet newMeet = meetService.create(meet).get();
         Assert.assertEquals(meet.getName(), newMeet.getName());
         Assert.assertEquals(meet.getSurname(), newMeet.getSurname());
         Assert.assertEquals(meet.getPhoneNumber(), newMeet.getPhoneNumber());
         Assert.assertEquals(meet.getResidence(), newMeet.getResidence());
-        Assert.assertEquals(meet.getDate(), newMeet.getDate());
-        Assert.assertEquals(meet.getTime(), newMeet.getTime());
+        Assert.assertEquals(meet.getDate().toString(), newMeet.getDate().toString());
+        Assert.assertEquals(meet.getTime().toString(), newMeet.getTime().toString());
+        Assert.assertEquals(meet.getPeopleCount(), newMeet.getPeopleCount());
+        Assert.assertEquals(meet.getAge(), newMeet.getAge());
+        Assert.assertEquals(meet.getAgeGroup(), newMeet.getAgeGroup());
+        Assert.assertEquals(meet.getLanguages().size(), 1);
+        Assert.assertEquals(meet.getPreferences(), newMeet.getPreferences());
+        Assert.assertEquals(meet.getComment(), newMeet.getComment());
+        Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
+        Assert.assertEquals(meet.getVolunteer(), newMeet.getVolunteer());
+    }
+
+    @Test
+    public void create_MeetWithoutLanguages_ShouldBeCreated() {
+        Meet meet = sampleMeet();
+        meet.setLanguages(new HashSet<>());
+        Meet newMeet = meetService.create(meet).get();
+        Assert.assertEquals(meet.getName(), newMeet.getName());
+        Assert.assertEquals(meet.getSurname(), newMeet.getSurname());
+        Assert.assertEquals(meet.getPhoneNumber(), newMeet.getPhoneNumber());
+        Assert.assertEquals(meet.getResidence(), newMeet.getResidence());
+        Assert.assertEquals(meet.getDate().toString(), newMeet.getDate().toString());
+        Assert.assertEquals(meet.getTime().toString(), newMeet.getTime().toString());
         Assert.assertEquals(meet.getPeopleCount(), newMeet.getPeopleCount());
         Assert.assertEquals(meet.getAge(), newMeet.getAge());
         Assert.assertEquals(meet.getAgeGroup(), newMeet.getAgeGroup());
         Assert.assertEquals(newMeet.getLanguages(), meet.getLanguages());
+        Assert.assertEquals(meet.getLanguages().size(), 0);
         Assert.assertEquals(meet.getPreferences(), newMeet.getPreferences());
         Assert.assertEquals(meet.getComment(), newMeet.getComment());
         Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
@@ -113,23 +138,6 @@ public class MeetServiceTest {
     }
 
     @Test
-    public void addLanguage_Language_ShouldBeAddedLanguage() {
-        meetService.create(sampleMeet());
-        Meet meet = meetService.getAll().get(0);
-        MeetLanguage language = meetService.addLanguage(meet.getId(), Language.ENGLISH).right().get();
-        Assert.assertEquals(language.getLanguage(), Language.ENGLISH);
-        meet = meetService.get(meet.getId()).get();
-        Assert.assertEquals(meet.getLanguages().size(), 1);
-    }
-
-    @Test
-    public void addLanguage_NotExistingMeet_SShouldNotBeAdded() {
-        Either<Exception, MeetLanguage> languageEither = meetService.addLanguage(0L, Language.ENGLISH);
-        Assert.assertTrue(languageEither.isLeft());
-        Assert.assertFalse(languageEither.left().isEmpty());
-    }
-
-    @Test
     public void delete_Meet_ShouldBeDeleted() {
         meetService.create(sampleMeet());
         List<Meet> meets = meetService.getAll();
@@ -142,7 +150,7 @@ public class MeetServiceTest {
 
     @Test
     public void edit_Meet_ShouldEdit() {
-        Meet meet = meetService.create(sampleMeet()).right().get();
+        Meet meet = meetService.create(sampleMeet()).get();
         Assert.assertEquals(meet.getStatus(), Status.NEW);
         meet.setStatus(Status.REPORTED);
         Meet newMeet = meetService.edit(meet.getId(), meet).get();

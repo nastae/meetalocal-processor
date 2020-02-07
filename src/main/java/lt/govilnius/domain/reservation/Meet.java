@@ -1,6 +1,7 @@
 package lt.govilnius.domain.reservation;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -21,33 +22,44 @@ public class Meet {
     @Column(name = "changed_at")
     private Timestamp changedAt;
 
+    @NotNull
     private String email;
 
+    @NotNull
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private String surname;
 
+    @NotNull
     @Column(name = "residence")
     private String residence;
 
+    @NotNull
     @Column(name = "date")
     private Date date;
 
+    @NotNull
     @Column(name = "time")
     private Time time;
 
+    @NotNull
     @Column(name = "people_count")
     private Integer peopleCount;
 
+    @NotNull
     @Column(name = "age", nullable = false)
     private Integer age;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @NotNull
     @Column(name = "age_group")
     @Enumerated(EnumType.STRING)
     private AgeGroup ageGroup;

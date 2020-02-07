@@ -28,12 +28,8 @@ public class MeetService {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    public Either<Exception, Meet> create(Meet meet) {
-        try {
-            return Either.right(add(meet));
-        } catch (RuntimeException e) {
-            return Either.left(new RuntimeException("Fail to create a meet entity"));
-        }
+    public Optional<Meet> create(Meet meet) {
+        return add(meet);
     }
 
     public Either<Exception, Meet> setVolunteer(Long id, Long volunteerId) {
@@ -50,14 +46,14 @@ public class MeetService {
         }
     }
 
-    public Either<Exception, MeetLanguage> addLanguage(Long id, Language language) {
+    private Either<Exception, MeetLanguage> addLanguage(Long id, Language language) {
         final Optional<Meet> optionalMeet = meetRepository.findById(id);
         return optionalMeet
                 .<Either<Exception, MeetLanguage>>map(meet -> Either.right(meetLanguageRepository.save(new MeetLanguage(language, meet))))
                 .orElseGet(() -> Either.left(new NoSuchElementException("Meet doesn't exist with id " + id)));
     }
 
-    private Meet add(Meet meet) {
+    private Optional<Meet> add(Meet meet) {
         final Meet entity = new Meet();
         entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
@@ -77,7 +73,11 @@ public class MeetService {
         entity.setComment(meet.getComment());
         entity.setVolunteer(null);
         entity.setStatus(Status.NEW);
-        return meetRepository.save(entity);
+        meet = meetRepository.save(entity);
+        for (MeetLanguage language : meet.getLanguages()) {
+            addLanguage(meet.getId(), language.getLanguage());
+        }
+        return get(meet.getId());
     }
 
     public List<Meet> getAll() {

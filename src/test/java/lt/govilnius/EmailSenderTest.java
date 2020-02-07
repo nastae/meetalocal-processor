@@ -1,6 +1,7 @@
 package lt.govilnius;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
@@ -96,9 +97,9 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "meetalocaltest@gmail.com", "123000", "Test", "Test",
-                "Vilnius", new Date(2019, 2, 2), new Time(12, 12, 26),
+                "Vilnius", new Date(2019, 1, 1), new Time(12, 12, 12),
                 1, 26, Gender.MALE,
-                AgeGroup.YOUTH, new HashSet<>(), "none",
+                AgeGroup.YOUTH, ImmutableSet.of(sampleMeetLanguage(Language.ENGLISH)), "none",
                 "comments", Status.NEW, null, new HashSet<>(), new HashSet<>());
     }
 
@@ -110,9 +111,17 @@ public class EmailSenderTest {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "Test", "Test", new Date(2000, 1, 1),
-                "2312345","meetalocaltest@gmail.com", null,
+                "Test", "Test", new Date(2019, 1, 1),
+                "2312345","meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(Language.RUSSIAN)),
                 "Spain", age, gender,
                 "none", true, new HashSet<>(), new HashSet<>());
+    }
+
+    public static MeetLanguage sampleMeetLanguage(Language language) {
+        return new MeetLanguage(language, null);
+    }
+
+    public static VolunteerLanguage sampleVolunteerLanguage(Language language) {
+        return new VolunteerLanguage(language, null);
     }
 }

@@ -1,10 +1,7 @@
 package lt.govilnius;
 
-import io.atlassian.fugue.Either;
 import lt.govilnius.domain.reservation.Gender;
-import lt.govilnius.domain.reservation.Language;
 import lt.govilnius.domain.reservation.Volunteer;
-import lt.govilnius.domain.reservation.VolunteerLanguage;
 import lt.govilnius.facadeService.reservation.VolunteerService;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.After;
@@ -16,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +37,7 @@ public class VolunteerServiceTest {
     @Test
     public void create_Volunteer_ShouldBeCreated() {
         Volunteer volunteer = sampleVolunteer();
-        Volunteer newVolunteer = volunteerService.create(volunteer).right().get();
+        Volunteer newVolunteer = volunteerService.create(volunteer).get();
         Assert.assertNotEquals(volunteer.getCreatedAt(), newVolunteer.getCreatedAt());
         Assert.assertNotEquals(volunteer.getChangedAt(), newVolunteer.getChangedAt());
         Assert.assertEquals(volunteer.getName(), newVolunteer.getName());
@@ -47,7 +45,27 @@ public class VolunteerServiceTest {
         Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
         Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
         Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
-        Assert.assertEquals(volunteer.getLanguages(), newVolunteer.getLanguages());
+        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
+        Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
+        Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
+        Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());
+        Assert.assertEquals(volunteer.getDescription(), newVolunteer.getDescription());
+        Assert.assertEquals(volunteer.getActive(), newVolunteer.getActive());
+    }
+
+    @Test
+    public void create_VolunteerWithoutLanguage_ShouldBeCreated() {
+        Volunteer volunteer = sampleVolunteer();
+        volunteer.setLanguages(new HashSet<>());
+        Volunteer newVolunteer = volunteerService.create(volunteer).get();
+        Assert.assertNotEquals(volunteer.getCreatedAt(), newVolunteer.getCreatedAt());
+        Assert.assertNotEquals(volunteer.getChangedAt(), newVolunteer.getChangedAt());
+        Assert.assertEquals(volunteer.getName(), newVolunteer.getName());
+        Assert.assertEquals(volunteer.getSurname(), newVolunteer.getSurname());
+        Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
+        Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
+        Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
+        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
         Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
         Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
         Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());
@@ -79,23 +97,6 @@ public class VolunteerServiceTest {
     }
 
     @Test
-    public void addLanguage_Language_ShouldBeAddedLanguage() {
-        volunteerService.create(sampleVolunteer());
-        Volunteer volunteer = volunteerService.getAll().get(0);
-        VolunteerLanguage language = volunteerService.addLanguage(volunteer.getId(), Language.ENGLISH).right().get();
-        Assert.assertEquals(language.getLanguage(), Language.ENGLISH);
-        volunteer = volunteerService.get(volunteer.getId()).get();
-        Assert.assertEquals(volunteer.getLanguages().size(), 1);
-    }
-
-    @Test
-    public void addLanguage_NotExistingVolunteer_SShouldNotBeAdded() {
-        Either<Exception, VolunteerLanguage> languageEither = volunteerService.addLanguage(0L, Language.ENGLISH);
-        Assert.assertTrue(languageEither.isLeft());
-        Assert.assertFalse(languageEither.left().isEmpty());
-    }
-
-    @Test
     public void delete_Volunteer_ShouldBeDeleted() {
         volunteerService.create(sampleVolunteer());
         List<Volunteer> volunteers = volunteerService.getAll();
@@ -108,7 +109,7 @@ public class VolunteerServiceTest {
 
     @Test
     public void edit_Volunteer_ShouldEdit() {
-        Volunteer volunteer = volunteerService.create(sampleVolunteer()).right().get();
+        Volunteer volunteer = volunteerService.create(sampleVolunteer()).get();
         volunteer.setName("NEW");
         volunteer.setSurname("NEW");
         volunteer.setDateOfBirth(new Date(1999, 1, 1));
@@ -126,7 +127,7 @@ public class VolunteerServiceTest {
         Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
         Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
         Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
-        Assert.assertEquals(volunteer.getLanguages(), newVolunteer.getLanguages());
+        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
         Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
         Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
         Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());

@@ -21,23 +21,19 @@ public class VolunteerService {
     @Autowired
     private VolunteerLanguageRepository volunteerLanguageRepository;
 
-    public Either<Exception, Volunteer> create(Volunteer volunteer) {
-        try {
-            return Either.right(add(volunteer));
-        } catch (RuntimeException e) {
-            return Either.left(new RuntimeException("Fail to create a volunteer entity"));
-        }
+    public Optional<Volunteer> create(Volunteer volunteer) {
+        return add(volunteer);
     }
 
-    public Either<Exception, VolunteerLanguage> addLanguage(Long id, Language language) {
+    private Either<Exception, VolunteerLanguage> addLanguage(Long id, Language language) {
         final Optional<Volunteer> optionalVolunteer = volunteerRepository.findById(id);
         return optionalVolunteer
                 .<Either<Exception, VolunteerLanguage>>map(volunteer -> Either.right(volunteerLanguageRepository.save(new VolunteerLanguage(language, volunteer))))
                 .orElseGet(() -> Either.left(new NoSuchElementException("Volunteer doesn't exist with id " + id)));
     }
 
-    private Volunteer add(Volunteer volunteer) {
-        final Volunteer entity = new Volunteer();
+    private Optional<Volunteer> add(Volunteer volunteer) {
+        Volunteer entity = new Volunteer();
         entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
         entity.setName(volunteer.getName());
@@ -51,7 +47,11 @@ public class VolunteerService {
         entity.setGender(volunteer.getGender());
         entity.setDescription(volunteer.getDescription());
         entity.setActive(volunteer.getActive());
-        return volunteerRepository.save(entity);
+        entity = volunteerRepository.save(entity);
+        for (VolunteerLanguage language : volunteer.getLanguages()) {
+            addLanguage(entity.getId(), language.getLanguage());
+        }
+        return get(entity.getId());
     }
 
     public List<Volunteer> getAll() {
