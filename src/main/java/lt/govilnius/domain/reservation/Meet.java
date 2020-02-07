@@ -66,8 +66,11 @@ public class Meet {
     @JoinColumn(name="volunteer", nullable=true)
     private Volunteer volunteer;
 
-    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
+
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Report> reports;
 
     public Meet() {}
 
@@ -76,7 +79,8 @@ public class Meet {
                 String residence, Date date, Time time,
                 Integer peopleCount, Integer age, Gender gender,
                 AgeGroup ageGroup, Set<MeetLanguage> languages, String preferences,
-                String comment, Status status, Volunteer volunteer, Set<MeetEngagement> meetEngagements) {
+                String comment, Status status, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
+                Set<Report> reports) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.email = email;
@@ -96,6 +100,7 @@ public class Meet {
         this.status = status;
         this.volunteer = volunteer;
         this.meetEngagements = meetEngagements;
+        this.reports = reports;
     }
 
     public Long getId() {
@@ -256,5 +261,13 @@ public class Meet {
 
     public void setMeetEngagements(Set<MeetEngagement> meetEngagements) {
         this.meetEngagements = meetEngagements;
+    }
+
+    public Set<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(Set<Report> reports) {
+        this.reports = reports;
     }
 }

@@ -5,10 +5,13 @@ import com.speedment.common.function.TriFunction;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.Volunteer;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+
+import static java.lang.String.format;
 
 public class EmailSenderConfig {
 
@@ -18,18 +21,22 @@ public class EmailSenderConfig {
     private Template template;
     private Map<String, Object> model;
 
+    private static final String SUBJECT = "Meet a local";
+
     public EmailSenderConfig(Template template, Map<String, Object> model, String subject) {
         this.template = template;
         this.model = model;
         this.subject = subject;
     }
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> AGREEMENT_REQUEST_CONFIG = (meet, websiteUrl) ->
-        new EmailSenderConfig(Template.AGREEMENT_REQUEST, ImmutableMap
+    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, websiteUrl) -> {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(meet.getDate());
+        return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
-                .put("month", DateUtils.monthToLithuanian(meet.getDate().getMonth()))
-                .put("day", meet.getDate().getDate())
-                .put("time", String.format("%02d:%02d", meet.getDate().getHours(), meet.getDate().getMinutes()))
+                .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
+                .put("day", cal.get(Calendar.DAY_OF_MONTH))
+                .put("time", format("%02d:%02d", 1, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE)))
                 .put("name", meet.getName())
                 .put("gender", meet.getGender().getName())
                 .put("age", meet.getAge())
@@ -38,53 +45,67 @@ public class EmailSenderConfig {
                 .put("canLink", websiteUrl + "")
                 .put("cannotLink", websiteUrl + "")
                 .build(),
-                "Meet a Local susitikimas su " + meet.getName());
+                format("%s # %07d", SUBJECT, meet.getId()));
+    };
 
-    public static final TriFunction<Meet, List<Volunteer>, String, EmailSenderConfig> AGREEMENT_RESPONSE_CONFIG = (meet, volunteers, websiteUrl) -> {
+    public static final TriFunction<Meet, List<Volunteer>, String, EmailSenderConfig> TOURIST_REQUEST_CONFIG = (meet, volunteers, websiteUrl) -> {
         final Map<String, Object> model = new HashMap<>();
         model.put("name", meet.getName());
         model.put("volunteers", volunteers);
-        return new EmailSenderConfig(Template.AGREEMENT_RESPONSE, model, "Meet a Local in Vilnius");
+        return new EmailSenderConfig(Template.TOURIST_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> AGREEMENT_RESPONSE_NOT_FOUND_CONFIG = (f, websiteUrl) ->
-        new EmailSenderConfig(Template.AGREEMENT_RESPONSE_NOT_FOUND, ImmutableMap
+    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_ADDITION_CONFIG = (meet, websiteUrl) ->
+        new EmailSenderConfig(Template.VOLUNTEER_ADDITION, ImmutableMap
                 .<String, Object>builder()
-                .put("name", f.getName())
+                .put("name", meet.getName())
                 .build(),
-                "Meet a Local in Vilnius");
+                format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, Volunteer, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (f, v) ->
-        new EmailSenderConfig(Template.TOURIST_INFORMATION, ImmutableMap
+    public static final BiFunction<Meet, Volunteer, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (meet, v) -> {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(meet.getDate());
+        return new EmailSenderConfig(Template.TOURIST_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("name", f.getName())
-                .put("month", DateUtils.monthToEnglish(f.getDate().getMonth()))
-                .put("time", String.format("%02d:%02d", f.getDate().getHours(), f.getDate().getMinutes()))
+                .put("name", meet.getName())
+                .put("month", DateUtils.monthToEnglish(cal.get(Calendar.MONTH)))
+                .put("time", format("%02d:%02d", 1, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE)))
                 .put("meetFriend", v.getName())
                 .put("phoneNumber", v.getPhoneNumber())
                 .put("email", v.getEmail())
                 .build(),
-                "Meet a Local in Vilnius");
+                format("%s # %07d", SUBJECT, meet.getId()));
+    };
 
-    public static final BiFunction<Meet, Volunteer, EmailSenderConfig> VOLUNTEER_INFORMATION_CONFIG = (f, v) ->
-        new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
+    public static final BiFunction<Meet, Volunteer, EmailSenderConfig> VOLUNTEER_INFORMATION_CONFIG = (meet, v) -> {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(meet.getDate());
+        return new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("month", DateUtils.monthToLithuanian(f.getDate().getMonth()))
-                .put("time", String.format("%02d:%02d", f.getDate().getHours(), f.getDate().getMinutes()))
-                .put("meetFriend", f.getName())
-                .put("phoneNumber", f.getPhoneNumber())
-                .put("email", f.getEmail())
+                .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
+                .put("time", format("%02d:%02d", 1, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE)))
+                .put("meetFriend", meet.getName())
+                .put("phoneNumber", meet.getPhoneNumber())
+                .put("email", meet.getEmail())
                 .build(),
-                "Meet a Local in Vilnius");
+                format("%s # %07d", SUBJECT, meet.getId()));
+    };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> EVALUATION_CONFIG = (f, websiteUrl) ->
-        new EmailSenderConfig(Template.EVALUATION, ImmutableMap.of(), "Meet a Local in Vilnius");
+    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_EVALUATION_CONFIG = (meet, websiteUrl) ->
+        new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap.of(),
+                format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> AGREEMENT_RESPONSE_NOT_SELECTED_CONFIG = (m, websiteUrl) ->
-        new EmailSenderConfig(Template.AGREEMENT_RESPONSE_NOT_SELECTED, ImmutableMap.of(), "Meet a Local in Vilnius");
+    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_EVALUATION_CONFIG = (meet, websiteUrl) ->
+            new EmailSenderConfig(Template.VOLUNTEER_EVALUATION, ImmutableMap.of(),
+                    format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> AGREEMENT_REPONSE_REPORTED = (f, websiteUrl) ->
-        new EmailSenderConfig(Template.AGREEMENT_RESPONSE_REPORTED, ImmutableMap.of(), "Meet a local in Vilnius");
+    public static final BiFunction<Meet, String, EmailSenderConfig> CANCELLATION_CONFIG = (meet, websiteUrl) ->
+        new EmailSenderConfig(Template.CANCELLATION, ImmutableMap.of(),
+                format("%s # %07d", SUBJECT, meet.getId()));
+
+    public static final BiFunction<Meet, String, EmailSenderConfig> REPORT_CONFIG = (meet, websiteUrl) ->
+        new EmailSenderConfig(Template.REPORT, ImmutableMap.of(),
+                format("%s # %07d", SUBJECT, meet.getId()));
 
     public Template getTemplate() {
         return template;
@@ -102,14 +123,15 @@ public class EmailSenderConfig {
      * @Template - E-mail template
      */
     public enum Template {
-        AGREEMENT_REQUEST(MAIL_TEMPLATE_PATH + "/agreement-request.vm"),
-        AGREEMENT_RESPONSE(MAIL_TEMPLATE_PATH + "/agreement-response.vm"),
-        AGREEMENT_RESPONSE_NOT_FOUND(MAIL_TEMPLATE_PATH + "/agreement-response-not-found.vm"),
-        AGREEMENT_RESPONSE_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/agreement-response-not-selected.vm"),
-        AGREEMENT_RESPONSE_REPORTED(MAIL_TEMPLATE_PATH + "/agreement-response-reported.vm"),
-        EVALUATION(MAIL_TEMPLATE_PATH + "/evaluation.vm"),
+        VOLUNTEER_REQUEST(MAIL_TEMPLATE_PATH + "/volunteer-request.vm"),
+        TOURIST_REQUEST(MAIL_TEMPLATE_PATH + "/tourist-request.vm"),
+        VOLUNTEER_ADDITION(MAIL_TEMPLATE_PATH + "/tourist-addition.vm"),
+        CANCELLATION(MAIL_TEMPLATE_PATH + "/cancellation.vm"),
+        REPORT(MAIL_TEMPLATE_PATH + "/tourist-report.vm"),
+        TOURIST_EVALUATION(MAIL_TEMPLATE_PATH + "/tourist-evaluation.vm"),
+        VOLUNTEER_EVALUATION(MAIL_TEMPLATE_PATH + "/volunteer-evaluation.vm"),
         TOURIST_INFORMATION(MAIL_TEMPLATE_PATH + "/tourist-information.vm"),
-        VOLUNTEER_INFORMATION(MAIL_TEMPLATE_PATH + "/volunteer-information.vm");
+        VOLUNTEER_INFORMATION(MAIL_TEMPLATE_PATH + "/volunteer-information.vm"),;
 
         public final String path;
 

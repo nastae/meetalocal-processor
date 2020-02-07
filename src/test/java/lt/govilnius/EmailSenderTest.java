@@ -29,23 +29,23 @@ public class EmailSenderTest {
     private static final String WEBSITE_URL = "test";
 
     @Test
-    public void send_AgreementRequest_ShouldSend() {
+    public void send_VolunteerRequest_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.AGREEMENT_REQUEST_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_AgreementResponse_ShouldSend() {
+    public void send_TouristRequest_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.AGREEMENT_RESPONSE_CONFIG.apply(sampleMeet(), ImmutableList.of(sampleVolunteer()), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(sampleMeet(), ImmutableList.of(sampleVolunteer()), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_AgreementResponseNotFound_ShouldSend() {
+    public void send_VolunteerAddition_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.AGREEMENT_RESPONSE_NOT_FOUND_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_ADDITION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -64,23 +64,30 @@ public class EmailSenderTest {
     }
 
     @Test
-    public void send_Evaluation_ShouldSend() {
+    public void send_VolunteerEvaluation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_AgreementResponseNotSelected_ShouldSend() {
+    public void send_TouristEvaluation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.AGREEMENT_RESPONSE_NOT_SELECTED_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_AgreementResponseReported() {
+    public void send_Cancellation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.AGREEMENT_REPONSE_REPORTED.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_Report_ShouldSend() {
+        final EmailSenderConfig config =
+                EmailSenderConfig.REPORT_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -92,7 +99,7 @@ public class EmailSenderTest {
                 "Vilnius", new Date(2019, 2, 2), new Time(12, 12, 26),
                 1, 26, Gender.MALE,
                 AgeGroup.YOUTH, new HashSet<>(), "none",
-                "comments", Status.NEW, null, new HashSet<>());
+                "comments", Status.NEW, null, new HashSet<>(), new HashSet<>());
     }
 
     public static Volunteer sampleVolunteer() {
@@ -104,8 +111,8 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "Test", "Test", new Date(2000, 1, 1),
-                null,"meetalocaltest@gmail.com", null,
+                "2312345","meetalocaltest@gmail.com", null,
                 "Spain", age, gender,
-                "none", true, null);
+                "none", true, new HashSet<>(), new HashSet<>());
     }
 }

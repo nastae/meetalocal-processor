@@ -51,13 +51,17 @@ public class Volunteer implements Serializable {
     @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Report> reports;
+
     public Volunteer() {
     }
 
     public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
                      String additionalLanguages, Integer age, Gender gender,
-                     String description, Boolean active, Set<MeetEngagement> meetEngagements) {
+                     String description, Boolean active, Set<MeetEngagement> meetEngagements,
+                     Set<Report> reports) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
@@ -72,6 +76,7 @@ public class Volunteer implements Serializable {
         this.description = description;
         this.active = active;
         this.meetEngagements = meetEngagements;
+        this.reports = reports;
     }
 
     public Long getId() {
@@ -192,5 +197,13 @@ public class Volunteer implements Serializable {
 
     public void setChangedAt(Timestamp changedAt) {
         this.changedAt = changedAt;
+    }
+
+    public Set<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(Set<Report> reports) {
+        this.reports = reports;
     }
 }
