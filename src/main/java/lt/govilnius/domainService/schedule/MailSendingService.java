@@ -1,6 +1,7 @@
 package lt.govilnius.domainService.schedule;
 
 import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
@@ -29,6 +30,9 @@ public class MailSendingService {
     private MeetEngagementService meetEngagementService;
 
     @Autowired
+    private MeetEngagementFilter meetEngagementFilter;
+
+    @Autowired
     private ReportService reportService;
 
     @Autowired
@@ -55,12 +59,18 @@ public class MailSendingService {
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
             LOGGER.info("Process the new meet with id " + meet.getId());
-            meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-            meetService.edit(meet.getId(), meet);
             final List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
-            volunteers.forEach(volunteer -> {
-                emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
-            });
+            if (volunteers.size() > 0) {
+                meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+                meetService.edit(meet.getId(), meet);
+                volunteers.forEach(volunteer -> {
+                    emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+                });
+            } else {
+                meet.setStatus(Status.CANCELLATION);
+                meetService.edit(meet.getId(), meet);
+                emailSender.send(new Mail(meet.getEmail()), EmailSenderConfig.CANCELLATION_CONFIG.apply(meet, websiteUrl));
+            }
         });
     }
 
@@ -72,6 +82,7 @@ public class MailSendingService {
                 List<Report> reports = reportService.getByMeetId(meet.getId());
                 EmailSenderConfig emailSenderConfig = null;
                 if (meetEngagements.size() > 0) {
+                    meetEngagements = meetEngagementFilter.filterForMail(meetEngagements, meet);
                     emailSenderConfig = prepareResponsesConfig(meet, meetEngagements);
                 } else if (reports.size() > 0) {
                     emailSenderConfig = prepareReportConfig(meet);

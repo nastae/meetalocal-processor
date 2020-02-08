@@ -104,16 +104,16 @@ public class EmailSenderTest {
     }
 
     public static Volunteer sampleVolunteer() {
-        return sampleVolunteer(Gender.MALE, 26);
+        return sampleVolunteer(Language.RUSSIAN, 26);
     }
 
-    public static Volunteer sampleVolunteer(Gender gender, Integer age) {
+    public static Volunteer sampleVolunteer(Language language, Integer age) {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "Test", "Test", new Date(2019, 1, 1),
-                "2312345","meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(Language.RUSSIAN)),
-                "Spain", age, gender,
+                "2312345","meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
+                "Spain", age, Gender.MALE,
                 "none", true, new HashSet<>(), new HashSet<>());
     }
 

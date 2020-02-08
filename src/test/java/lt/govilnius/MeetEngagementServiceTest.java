@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Time;
 import java.util.List;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
@@ -47,16 +48,19 @@ public class MeetEngagementServiceTest {
     public void create_Volunteer_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer).right().get();
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
         Assert.assertEquals(meetEngagement.getMeet().getId(), meet.getId());
         Assert.assertEquals(meetEngagement.getVolunteer().getId(), volunteer.getId());
+        Assert.assertEquals(meetEngagement.getTime(), time);
     }
 
     @Test
     public void getAll_MeetEngagements_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
-        meetEngagementService.create(meet, volunteer);
+        Time time = new Time(10, 10, 10);
+        meetEngagementService.create(meet, volunteer, time);
         List<MeetEngagement> meetEngagements = meetEngagementService.getAll();
         Assert.assertEquals(meetEngagements.size(), 1);
     }
@@ -65,8 +69,9 @@ public class MeetEngagementServiceTest {
     public void getByMeetId_MeetEngagements_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
-        meetEngagementService.create(meet, volunteer);
-        meetEngagementService.create(meet, volunteer);
+        Time time = new Time(10, 10, 10);
+        meetEngagementService.create(meet, volunteer, time);
+        meetEngagementService.create(meet, volunteer, time);
         List<MeetEngagement> meetEngagements = meetEngagementService.getByMeetId(meet.getId());
         Assert.assertEquals(meetEngagements.size(), 2);
     }
@@ -75,9 +80,10 @@ public class MeetEngagementServiceTest {
     public void getByVolunteerId_MeetEngagements_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
-        meetEngagementService.create(meet, volunteer);
-        meetEngagementService.create(meet, volunteer);
-        meetEngagementService.create(meet, volunteer);
+        Time time = new Time(10, 10, 10);
+        meetEngagementService.create(meet, volunteer, time);
+        meetEngagementService.create(meet, volunteer, time);
+        meetEngagementService.create(meet, volunteer, time);
         List<MeetEngagement> meetEngagements = meetEngagementService.getByMeetId(meet.getId());
         Assert.assertEquals(meetEngagements.size(), 3);
     }
