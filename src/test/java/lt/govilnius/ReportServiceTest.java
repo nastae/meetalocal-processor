@@ -47,7 +47,7 @@ public class ReportServiceTest {
     public void create_Volunteer_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
-        Report report = reportService.create(meet, volunteer, "Comment").right().get();
+        Report report = reportService.create(meet, volunteer, "Comment").get();
         Assert.assertEquals(report.getMeet().getId(), meet.getId());
         Assert.assertEquals(report.getVolunteer().getId(), volunteer.getId());
         Assert.assertEquals(report.getComment(), "Comment");

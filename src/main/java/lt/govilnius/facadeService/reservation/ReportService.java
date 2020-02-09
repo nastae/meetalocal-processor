@@ -1,6 +1,5 @@
 package lt.govilnius.facadeService.reservation;
 
-import io.atlassian.fugue.Either;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.Report;
 import lt.govilnius.domain.reservation.Volunteer;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReportService {
@@ -16,12 +16,8 @@ public class ReportService {
     @Autowired
     private ReportRepository reportRepository;
 
-    public Either<Exception, Report> create(Meet meet, Volunteer volunteer, String comment) {
-        try {
-            return Either.right(add(meet, volunteer, comment));
-        } catch (RuntimeException e) {
-            return Either.left(new RuntimeException("Fail to create a meet engagement entity"));
-        }
+    public Optional<Report> create(Meet meet, Volunteer volunteer, String comment) {
+        return Optional.ofNullable(add(meet, volunteer, comment));
     }
 
     private Report add(Meet meet, Volunteer volunteer, String comment) {
