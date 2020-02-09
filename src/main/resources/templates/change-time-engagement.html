@@ -13,9 +13,14 @@
 <div class="container">
     <div class="row d-flex justify-content-center mx-auto">
         <div class="col-md-6 col-xs-12 div-style">
-            <form>
-                <div class="d-flex justify-content-center mx-auto main-label" >
-                    <h2>Something went wrong!</h2>
+            <div class="d-flex justify-content-center mx-auto main-label" >
+                <h2>Change the meet <span th:text="${tourist}" th:remove="tag">Name</span> time:</h2>
+            </div>
+            <form action="#" th:action="@{/meet/engagements-changes}" method="post">
+                <input hidden name='token' th:value='${token}'/>
+                <input type="time" name='time' th:value='${time}'/>
+                <div class="form-group justify-content-center d-flex">
+                    <button type="submit" class="btn btn-primary button-submit">Change</button>
                 </div>
             </form>
         </div>

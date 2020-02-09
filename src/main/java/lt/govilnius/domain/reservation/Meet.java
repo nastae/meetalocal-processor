@@ -1,5 +1,7 @@
 package lt.govilnius.domain.reservation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
@@ -78,9 +80,11 @@ public class Meet {
     @JoinColumn(name="volunteer", nullable=true)
     private Volunteer volunteer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Report> reports;
 

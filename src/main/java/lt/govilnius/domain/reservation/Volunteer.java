@@ -1,5 +1,7 @@
 package lt.govilnius.domain.reservation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -48,9 +50,11 @@ public class Volunteer implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Report> reports;
 

@@ -1,0 +1,28 @@
+{
+  "id":null,
+  "createdAt":"3919-01-31T23:01:01.000+0000",
+  "changedAt":"3919-01-31T23:01:01.000+0000",
+  "name":"Test",
+  "surname":"Test",
+  "dateOfBirth":"3919-02-01",
+  "phoneNumber":"2312345",
+  "email":"meetalocaltest@gmail.com",
+  "languages":[
+    {
+      "id":null,
+      "language":"ENGLISH",
+      "volunteer":null
+    }
+  ],
+  "additionalLanguages":"Spain",
+  "age":26,
+  "gender":"MALE",
+  "description":"none",
+  "active":true,
+  "meetEngagements":[
+
+  ],
+  "reports":[
+
+  ]
+}

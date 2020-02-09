@@ -6,25 +6,25 @@
     <p>Here is the list of locals who would be glad to meet you.</p>
     <p>Please select the most favourite volunteer and press confirmation button within 24 hours.</p>
     <p>Unless you choose a volunteer within 24 hours, your registration will be cancelled.</p><br>
-    #foreach( $volunteer in $volunteers )
-        <p>Name: ${volunteer.name}</p>
+    #foreach( $engagement in $engagements )
+        <p>Name: ${engagement.volunteer.name}</p>
         <p>Gender:
-        #if( $volunteer.gender == 'FEMALE' )
+        #if( $engagement.volunteer.gender == 'FEMALE' )
           female
         #else
           man
         #end
         </p>
-        <p>Age: ${volunteer.age}</p>
-        <p>Short description: ${volunteer.description}</p>
+        <p>Age: ${engagement.volunteer.age}</p>
+        <p>Short description: ${engagement.volunteer.description}</p>
         <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
           <tr>
               <td>
                   <table cellspacing="0" cellpadding="0">
                       <tr>
                           <td style="border-radius: 2px;" bgcolor="#ED2939">
-                              <a target="_blank" style="padding: 8px 12px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-                                  Agree
+                              <a href="${websiteUrl}/mail/selections?token=${engagement.token}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
+                                  Select
                               </a>
                           </td>
                       </tr>

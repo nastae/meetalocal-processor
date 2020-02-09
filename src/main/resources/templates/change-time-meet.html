@@ -14,17 +14,13 @@
     <div class="row d-flex justify-content-center mx-auto">
         <div class="col-md-6 col-xs-12 div-style">
             <div class="d-flex justify-content-center mx-auto main-label" >
-                <h2>Do you agree to meet with the volunteer <span th:text="${volunteertName}" th:remove="tag">Name</span>?</h2>
+                <h2>Change the meet time:</h2>
             </div>
-            <form action="#" th:action="@{/action/volunteer/can}" th:object="${actionAgreement}" method="post">
-                <input hidden name='id' th:value='${id}'/>
+            <form action="#" th:action="@{/meet/meets-changes}" method="post">
+                <input hidden name='meet' th:value='${meet}'/>
+                <input type="time" name='time' th:value='${time}'/>
                 <div class="form-group justify-content-center d-flex">
-                    <button type="submit" class="btn btn-primary button-submit">Yes</button>
-                </div>
-            </form>
-            <form action="#" th:action="@{/action/response}" method="post">
-                <div class="form-group justify-content-center d-flex">
-                    <button type="submit" class="btn btn-primary button-submit">No</button>
+                    <button type="submit" class="btn btn-primary button-submit">Change</button>
                 </div>
             </form>
         </div>

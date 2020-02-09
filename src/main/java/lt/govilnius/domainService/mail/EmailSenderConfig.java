@@ -3,6 +3,7 @@ package lt.govilnius.domainService.mail;
 import com.google.common.collect.ImmutableMap;
 import com.speedment.common.function.TriFunction;
 import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
 
 import java.util.Calendar;
@@ -29,7 +30,7 @@ public class EmailSenderConfig {
         this.subject = subject;
     }
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, websiteUrl) -> {
+    public static final TriFunction<Meet, String, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, token, websiteUrl) -> {
         Calendar cal = Calendar.getInstance();
         cal.setTime(meet.getDate());
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
@@ -42,23 +43,29 @@ public class EmailSenderConfig {
                 .put("age", meet.getAge())
                 .put("peopleCount", meet.getPeopleCount())
                 .put("preferences", meet.getPreferences())
-                .put("canLink", websiteUrl + "")
-                .put("cannotLink", websiteUrl + "")
+                .put("agreementUrl", websiteUrl + "/mail/agreements?token=" + token)
+                .put("cancellationUrl", websiteUrl + "/mail/cancellations?token=" + token)
+                .put("changeUrl", websiteUrl + "/mail/engagements-changes?token=" + token)
+                .put("reportUrl", websiteUrl + "/mail/reports?token=" + token)
+                .put("token", token)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final TriFunction<Meet, List<Volunteer>, String, EmailSenderConfig> TOURIST_REQUEST_CONFIG = (meet, volunteers, websiteUrl) -> {
+    public static final TriFunction<Meet, List<MeetEngagement>, String, EmailSenderConfig> TOURIST_REQUEST_CONFIG = (meet, engagements, websiteUrl) -> {
         final Map<String, Object> model = new HashMap<>();
         model.put("name", meet.getName());
-        model.put("volunteers", volunteers);
+        model.put("engagements", engagements);
+        model.put("websiteUrl", websiteUrl);
+
         return new EmailSenderConfig(Template.TOURIST_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_ADDITION_CONFIG = (meet, websiteUrl) ->
+    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_ADDITION_CONFIG = (meet, websiteUrl) ->
         new EmailSenderConfig(Template.VOLUNTEER_ADDITION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", meet.getName())
+                .put("changeMeetAfterAdditionUrl", websiteUrl + "/mail/meets-changes?meet=" + meet.getId().toString())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
 

@@ -13,9 +13,13 @@
 <div class="container">
     <div class="row d-flex justify-content-center mx-auto">
         <div class="col-md-6 col-xs-12 div-style">
-            <form>
-                <div class="d-flex justify-content-center mx-auto main-label" >
-                    <h2>Something went wrong!</h2>
+            <div class="d-flex justify-content-center mx-auto main-label" >
+                <h2>Do you agree to cancel meet with tourist <span th:text="${tourist}" th:remove="tag">Name</span>?</h2>
+            </div>
+            <form action="#" th:action="@{/meet/cancellations}" method="post">
+                <input hidden name='token' th:value='${token}'/>
+                <div class="form-group justify-content-center d-flex">
+                    <button type="submit" class="btn btn-primary button-submit">Yes</button>
                 </div>
             </form>
         </div>

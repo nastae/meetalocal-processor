@@ -32,21 +32,24 @@ public class EmailSenderTest {
     @Test
     public void send_VolunteerRequest_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(sampleMeet(), "TOKEN", WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristRequest_ShouldSend() {
+        Meet meet = sampleMeet();
+        Volunteer volunteer = sampleVolunteer();
         final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(sampleMeet(), ImmutableList.of(sampleVolunteer()), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
+                        meet, ImmutableList.of(new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_VolunteerAddition_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_ADDITION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 

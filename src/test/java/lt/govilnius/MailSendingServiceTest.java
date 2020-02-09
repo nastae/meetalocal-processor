@@ -148,7 +148,7 @@ public class MailSendingServiceTest {
 
         mailSendingService.processRequests();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_ADDITION).size(), 1);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 1);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class MailSendingServiceTest {
     @Test
     public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldSendResponseToTourist() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION);
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
         meet = meetRepository.save(meet);
 
@@ -176,14 +176,14 @@ public class MailSendingServiceTest {
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processRequestsAfterAdditional();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 1);
     }
 
     @Test
     public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldSendReport() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION);
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
         meet = meetRepository.save(meet);
 
@@ -194,54 +194,54 @@ public class MailSendingServiceTest {
         reportRepository.save(report);
 
         mailSendingService.processRequestsAfterAdditional();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.REPORTED).size(), 1);
     }
 
     @Test
     public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldNotFindVolunteers() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION);
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
         meetRepository.save(meet);
 
         mailSendingService.processRequestsAfterAdditional();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.CANCELLATION).size(), 1);
     }
 
     @Test
     public void processRequestsAfterAdditional_SentMeetToVolunteerAndBadChangedAt_ShouldDoNothing() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION);
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10));
         meetRepository.save(meet);
 
         mailSendingService.processRequestsAfterAdditional();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).size(), 1);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 1);
     }
 
     @Test
     public void processAdditionals_MeetWithoutEngagements_ShouldSendRequestToTourist() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+        meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - additionalWaiting));
         meetRepository.save(meet);
 
         mailSendingService.processAdditionals();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_ADDITION).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).size(), 1);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 1);
     }
 
     @Test
     public void processAdditionals_MeetWithoutEngagementsAndWithBadChangedAt_ShouldDoNothing() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+        meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10));
         meetRepository.save(meet);
 
         mailSendingService.processAdditionals();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_ADDITION).size(), 1);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 1);
     }
 
     @Test

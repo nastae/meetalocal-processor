@@ -183,7 +183,7 @@ public class InteractionWithMeetServiceTest {
     }
 
     @Test
-    public void change_Token_ShouldChange() {
+    public void changeEngagement_Token_ShouldChange() {
         String token = "A";
         String timeString = "20:20:20";
         Time time = new Time(10, 10, 10);
@@ -197,7 +197,7 @@ public class InteractionWithMeetServiceTest {
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
         when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.of(result));
-        MeetEngagement actual = interactionWithMeetService.change(token, timeString).get();
+        MeetEngagement actual = interactionWithMeetService.changeEngagement(token, timeString).get();
         Assert.assertEquals(result.getToken(), actual.getToken());
         Assert.assertFalse(result.getEngaged());
         Assert.assertEquals(result.getTime(), actual.getTime());
@@ -205,7 +205,7 @@ public class InteractionWithMeetServiceTest {
     }
 
     @Test
-    public void change_TokenAndBadStatus_ShouldAgree() {
+    public void changeEngagement_TokenAndBadStatus_ShouldAgree() {
         String timeString = "20:20:20";
         String token = "A";
         Time time = new Time(10, 10, 10);
@@ -216,12 +216,12 @@ public class InteractionWithMeetServiceTest {
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
-        Optional<MeetEngagement> actual = interactionWithMeetService.change(token, timeString);
+        Optional<MeetEngagement> actual = interactionWithMeetService.changeEngagement(token, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 
     @Test
-    public void change_TokenAndBadTime_ShouldAgree() {
+    public void changeEngagement_TokenAndBadTime_ShouldAgree() {
         String timeString = "20:20:20";
         String token = "A";
         Time time = new Time(10, 10, 10);
@@ -232,12 +232,12 @@ public class InteractionWithMeetServiceTest {
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
-        Optional<MeetEngagement> actual = interactionWithMeetService.change(token, timeString);
+        Optional<MeetEngagement> actual = interactionWithMeetService.changeEngagement(token, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 
     @Test
-    public void change_Token_ShouldFailEdit() {
+    public void changeEngagement_Token_ShouldFailEdit() {
         String timeString = "20:20:20";
         String token = "A";
         Time time = new Time(10, 10, 10);
@@ -251,80 +251,64 @@ public class InteractionWithMeetServiceTest {
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
         when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.ofNullable(null));
-        Optional<MeetEngagement> actual = interactionWithMeetService.change(token, timeString);
+        Optional<MeetEngagement> actual = interactionWithMeetService.changeEngagement(token, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 
     @Test
-    public void changeAfterAddition_Token_ShouldChange() {
-        String token = "A";
+    public void changeMeetAfterAddition_Token_ShouldChange() {
+        String meetId = "1010";
         String timeString = "20:20:20";
-        Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+        meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
-        engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
-        engagement.setId(1L);
-        when(meetEngagementService.getByToken(token)).
-                thenReturn(Optional.of(engagement));
-        when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.of(result));
-        MeetEngagement actual = interactionWithMeetService.changeAfterAddition(token, timeString).get();
-        Assert.assertEquals(result.getToken(), actual.getToken());
-        Assert.assertFalse(result.getEngaged());
+        meet.setId(Long.parseLong(meetId));
+        Meet result = sampleMeet();
+        when(meetService.get(Long.parseLong(meetId))).
+                thenReturn(Optional.of(meet));
+        when(meetService.edit(meet.getId(), meet)).thenReturn(Optional.of(result));
+        Meet actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString).get();
         Assert.assertEquals(result.getTime(), actual.getTime());
         Assert.assertEquals(result.getId(), actual.getId());
     }
 
     @Test
-    public void changeAfterAddition_TokenAndBadStatus_ShouldAgree() {
+    public void changeMeetAfterAddition_TokenAndBadStatus_ShouldAgree() {
+        String meetId = "1010";
         String timeString = "20:20:20";
-        String token = "A";
-        Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
-        engagement.setId(1L);
-        when(meetEngagementService.getByToken(token)).
-                thenReturn(Optional.of(engagement));
-        Optional<MeetEngagement> actual = interactionWithMeetService.changeAfterAddition(token, timeString);
+        when(meetService.get(Long.parseLong(meetId))).
+                thenReturn(Optional.of(meet));
+        Optional<Meet> actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 
     @Test
-    public void changeAfterAddition_TokenAndBadTime_ShouldAgree() {
+    public void changeMeetAfterAddition_TokenAndBadTime_ShouldAgree() {
         String timeString = "20:20:20";
-        String token = "A";
-        Time time = new Time(10, 10, 10);
+        String meetId = "1010";
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+        meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
-        engagement.setId(1L);
-        when(meetEngagementService.getByToken(token)).
-                thenReturn(Optional.of(engagement));
-        Optional<MeetEngagement> actual = interactionWithMeetService.changeAfterAddition(token, timeString);
+        when(meetService.get(Long.parseLong(meetId))).
+                thenReturn(Optional.of(meet));
+        Optional<Meet> actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 
     @Test
-    public void changeAfterAddition_Token_ShouldFailEdit() {
+    public void changeMeetAfterAddition_Token_ShouldFailEdit() {
         String timeString = "20:20:20";
-        String token = "A";
-        Time time = new Time(10, 10, 10);
+        String meetId = "1010";
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+        meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
-        engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
-        engagement.setId(1L);
-        when(meetEngagementService.getByToken(token)).
-                thenReturn(Optional.of(engagement));
-        when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.ofNullable(null));
-        Optional<MeetEngagement> actual = interactionWithMeetService.changeAfterAddition(token, timeString);
+        when(meetService.get(Long.parseLong(meetId))).
+                thenReturn(Optional.of(meet));
+        when(meetService.edit(meet.getId(), meet)).thenReturn(Optional.ofNullable(null));
+        Optional<Meet> actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString);
         Assert.assertFalse(actual.isPresent());
     }
 

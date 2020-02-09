@@ -48,8 +48,8 @@ public class InteractionWithMeetService {
         return changeEngage(token, false, null);
     }
 
-    public Optional<MeetEngagement> change(String token, String timeString) {
-        LOGGER.info("Process change of the meet engagement with token " + token);
+    public Optional<MeetEngagement> changeEngagement(String token, String timeString) {
+        LOGGER.info("Process change the meet engagement with token " + token);
         final Time time;
         try {
             time = TimeConverter.convertToTime(timeString);
@@ -60,14 +60,14 @@ public class InteractionWithMeetService {
         }
     }
 
-    public Optional<MeetEngagement> changeAfterAddition(String token, String timeString) {
-        LOGGER.info("Process change of the meet engagement with token " + token + " after addition is sent");
+    public Optional<Meet> changeMeetAfterAddition(String meetId, String timeString) {
+        LOGGER.info("Process change the meet with id " + meetId + " after addition is sent");
         final Time time;
         try {
             time = TimeConverter.convertToTime(timeString);
-            return changeEngageAfterAddition(token, true, time);
+            return changeEngageAfterAddition(Long.parseLong(meetId), time);
         } catch (ParseException e) {
-            LOGGER.error("Fail to parse time " + timeString + " of the meet engagement with token " + token, e);
+            LOGGER.error("Fail to parse values changing meet with id " + meetId, e);
             return Optional.empty();
         }
     }
@@ -112,16 +112,15 @@ public class InteractionWithMeetService {
                 });
     }
 
-    private Optional<MeetEngagement> changeEngageAfterAddition(String token, boolean engage, Time time) {
-        final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
-        return engagement
-                .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_ADDITION))
-                .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < additionalWaiting)
+    private Optional<Meet> changeEngageAfterAddition(Long meetId, Time time) {
+        final Optional<Meet> meet = meetService.get(meetId);
+        return meet
+                .filter(e -> e.getStatus().equals(Status.SENT_TOURIST_ADDITION))
+                .filter(e -> System.currentTimeMillis() - e.getChangedAt().getTime() < additionalWaiting)
                 .map(e -> {
-                    LOGGER.info("Edit the meet engagement with token " + e.getToken() + "after addition is sent");
-                    e.setEngaged(engage);
+                    LOGGER.info("Edit the meet with id " + e.getId() + "after addition is sent");
                     e.setTime(time != null ? time : e.getTime());
-                    return meetEngagementService.edit(e.getId(), e).orElse(null);
+                    return meetService.edit(e.getId(), e).orElse(null);
                 });
     }
 }

@@ -13,7 +13,11 @@
   "age": 26,
   "gender": "MALE",
   "ageGroup": "YOUTH",
-  "languages": [],
+  "languages": [{
+    "id": 0,
+    "language": "ENGLISH",
+    "meet": null
+  }],
   "preferences": "none",
   "comment": "comments",
   "status": "NEW",

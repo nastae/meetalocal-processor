@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Component
 public class MailSendingService {
@@ -68,7 +68,9 @@ public class MailSendingService {
                     Either<Exception, MeetEngagement> meetEngagementEither = meetEngagementService.create(meet, volunteer, meet.getTime());
                     if (meetEngagementEither.isRight()) {
                         LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
-                        emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+                        final String token = meetEngagementEither.right().get().getToken();
+                        emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
+                                meet, token, websiteUrl));
                     } else {
                         LOGGER.info("Fail to create a meet engagement of the meet with id " + meet.getId(), meetEngagementEither);
                     }
@@ -95,8 +97,8 @@ public class MailSendingService {
                     emailSenderConfig = prepareReportConfig(meet);
                 } else {
                     LOGGER.info("Send additional information of the meet with id %s to tourist ", meet.getId());
-                    emailSenderConfig = EmailSenderConfig.VOLUNTEER_ADDITION_CONFIG.apply(meet, websiteUrl);
-                    meet.setStatus(Status.SENT_VOLUNTEER_ADDITION);
+                    emailSenderConfig = EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(meet, websiteUrl);
+                    meet.setStatus(Status.SENT_TOURIST_ADDITION);
                 }
                 meetService.edit(meet.getId(), meet);
                 emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
@@ -105,18 +107,24 @@ public class MailSendingService {
     }
 
     public void processAdditionals() {
-        meetService.findByStatus(Status.SENT_VOLUNTEER_ADDITION).forEach(meet -> {
+        meetService.findByStatus(Status.SENT_TOURIST_ADDITION).forEach(meet -> {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= additionalWaiting) {
-                LOGGER.info("Process the additional meet whose with id information" + meet.getId());
-                meet.setStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION);
+                LOGGER.info("Process the additional information of the meet with id" + meet.getId());
+                meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
                 meetService.edit(meet.getId(), meet);
-                emailSender.send(new Mail(meet.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+                final Set<MeetEngagement> meetEngagements = meet.getMeetEngagements();
+                meetEngagements.forEach(meetEngagement -> {
+                    final Volunteer volunteer = meetEngagement.getVolunteer();
+                    LOGGER.info("Send request to volunteer with id ", volunteer.getId());
+                    emailSender.send(new Mail(volunteer.getEmail()),
+                            EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, meetEngagement.getToken(), websiteUrl));
+                });
             }
         });
     }
 
     public void processRequestsAfterAdditional() {
-        meetService.findByStatus(Status.SENT_TOURIST_REQUEST_AFTER_ADDITION).forEach(meet -> {
+        meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).forEach(meet -> {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentRequestWaiting) {
                 LOGGER.info("Process the sent request of the meet with id " + meet.getId());
                 List<MeetEngagement> meetEngagements = meetEngagementService.getByMeetId(meet.getId());
@@ -200,11 +208,7 @@ public class MailSendingService {
 
     private EmailSenderConfig prepareResponsesConfig(Meet meet, List<MeetEngagement> meetEngagements) {
         LOGGER.info("Send volunteers responses of the meet with id %s to tourist ", meet.getId());
-        List<Volunteer> volunteers = meetEngagements
-                .stream()
-                .map(MeetEngagement::getVolunteer)
-                .collect(Collectors.toList());
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
-        return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, volunteers, websiteUrl);
+        return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, meetEngagements, websiteUrl);
     }
 }

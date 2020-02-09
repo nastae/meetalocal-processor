@@ -1,5 +1,7 @@
 package lt.govilnius.domain.reservation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -14,6 +16,7 @@ public class MeetLanguage implements Serializable {
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="meet_id", nullable=false)
     private Meet meet;

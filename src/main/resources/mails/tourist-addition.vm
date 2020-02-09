@@ -3,10 +3,21 @@
 <body>
     <p>Hello, ${name},</p>
     <p>Deja, mums nepavyko rasti savanorio susitikimui nurodytu laiku. Galbūt Jums tiktų kitas laikas? Prašome papildyti informaciją čia:</p>
-    <form action="" method="put">
-      Susitikimo data: <input type="date" name="date"><br>
-      <button type="submit" name="send">Siųsti</button>
-    </form>
+    <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
+      <tr>
+          <td>
+              <table cellspacing="0" cellpadding="0">
+                  <tr>
+                      <td style="border-radius: 2px;" bgcolor="#ED2939">
+                          <a href="${changeMeetAfterAdditionUrl}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
+                              Keisti laika
+                          </a>
+                      </td>
+                  </tr>
+              </table>
+          </td>
+      </tr>
+    </table>
     <br>
     <p>If you have any further questions, please contact Tourist Information Centre (Pilies St. 2):</p>
     <p>+370 5 262 9660</p>

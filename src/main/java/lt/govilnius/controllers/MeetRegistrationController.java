@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
-@RequestMapping("/api/registration/")
+@RequestMapping("/registration")
 public class MeetRegistrationController {
 
     @Autowired
