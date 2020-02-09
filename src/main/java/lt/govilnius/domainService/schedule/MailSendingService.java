@@ -1,5 +1,6 @@
 package lt.govilnius.domainService.schedule;
 
+import io.atlassian.fugue.Either;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
@@ -64,7 +65,13 @@ public class MailSendingService {
                 meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
                 meetService.edit(meet.getId(), meet);
                 volunteers.forEach(volunteer -> {
-                    emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+                    Either<Exception, MeetEngagement> meetEngagementEither = meetEngagementService.create(meet, volunteer, meet.getTime());
+                    if (meetEngagementEither.isRight()) {
+                        LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
+                        emailSender.send(new Mail(volunteer.getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, websiteUrl));
+                    } else {
+                        LOGGER.info("Fail to create a meet engagement of the meet with id " + meet.getId(), meetEngagementEither);
+                    }
                 });
             } else {
                 meet.setStatus(Status.CANCELLATION);

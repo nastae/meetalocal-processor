@@ -113,7 +113,7 @@ public class MailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processRequests();
@@ -172,7 +172,7 @@ public class MailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processRequestsAfterAdditional();
@@ -255,7 +255,7 @@ public class MailSendingServiceTest {
         meet.setVolunteer(volunteer);
         meetRepository.save(meet);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processResponses();
@@ -273,7 +273,7 @@ public class MailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processResponses();
@@ -291,7 +291,7 @@ public class MailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processResponses();
@@ -309,7 +309,7 @@ public class MailSendingServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - evaluationWaiting));
         meetRepository.save(meet);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processAgreements();
@@ -339,7 +339,7 @@ public class MailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12));
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
         mailSendingService.processAgreements();

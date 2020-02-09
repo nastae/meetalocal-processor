@@ -32,11 +32,13 @@ public class MeetRegistrationControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private static final String URL = "/api/registration/meets";
+
     @Test
     public void newMeet_Meet_ShoudCreateNew() throws Exception {
         Meet meet = sampleMeet();
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isOk())
@@ -65,7 +67,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setEmail(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -76,7 +78,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setPhoneNumber(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -87,7 +89,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setName(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -98,7 +100,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setSurname(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -109,7 +111,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setResidence(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -120,7 +122,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setDate(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -131,7 +133,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setTime(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -142,7 +144,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setPeopleCount(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -153,7 +155,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setAge(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -164,7 +166,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setGender(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -175,7 +177,7 @@ public class MeetRegistrationControllerTest {
         Meet meet = sampleMeet();
         meet.setAgeGroup(null);
 
-        mvc.perform(post("/api/meets")
+        mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());

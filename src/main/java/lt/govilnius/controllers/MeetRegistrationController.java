@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/registration/")
 public class MeetRegistrationController {
 
     @Autowired
@@ -23,7 +23,6 @@ public class MeetRegistrationController {
 
     @PostMapping("/meets")
     public ResponseEntity<?> newMeet(@Valid @RequestBody Meet meet) {
-        System.out.println(meet.getEmail());
         Optional<Meet> meetOptional = meetService.create(meet);
         if (meetOptional.isPresent())
             return ResponseEntity.ok(meetOptional.get());
