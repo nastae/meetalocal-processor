@@ -32,7 +32,7 @@ public class MeetRegistrationControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final String URL = "/api/registration/meets";
+    private static final String URL = "/registration/meets";
 
     @Test
     public void newMeet_Meet_ShoudCreateNew() throws Exception {
