@@ -38,7 +38,7 @@ public class MeetStatusController {
 
     @PostMapping("/engagements-changes")
     public String change(@RequestParam Map<String, String> params) {
-        final Optional<MeetEngagement> engagement = interactionWithMeetService.changeEngagement(params.get("token"), params.get("time"));
+        final Optional<MeetEngagement> engagement = interactionWithMeetService.changeEngagement(params.get("token"), params.get("time") + ":00");
         return engagement.isPresent() ?
                 "thanks-for-answer" :
                 "error";
@@ -54,7 +54,7 @@ public class MeetStatusController {
 
     @PostMapping("/meets-changes")
     public String changeMeetsAfterAddition(@RequestParam Map<String, String> params) {
-        final Optional<Meet> meet = interactionWithMeetService.changeMeetAfterAddition(params.get("meet"), params.get("time"));
+        final Optional<Meet> meet = interactionWithMeetService.changeMeetAfterAddition(params.get("meet"), params.get("time") + ":00");
         return meet.isPresent() ?
                 "thanks-for-answer" :
                 "error";
