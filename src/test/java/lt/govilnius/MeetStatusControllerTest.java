@@ -61,7 +61,7 @@ public class MeetStatusControllerTest {
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    private static final String ERROR_MESSAGE = "Something went wrong!";
+    private static final String ERROR_MESSAGE = "The action is not available!";
 
     @After
     public void cleanEachTest() {
