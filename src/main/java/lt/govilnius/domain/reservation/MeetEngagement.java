@@ -29,18 +29,18 @@ public class MeetEngagement {
     private String token;
 
     @NotNull
-    @Column(name = "engaged")
-    private Boolean engaged;
+    @Column(name = "confirmed")
+    private Boolean confirmed;
 
     public MeetEngagement() {
     }
 
-    public MeetEngagement(Meet meet, Volunteer volunteer, Time time, String token, Boolean engaged) {
+    public MeetEngagement(Meet meet, Volunteer volunteer, Time time, String token, Boolean confirmed) {
         this.meet = meet;
         this.volunteer = volunteer;
         this.time = time;
         this.token = token;
-        this.engaged = engaged;
+        this.confirmed = confirmed;
     }
 
     public Long getId() {
@@ -83,11 +83,11 @@ public class MeetEngagement {
         this.token = token;
     }
 
-    public Boolean getEngaged() {
-        return engaged;
+    public Boolean getConfirmed() {
+        return confirmed;
     }
 
-    public void setEngaged(Boolean engaged) {
-        this.engaged = engaged;
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }

@@ -1,6 +1,5 @@
 package lt.govilnius.facadeService.reservation;
 
-import io.atlassian.fugue.Either;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
@@ -19,12 +18,8 @@ public class MeetEngagementService {
     @Autowired
     private MeetEngagementRepository meetEngagementRepository;
 
-    public Either<Exception, MeetEngagement> create(Meet meet, Volunteer volunteer, Time time) {
-        try {
-            return Either.right(add(meet, volunteer, time));
-        } catch (RuntimeException e) {
-            return Either.left(new RuntimeException("Fail to create a meet engagement entity"));
-        }
+    public Optional<MeetEngagement> create(Meet meet, Volunteer volunteer, Time time) {
+        return Optional.of(add(meet, volunteer, time));
     }
 
     private MeetEngagement add(Meet meet, Volunteer volunteer, Time time) {
@@ -36,7 +31,7 @@ public class MeetEngagementService {
         entity.setVolunteer(volunteer);
         entity.setTime(time);
         entity.setToken(token);
-        entity.setEngaged(false);
+        entity.setConfirmed(false);
         return meetEngagementRepository.save(entity);
     }
 
@@ -46,7 +41,7 @@ public class MeetEngagementService {
     }
 
     private MeetEngagement updateEntity(MeetEngagement entity, MeetEngagement newData) {
-        entity.setEngaged(newData.getEngaged());
+        entity.setConfirmed(newData.getConfirmed());
         return meetEngagementRepository.save(entity);
     }
 
@@ -64,5 +59,8 @@ public class MeetEngagementService {
 
     public Optional<MeetEngagement> getByToken(String token) {
         return meetEngagementRepository.findByToken(token);
+    }
+    public Optional<MeetEngagement> findByMeetIdAndVolunteerId(Long meetId, Long volunteerId) {
+        return meetEngagementRepository.findByMeetIdAndVolunteerId(meetId, volunteerId);
     }
 }

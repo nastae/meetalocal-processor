@@ -26,7 +26,7 @@ public class EmailSenderTest {
     @Autowired
     private EmailSender emailSender;
 
-    private static final String RECEIVER = "aurisgo1998@gmail.com";
+    private static final String RECEIVER = "meetalocaltest@gmail.com";
     private static final String WEBSITE_URL = "test";
 
     @Test
@@ -46,31 +46,37 @@ public class EmailSenderTest {
         emailSender.send(new Mail(RECEIVER), config);
     }
 
+
     @Test
-    public void send_VolunteerAddition_ShouldSend() {
+    public void send_TouristCancellation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_TouristCancellationNotSelected_ShouldSend() {
+        final EmailSenderConfig config =
+                EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_TouristAddition_ShouldSend() {
+        Meet meet = sampleMeet();
+        meet.setId(0L);
+        final EmailSenderConfig config =
+                EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(meet, WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristInformation_ShouldSend() {
+        Meet meet = sampleMeet();
+        Volunteer volunteer = sampleVolunteer();
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true);
         final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(sampleMeet(), sampleVolunteer());
-        emailSender.send(new Mail(RECEIVER), config);
-    }
-
-    @Test
-    public void send_VolunteerInformation_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(sampleMeet(), sampleVolunteer());
-        emailSender.send(new Mail(RECEIVER), config);
-    }
-
-    @Test
-    public void send_VolunteerEvaluation_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -82,16 +88,26 @@ public class EmailSenderTest {
     }
 
     @Test
-    public void send_Cancellation_ShouldSend() {
+    public void send_VolunteerCancellation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_Report_ShouldSend() {
+    public void send_VolunteerInformation_ShouldSend() {
+        Meet meet = sampleMeet();
+        Volunteer volunteer = sampleVolunteer();
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true);
         final EmailSenderConfig config =
-                EmailSenderConfig.REPORT_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_VolunteerEvaluation_ShouldSend() {
+        final EmailSenderConfig config =
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -103,7 +119,7 @@ public class EmailSenderTest {
                 "Vilnius", new Date(2019, 1, 1), new Time(12, 12, 12),
                 1, 26, Gender.MALE,
                 AgeGroup.YOUTH, ImmutableSet.of(sampleMeetLanguage(Language.ENGLISH)), "none",
-                "comments", Status.NEW, null, new HashSet<>(), new HashSet<>());
+                "comments", Status.NEW, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     public static Volunteer sampleVolunteer() {

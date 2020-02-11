@@ -1,86 +1,288 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
+
 <head>
+    <!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="width=device-width" name="viewport" />
+    <!--[if !mso]><!-->
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <!--<![endif]-->
+    <title></title>
+    <!--[if !mso]><!-->
+    <!--<![endif]-->
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        table,
+        td,
+        tr {
+            vertical-align: top;
+            border-collapse: collapse;
+        }
+
+        * {
+            line-height: inherit;
+        }
+
+        a[x-apple-data-detectors=true] {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+    </style>
+    <style id="media-query" type="text/css">
+        @media (max-width: 520px) {
+            .block-grid,
+            .col {
+                min-width: 320px !important;
+                max-width: 100% !important;
+                display: block !important;
+            }
+            .block-grid {
+                width: 100% !important;
+            }
+            .col {
+                width: 100% !important;
+            }
+            .col>div {
+                margin: 0 auto;
+            }
+            img.fullwidth,
+            img.fullwidthOnMobile {
+                max-width: 100% !important;
+            }
+            .no-stack .col {
+                min-width: 0 !important;
+                display: table-cell !important;
+            }
+            .no-stack.two-up .col {
+                width: 50% !important;
+            }
+            .no-stack .col.num4 {
+                width: 33% !important;
+            }
+            .no-stack .col.num8 {
+                width: 66% !important;
+            }
+            .no-stack .col.num4 {
+                width: 33% !important;
+            }
+            .no-stack .col.num3 {
+                width: 25% !important;
+            }
+            .no-stack .col.num6 {
+                width: 50% !important;
+            }
+            .no-stack .col.num9 {
+                width: 75% !important;
+            }
+            .video-block {
+                max-width: none !important;
+            }
+            .mobile_hide {
+                min-height: 0px;
+                max-height: 0px;
+                max-width: 0px;
+                display: none;
+                overflow: hidden;
+                font-size: 0px;
+            }
+            .desktop_hide {
+                display: block !important;
+                max-height: none !important;
+            }
+        }
+    </style>
 </head>
-    <body>
-        <p>Sveiki,</p><br>
-        <p>Gavome naują registraciją susitikimui – ${month} ${day} d., ${time}</b></p>
-        <p>Informacija apie turistą:</p>
-        <p>Vardas: ${name}</p>
-        <p>Lytis:
-        #if( $gender == 'FEMALE' )
-          moteris
-        #else
-          vyras
-        #end
-        </p>
-        <p>Amžius: ${age}</p>
-        <p>Turistų skaičius: ${peopleCount}</p>
-        <p>Pageidavimai: ${preferences}</p><br>
-        <p>Prašome patvirtinti, jeigu (ar) turite galimybę dalyvauti susitikime.</p>
-        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
-          <tr>
-        	  <td>
-        		  <table cellspacing="0" cellpadding="0">
-        			  <tr>
-        				  <td style="border-radius: 2px;" bgcolor="#ED2939">
-        					  <a href="${agreementUrl}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-        						  Galiu
-        					  </a>
-        				  </td>
-        			  </tr>
-        		  </table>
-        	  </td>
-          </tr>
-        </table>
-        <br>
-        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
-          <tr>
-              <td>
-                  <table cellspacing="0" cellpadding="0">
-                      <tr>
-                          <td style="border-radius: 2px;" bgcolor="#ED2939">
-                              <a href="${cancellationUrl}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-                                  Negaliu
-                              </a>
-                          </td>
-                      </tr>
-                  </table>
-              </td>
-          </tr>
-        </table>
-        <br>
-        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
-          <tr>
-        	  <td>
-        		  <table cellspacing="0" cellpadding="0">
-        			  <tr>
-        				  <td style="border-radius: 2px;" bgcolor="#ED2939">
-        					  <a href="${changeUrl}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-        						  Galiu kitu laiku
-        					  </a>
-        				  </td>
-        			  </tr>
-        		  </table>
-        	  </td>
-          </tr>
-        </table>
-        <br>
-        <table width="100%" cellspacing="0" cellpadding="0" style="display: inline;">
-          <tr>
-        	  <td>
-        		  <table cellspacing="0" cellpadding="0">
-        			  <tr>
-        				  <td style="border-radius: 2px;" bgcolor="#ED2939">
-        					  <a href="${reportUrl}" target="_blank" style="padding: 8px 24px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-        						  Pranešti apie pažeidimą
-        					  </a>
-        				  </td>
-        			  </tr>
-        		  </table>
-        	  </td>
-          </tr>
-        </table>
-        <br>
-        <p>Susisieksime netrukus!</p>
-    </body>
+
+<body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #FFFFFF;">
+    <!--[if IE]><div class="ie-browser"><![endif]-->
+    <table bgcolor="#FFFFFF" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="table-layout: fixed; vertical-align: top; min-width: 320px; Margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF; width: 100%;" valign="top" width="100%">
+        <tbody>
+            <tr style="vertical-align: top;" valign="top">
+                <td style="word-break: break-word; vertical-align: top;" valign="top">
+                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color:#FFFFFF"><![endif]-->
+                    <div style="background-color:transparent;">
+                        <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
+                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
+                                <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
+                                <!--[if (mso)|(IE)]><td align="center" width="500" style="background-color:#ffffff;width:500px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num12" style="min-width: 320px; max-width: 500px; display: table-cell; vertical-align: top; width: 500px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <div align="center" class="img-container center autowidth" style="padding-right: 0px;padding-left: 0px;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]--><img align="center" alt="Header" border="0" class="center autowidth" src="https://i.imgur.com/VdAoO47.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 500px; display: block;" title="Header" width="500" />
+                                                <!--[if mso]></td></tr></table><![endif]-->
+                                            </div>
+                                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 35px; padding-bottom: 35px; font-family: Verdana, sans-serif"><![endif]-->
+                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:35px;padding-right:10px;padding-bottom:35px;padding-left:10px;">
+                                                <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Sveiki,</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Gavome naują registraciją susitikimui - <strong>${month} ${day} d., ${time}.</strong></p>
+                                                </div>
+                                            </div>
+                                            <!--[if mso]></td></tr></table><![endif]-->
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color:transparent;">
+                        <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #f2f2f2;">
+                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#f2f2f2;">
+                                <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#f2f2f2"><![endif]-->
+                                <!--[if (mso)|(IE)]><td align="center" width="500" style="background-color:#f2f2f2;width:500px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num12" style="min-width: 320px; max-width: 500px; display: table-cell; vertical-align: top; width: 500px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 30px; padding-left: 30px; padding-top: 30px; padding-bottom: 30px; font-family: Verdana, sans-serif"><![endif]-->
+                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:30px;padding-right:30px;padding-bottom:30px;padding-left:30px;">
+                                                <div style="font-size: 14px; line-height: 1.2; font-family: Verdana, Geneva, sans-serif; color: #555555; mso-line-height-alt: 17px;">
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong><span style="background-color: transparent;">INFORMACIJA APIE TURISTĄ</span></strong></p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><span style="background-color: transparent;"><strong>Vardas</strong>: ${touristName}</span></p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Amžius</strong>: ${age}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Kalba</strong>: ${languages}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Turistų skaičius</strong>: ${touristCount}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Pomėgiai</strong>: ${hobbies}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Pageidavimai</strong>: ${preferences}</p>
+                                                </div>
+                                            </div>
+                                            <!--[if mso]></td></tr></table><![endif]-->
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color:transparent;">
+                        <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
+                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
+                                <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
+                                <!--[if (mso)|(IE)]><td align="center" width="500" style="background-color:#ffffff;width:500px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num12" style="min-width: 320px; max-width: 500px; display: table-cell; vertical-align: top; width: 500px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Verdana, sans-serif"><![endif]-->
+                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Prašome patvirtinti, jeigu (ar) turite galimybę dalyvauti susitikime.</p>
+                                                </div>
+                                            </div>
+                                            <!--[if mso]></td></tr></table><![endif]-->
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color:transparent;">
+                        <div class="block-grid four-up" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
+                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
+                                <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
+                                <!--[if (mso)|(IE)]><td align="center" width="125" style="background-color:#ffffff;width:125px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num3" style="max-width: 320px; min-width: 125px; display: table-cell; vertical-align: top; width: 125px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <div align="center" class="button-container" style="padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.vilnius.lt/" style="height:31.5pt; width:92.25pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:12px"><![endif]--><a href="${agreementUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:12px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 12px; line-height: 24px;" style="font-size: 12px; line-height: 24px;"><strong>GALIU</strong></span></span></span></a>
+                                                <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
+                                            </div>
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td><td align="center" width="125" style="background-color:#ffffff;width:125px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num3" style="max-width: 320px; min-width: 125px; display: table-cell; vertical-align: top; width: 125px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <div align="center" class="button-container" style="padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.vilnius.lt/" style="height:31.5pt; width:105.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:12px"><![endif]--><a href="${cancellationUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:12px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 12px; line-height: 24px;" style="font-size: 12px; line-height: 24px;"><strong>NEGALIU</strong></span></span></span></a>
+                                                <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
+                                            </div>
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td><td align="center" width="125" style="background-color:#ffffff;width:125px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num3" style="max-width: 320px; min-width: 125px; display: table-cell; vertical-align: top; width: 125px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <div align="center" class="button-container" style="padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.vilnius.lt/" style="height:55.5pt; width:108.75pt; v-text-anchor:middle;" arcsize="6%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:12px"><![endif]--><a href="${changeUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:12px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 12px; line-height: 24px;" style="font-size: 12px; line-height: 24px;"><strong>GALIU KITU LAIKU</strong></span></span></span></a>
+                                                <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
+                                            </div>
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td><td align="center" width="125" style="background-color:#ffffff;width:125px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                <div class="col num3" style="max-width: 320px; min-width: 125px; display: table-cell; vertical-align: top; width: 125px;">
+                                    <div style="width:100% !important;">
+                                        <!--[if (!mso)&(!IE)]><!-->
+                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                            <!--<![endif]-->
+                                            <div align="center" class="button-container" style="padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.vilnius.lt/" style="height:31.5pt; width:95.25pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:12px"><![endif]--><a href="${reportUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:12px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 12px; line-height: 24px;" style="font-size: 12px; line-height: 24px;"><strong>PRANEŠTI</strong></span></span></span></a>
+                                                <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
+                                            </div>
+                                            <!--[if (!mso)&(!IE)]><!-->
+                                        </div>
+                                        <!--<![endif]-->
+                                    </div>
+                                </div>
+                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!--[if (IE)]></div><![endif]-->
+</body>
+
 </html>

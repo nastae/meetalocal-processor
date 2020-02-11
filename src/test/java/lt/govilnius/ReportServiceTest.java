@@ -44,7 +44,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void create_Volunteer_ShouldBeCreated() {
+    public void create_Report_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         Report report = reportService.create(meet, volunteer, "Comment").get();
@@ -54,7 +54,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void getAll_MeetEngagements_ShouldGet() {
+    public void getAll_Reports_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         reportService.create(meet, volunteer, "Comment");
@@ -63,7 +63,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void getByMeetId_MeetEngagements_ShouldGet() {
+    public void getByMeetId_Reports_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         reportService.create(meet, volunteer, "Comment");
@@ -73,7 +73,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void getByVolunteerId_MeetEngagements_ShouldGet() {
+    public void getByVolunteerId_Reports_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         reportService.create(meet, volunteer, "Comment");

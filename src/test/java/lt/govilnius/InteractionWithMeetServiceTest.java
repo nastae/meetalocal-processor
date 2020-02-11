@@ -61,7 +61,7 @@ public class InteractionWithMeetServiceTest {
         MeetEngagement actual = interactionWithMeetService.agree(token).get();
         Assert.assertEquals(result.getToken(), actual.getToken());
         Assert.assertEquals(result.getTime(), actual.getTime());
-        Assert.assertTrue(result.getEngaged());
+        Assert.assertTrue(result.getConfirmed());
         Assert.assertEquals(result.getId(), actual.getId());
     }
 
@@ -129,7 +129,7 @@ public class InteractionWithMeetServiceTest {
         when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.of(result));
         MeetEngagement actual = interactionWithMeetService.cancel(token).get();
         Assert.assertEquals(result.getToken(), actual.getToken());
-        Assert.assertFalse(result.getEngaged());
+        Assert.assertFalse(result.getConfirmed());
         Assert.assertEquals(result.getTime(), actual.getTime());
         Assert.assertEquals(result.getId(), actual.getId());
     }
@@ -199,7 +199,7 @@ public class InteractionWithMeetServiceTest {
         when(meetEngagementService.edit(engagement.getId(), engagement)).thenReturn(Optional.of(result));
         MeetEngagement actual = interactionWithMeetService.changeEngagement(token, timeString).get();
         Assert.assertEquals(result.getToken(), actual.getToken());
-        Assert.assertFalse(result.getEngaged());
+        Assert.assertFalse(result.getConfirmed());
         Assert.assertEquals(result.getTime(), actual.getTime());
         Assert.assertEquals(result.getId(), actual.getId());
     }

@@ -13,4 +13,5 @@ public interface MeetEngagementRepository extends JpaRepository<MeetEngagement, 
     List<MeetEngagement> findByMeetId(Long id);
     List<MeetEngagement> findByVolunteerId(Long id);
     Optional<MeetEngagement> findByToken(String token);
+    Optional<MeetEngagement> findByMeetIdAndVolunteerId(Long meetId, Long volunteerId);
 }

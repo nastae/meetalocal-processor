@@ -88,6 +88,10 @@ public class Meet {
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Report> reports;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<MeetStatus> statuses;
+
     public Meet() {}
 
     public Meet(Timestamp createdAt, Timestamp changedAt, String email,
@@ -96,7 +100,7 @@ public class Meet {
                 Integer peopleCount, Integer age, Gender gender,
                 AgeGroup ageGroup, Set<MeetLanguage> languages, String preferences,
                 String comment, Status status, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
-                Set<Report> reports) {
+                Set<Report> reports, Set<MeetStatus> statuses) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.email = email;
@@ -117,6 +121,7 @@ public class Meet {
         this.volunteer = volunteer;
         this.meetEngagements = meetEngagements;
         this.reports = reports;
+        this.statuses = statuses;
     }
 
     public Long getId() {
@@ -285,5 +290,13 @@ public class Meet {
 
     public void setReports(Set<Report> reports) {
         this.reports = reports;
+    }
+
+    public Set<MeetStatus> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(Set<MeetStatus> statuses) {
+        this.statuses = statuses;
     }
 }

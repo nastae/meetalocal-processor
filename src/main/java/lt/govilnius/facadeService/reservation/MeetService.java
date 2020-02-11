@@ -28,6 +28,9 @@ public class MeetService {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
+    @Autowired
+    private MeetStatusService meetStatusService;
+
     public Optional<Meet> create(Meet meet) {
         return add(meet);
     }
@@ -77,6 +80,7 @@ public class MeetService {
         for (MeetLanguage language : meet.getLanguages()) {
             addLanguage(meet.getId(), language.getLanguage());
         }
+        meetStatusService.create(meet, meet.getStatus());
         return get(meet.getId());
     }
 
@@ -104,9 +108,13 @@ public class MeetService {
     }
 
     private Meet updateEntity(Meet entity, Meet newData) {
+        if (!newData.getStatus().equals(entity.getStatus())) {
+            meetStatusService.create(entity, entity.getStatus());
+        }
         entity.setStatus(newData.getStatus());
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
-        return meetRepository.save(entity);
+        entity = meetRepository.save(entity);
+        return entity;
     }
 
     public List<Meet> findByStatus(Status status) {

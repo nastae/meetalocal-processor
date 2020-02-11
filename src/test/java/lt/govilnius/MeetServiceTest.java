@@ -2,10 +2,13 @@ package lt.govilnius;
 
 import io.atlassian.fugue.Either;
 import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetStatus;
 import lt.govilnius.domain.reservation.Status;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.facadeService.reservation.MeetService;
+import lt.govilnius.facadeService.reservation.MeetStatusService;
 import lt.govilnius.repository.reservation.MeetRepository;
+import lt.govilnius.repository.reservation.MeetStatusRepository;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.After;
 import org.junit.Assert;
@@ -35,10 +38,17 @@ public class MeetServiceTest {
     @Autowired
     private MeetRepository meetRepository;
 
+    @Autowired
+    private MeetStatusRepository meetStatusRepository;
+
+    @Autowired
+    private MeetStatusService meetStatusService;
+
     @After
     public void cleanEachTest() {
         meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
         volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
+        meetStatusRepository.findAll().forEach(status -> meetStatusRepository.delete(status));
     }
 
     @Test
@@ -59,6 +69,8 @@ public class MeetServiceTest {
         Assert.assertEquals(meet.getComment(), newMeet.getComment());
         Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
         Assert.assertEquals(meet.getVolunteer(), newMeet.getVolunteer());
+        List<MeetStatus> statuses = meetStatusService.getByMeetId(newMeet.getId());
+        Assert.assertEquals(statuses.size(), 1);
     }
 
     @Test
@@ -81,6 +93,8 @@ public class MeetServiceTest {
         Assert.assertEquals(meet.getComment(), newMeet.getComment());
         Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
         Assert.assertEquals(meet.getVolunteer(), newMeet.getVolunteer());
+        List<MeetStatus> statuses = meetStatusService.getByMeetId(newMeet.getId());
+        Assert.assertEquals(statuses.size(), 1);
     }
 
     @Test
@@ -88,6 +102,8 @@ public class MeetServiceTest {
         meetService.create(sampleMeet());
         List<Meet> meets = meetService.getAll();
         Assert.assertEquals(meets.size(), 1);
+        List<MeetStatus> statuses = meetStatusService.getByMeetId(meets.get(0).getId());
+        Assert.assertEquals(statuses.size(), 1);
     }
 
     @Test
@@ -156,6 +172,8 @@ public class MeetServiceTest {
         Meet newMeet = meetService.edit(meet.getId(), meet).get();
         Assert.assertEquals(newMeet.getStatus(), Status.REPORTED);
         Assert.assertNotEquals(meet.getChangedAt(), newMeet.getChangedAt());
+        List<MeetStatus> statuses = meetStatusService.getByMeetId(meet.getId());
+        Assert.assertEquals(statuses.size(), 2);
     }
 
     @Test

@@ -47,11 +47,11 @@ public class MeetEngagementServiceTest {
     }
 
     @Test
-    public void create_Volunteer_ShouldBeCreated() {
+    public void create_MeetEngagement_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
         Assert.assertEquals(meetEngagement.getMeet().getId(), meet.getId());
         Assert.assertEquals(meetEngagement.getVolunteer().getId(), volunteer.getId());
         Assert.assertEquals(meetEngagement.getTime(), time);
@@ -110,10 +110,10 @@ public class MeetEngagementServiceTest {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
-        Assert.assertEquals(meetEngagement.getEngaged(), false);
-        meetEngagement.setEngaged(true);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        Assert.assertEquals(meetEngagement.getConfirmed(), false);
+        meetEngagement.setConfirmed(true);
         meetEngagementService.edit(meetEngagement.getId(), meetEngagement);
-        Assert.assertEquals(meetEngagement.getEngaged(), true);
+        Assert.assertEquals(meetEngagement.getConfirmed(), true);
     }
 }

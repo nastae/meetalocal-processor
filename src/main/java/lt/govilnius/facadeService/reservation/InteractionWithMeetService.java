@@ -90,7 +90,7 @@ public class InteractionWithMeetService {
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.SENT_TOURIST_REQUEST))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < responsesWaiting)
-                .filter(MeetEngagement::getEngaged)
+                .filter(MeetEngagement::getConfirmed)
                 .map(e -> {
                     LOGGER.info("Edit the meet engagement with token " + e.getToken());
                     Meet meet = e.getMeet();
@@ -106,7 +106,7 @@ public class InteractionWithMeetService {
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < sentRequestWaiting)
                 .map(e -> {
                     LOGGER.info("Edit the meet engagement with token " + e.getToken());
-                    e.setEngaged(engage);
+                    e.setConfirmed(engage);
                     e.setTime(time != null ? time : e.getTime());
                     return meetEngagementService.edit(e.getId(), e).orElse(null);
                 });

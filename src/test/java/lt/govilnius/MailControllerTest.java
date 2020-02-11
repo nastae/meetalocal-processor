@@ -81,7 +81,7 @@ public class MailControllerTest {
         volunteer = volunteerService.create(volunteer).get();
 
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
 
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
@@ -117,7 +117,7 @@ public class MailControllerTest {
         volunteer = volunteerService.create(volunteer).get();
 
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
 
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
@@ -153,7 +153,7 @@ public class MailControllerTest {
         volunteer = volunteerService.create(volunteer).get();
 
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
 
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
@@ -189,7 +189,7 @@ public class MailControllerTest {
         volunteer = volunteerService.create(volunteer).get();
 
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
 
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
@@ -255,7 +255,7 @@ public class MailControllerTest {
         volunteer = volunteerService.create(volunteer).get();
 
         Time time = new Time(10, 10, 10);
-        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).right().get();
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
 
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());

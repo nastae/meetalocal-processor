@@ -24,21 +24,21 @@ public class MailSendingProcessor {
     @Scheduled(fixedDelay = 60000L)
     public void processRequests() {
         LOGGER.info("Starts process sent requested meet to volunteers");
-        mailSendingService.processRequests();
+        mailSendingService.processVolunteerRequests();
         LOGGER.info("Ends process sent request to volunteers");
     }
 
     @Scheduled(fixedDelay = 60000L)
     public void processAdditionals() {
         LOGGER.info("Starts process meets that volunteers haven't found");
-        mailSendingService.processAdditionals();
+        mailSendingService.processAdditions();
         LOGGER.info("Ends process meets that volunteers haven't found");
     }
 
     @Scheduled(fixedDelay = 60000L)
     public void processResponses() {
         LOGGER.info("Starts process responded meets by tourists");
-        mailSendingService.processResponses();
+        mailSendingService.processTouristRequests();
         LOGGER.info("Ends process responded meets by tourists");
     }
 
