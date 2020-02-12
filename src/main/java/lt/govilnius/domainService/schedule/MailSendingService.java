@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,12 +52,6 @@ public class MailSendingService {
     @Value("${waiting.sent.request.milliseconds}")
     private Long sentRequestWaiting;
 
-    @Value("${waiting.additional.milliseconds}")
-    private Long additionalWaiting;
-
-    @Value("${waiting.responses.milliseconds}")
-    private Long responsesWaiting;
-
     @Value("${waiting.evaluation.milliseconds}")
     private Long evaluationWaiting;
 
@@ -91,7 +86,7 @@ public class MailSendingService {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentRequestWaiting) {
                 LOGGER.info("Process the sent request to meet whose id " + meet.getId());
                 final List<MeetEngagement> engagements = meetEngagementFilter.filterForMail(
-                        getConfirmedEngagements(meet.getId()), meet);;
+                        meetEngagementService.getConfirmedByMeetId(meet.getId()), meet);;
                 final List<Report> reports = reportService.getByMeetId(meet.getId());
                 EmailSenderConfig emailSenderConfig = null;
                 if (engagements.size() > 0) {
@@ -106,35 +101,11 @@ public class MailSendingService {
         });
     }
 
-    private List<MeetEngagement> getConfirmedEngagements(Long meetId) {
-        return meetEngagementService.getByMeetId(meetId)
-                .stream()
-                .filter(MeetEngagement::getConfirmed)
-                .collect(toList());
-    }
-
-    public void processAdditions() {
-        meetService.findByStatus(Status.SENT_TOURIST_ADDITION).forEach(meet -> {
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= additionalWaiting) {
-                LOGGER.info("Process the additional information of the meet with id" + meet.getId());
-                meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-                meetService.edit(meet.getId(), meet);
-                final Set<MeetEngagement> meetEngagements = meet.getMeetEngagements();
-                meetEngagements.forEach(meetEngagement -> {
-                    final Volunteer volunteer = meetEngagement.getVolunteer();
-                    LOGGER.info("Send an additional request to volunteer with id " + volunteer.getId());
-                    emailSender.send(new Mail(volunteer.getEmail()),
-                            EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, meetEngagement.getToken(), websiteUrl));
-                });
-            }
-        });
-    }
-
     public void processRequestsAfterAddition() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).forEach(meet -> {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentRequestWaiting) {
                 LOGGER.info("Process the sent request of the meet with id " + meet.getId());
-                List<MeetEngagement> meetEngagements = getConfirmedEngagements(meet.getId());
+                List<MeetEngagement> meetEngagements = meetEngagementService.getConfirmedByMeetId(meet.getId());
                 List<Report> reports = reportService.getByMeetId(meet.getId());
                 EmailSenderConfig emailSenderConfig = null;
                 if (meetEngagements.size() > 0) {
@@ -145,52 +116,6 @@ public class MailSendingService {
                     emailSenderConfig = prepareTouristCanceledConfig(meet);
                 }
                 emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
-            }
-        });
-    }
-
-    public void processTouristRequests() {
-        meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= responsesWaiting) {
-                LOGGER.info("Process tourist request of the meet with id " + meet.getId());
-                final Volunteer volunteer = meet.getVolunteer();
-                final Optional<MeetEngagement> meetEngagement = volunteer != null ?
-                        meetEngagementService.findByMeetIdAndVolunteerId(meet.getId(), volunteer.getId()) :
-                        Optional.empty();
-                if (meetEngagement.isPresent()) {
-                    meet.setStatus(Status.AGREED);
-                    meetService.edit(meet.getId(), meet);
-                    final MeetEngagement engagement = meetEngagement.get();
-                    LOGGER.info("Send information of the meet with id " + meet.getId() + " to tourist");
-                    EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
-                    emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
-
-                    LOGGER.info("Send information of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
-                    emailSenderConfig = EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
-                    emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
-
-                    getConfirmedEngagements(meet.getId())
-                            .stream().
-                            filter(e -> !e.getVolunteer().getId().equals(volunteer.getId()))
-                            .forEach(e -> {
-                                final Volunteer v  = e.getVolunteer();
-                                LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
-                                emailSender.send(new Mail(v.getEmail()), EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(meet, websiteUrl));
-                            });
-                } else {
-                    meet.setStatus(Status.CANCELED);
-                    meetService.edit(meet.getId(), meet);
-                    LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist" );
-                    EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(meet, websiteUrl);
-                    emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
-
-                    LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to volunteers ");
-                    meetEngagementService.getByMeetId(meet.getId()).forEach(e -> {
-                        final Volunteer v  = e.getVolunteer();
-                        LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
-                        emailSender.send(new Mail(v.getEmail()), emailSenderConfig);
-                    });
-                }
             }
         });
     }

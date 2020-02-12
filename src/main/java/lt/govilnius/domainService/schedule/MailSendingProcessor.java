@@ -29,20 +29,6 @@ public class MailSendingProcessor {
     }
 
     @Scheduled(fixedDelay = 60000L)
-    public void processAdditionals() {
-        LOGGER.info("Starts process meets that volunteers haven't found");
-        mailSendingService.processAdditions();
-        LOGGER.info("Ends process meets that volunteers haven't found");
-    }
-
-    @Scheduled(fixedDelay = 60000L)
-    public void processResponses() {
-        LOGGER.info("Starts process responded meets by tourists");
-        mailSendingService.processTouristRequests();
-        LOGGER.info("Ends process responded meets by tourists");
-    }
-
-    @Scheduled(fixedDelay = 60000L)
     public void processAgreements() {
         LOGGER.info("Starts process agreed meets by tourists");
         mailSendingService.processAgreements();

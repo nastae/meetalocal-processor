@@ -1,6 +1,7 @@
 package lt.govilnius;
 
 import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.schedule.ProactiveMailSendingService;
 import lt.govilnius.facadeService.reservation.InteractionWithMeetService;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(value = MockitoJUnitRunner.class)
@@ -34,14 +36,15 @@ public class InteractionWithMeetServiceTest {
     @Mock
     private MeetService meetService;
 
+    @Mock
+    private ProactiveMailSendingService proactiveMailSendingService;
+
     @InjectMocks
     private InteractionWithMeetService interactionWithMeetService;
 
     @Before
     public void setUp() {
         ReflectionTestUtils.setField(interactionWithMeetService, "sentRequestWaiting", 500L);
-        ReflectionTestUtils.setField(interactionWithMeetService, "additionalWaiting", 500L);
-        ReflectionTestUtils.setField(interactionWithMeetService, "responsesWaiting", 500L);
     }
 
     @Test
@@ -266,7 +269,7 @@ public class InteractionWithMeetServiceTest {
         Meet result = sampleMeet();
         when(meetService.get(Long.parseLong(meetId))).
                 thenReturn(Optional.of(meet));
-        when(meetService.edit(meet.getId(), meet)).thenReturn(Optional.of(result));
+        when(proactiveMailSendingService.processAddition(any(), any())).thenReturn(Optional.of(result));
         Meet actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString).get();
         Assert.assertEquals(result.getTime(), actual.getTime());
         Assert.assertEquals(result.getId(), actual.getId());
@@ -294,6 +297,7 @@ public class InteractionWithMeetServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
         when(meetService.get(Long.parseLong(meetId))).
                 thenReturn(Optional.of(meet));
+        when(proactiveMailSendingService.processAddition(any(), any())).thenReturn(Optional.empty());
         Optional<Meet> actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString);
         Assert.assertFalse(actual.isPresent());
     }
@@ -307,7 +311,7 @@ public class InteractionWithMeetServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         when(meetService.get(Long.parseLong(meetId))).
                 thenReturn(Optional.of(meet));
-        when(meetService.edit(meet.getId(), meet)).thenReturn(Optional.ofNullable(null));
+        when(proactiveMailSendingService.processAddition(any(), any())).thenReturn(Optional.empty());
         Optional<Meet> actual = interactionWithMeetService.changeMeetAfterAddition(meetId, timeString);
         Assert.assertFalse(actual.isPresent());
     }
@@ -399,7 +403,7 @@ public class InteractionWithMeetServiceTest {
         result.setVolunteer(sampleVolunteer());
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
-        when(meetService.edit(meet.getId(), meet)).thenReturn(Optional.of(result));
+        when(proactiveMailSendingService.processTouristRequest(any(), any())).thenReturn(Optional.of(result));
         Meet actual = interactionWithMeetService.select(token).get();
         Assert.assertNotNull(actual.getVolunteer());
         Assert.assertEquals(meet.getId(), actual.getId());

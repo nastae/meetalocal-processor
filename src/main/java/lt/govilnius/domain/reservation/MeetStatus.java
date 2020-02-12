@@ -1,5 +1,7 @@
 package lt.govilnius.domain.reservation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -14,6 +16,7 @@ public class MeetStatus {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "meet_id")
     private Meet meet;

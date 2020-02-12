@@ -12,6 +12,8 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class MeetEngagementService {
 
@@ -62,5 +64,12 @@ public class MeetEngagementService {
     }
     public Optional<MeetEngagement> findByMeetIdAndVolunteerId(Long meetId, Long volunteerId) {
         return meetEngagementRepository.findByMeetIdAndVolunteerId(meetId, volunteerId);
+    }
+
+    public List<MeetEngagement> getConfirmedByMeetId(Long meetId) {
+        return getByMeetId(meetId)
+                .stream()
+                .filter(MeetEngagement::getConfirmed)
+                .collect(toList());
     }
 }

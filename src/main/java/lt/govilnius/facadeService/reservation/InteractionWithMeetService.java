@@ -1,9 +1,7 @@
 package lt.govilnius.facadeService.reservation;
 
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
-import lt.govilnius.domain.reservation.Report;
-import lt.govilnius.domain.reservation.Status;
+import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.schedule.ProactiveMailSendingService;
 import lt.govilnius.domainService.time.TimeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +27,14 @@ public class InteractionWithMeetService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ProactiveMailSendingService proactiveMailSendingService;
+
+    @Value("${website.url}")
+    private String websiteUrl;
+
     @Value("${waiting.sent.request.milliseconds}")
     private Long sentRequestWaiting;
-
-    @Value("${waiting.additional.milliseconds}")
-    private Long additionalWaiting;
-
-    @Value("${waiting.responses.milliseconds}")
-    private Long responsesWaiting;
 
     public Optional<MeetEngagement> agree(String token) {
         LOGGER.info("Process agreement of the meet engagement with token " + token);
@@ -89,13 +87,10 @@ public class InteractionWithMeetService {
         final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.SENT_TOURIST_REQUEST))
-                .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < responsesWaiting)
                 .filter(MeetEngagement::getConfirmed)
                 .map(e -> {
-                    LOGGER.info("Edit the meet engagement with token " + e.getToken());
-                    Meet meet = e.getMeet();
-                    meet.setVolunteer(e.getVolunteer());
-                    return meetService.edit(meet.getId(), meet).orElse(null);
+                    LOGGER.info("Process the meet engagement with token " + e.getToken());
+                    return proactiveMailSendingService.processTouristRequest(e.getVolunteer(), e.getMeet()).orElse(null);
                 });
     }
 
@@ -116,11 +111,9 @@ public class InteractionWithMeetService {
         final Optional<Meet> meet = meetService.get(meetId);
         return meet
                 .filter(e -> e.getStatus().equals(Status.SENT_TOURIST_ADDITION))
-                .filter(e -> System.currentTimeMillis() - e.getChangedAt().getTime() < additionalWaiting)
                 .map(e -> {
-                    LOGGER.info("Edit the meet with id " + e.getId() + "after addition is sent");
-                    e.setTime(time != null ? time : e.getTime());
-                    return meetService.edit(e.getId(), e).orElse(null);
+                    LOGGER.info("Process addition of the meet with id " + e.getId() + "after addition is sent");
+                    return proactiveMailSendingService.processAddition(e, time).orElse(null);
                 });
     }
 }

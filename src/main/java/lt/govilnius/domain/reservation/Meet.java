@@ -88,7 +88,6 @@ public class Meet {
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Report> reports;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetStatus> statuses;
 
