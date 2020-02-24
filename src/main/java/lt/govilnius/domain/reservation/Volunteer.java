@@ -24,6 +24,7 @@ public class Volunteer implements Serializable {
     private Timestamp changedAt;
 
     private String name;
+
     private String surname;
 
     @Column(name = "date_of_birth")
@@ -38,12 +39,7 @@ public class Volunteer implements Serializable {
     @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<VolunteerLanguage> languages;
 
-    private String additionalLanguages;
-
     private Integer age;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
 
     private String description;
 
@@ -54,18 +50,12 @@ public class Volunteer implements Serializable {
     @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<Report> reports;
-
     public Volunteer() {
     }
 
     public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
-                     String additionalLanguages, Integer age, Gender gender,
-                     String description, Boolean active, Set<MeetEngagement> meetEngagements,
-                     Set<Report> reports) {
+                     Integer age, String description, Boolean active, Set<MeetEngagement> meetEngagements) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
@@ -74,13 +64,10 @@ public class Volunteer implements Serializable {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.languages = languages;
-        this.additionalLanguages = additionalLanguages;
         this.age = age;
-        this.gender = gender;
         this.description = description;
         this.active = active;
         this.meetEngagements = meetEngagements;
-        this.reports = reports;
     }
 
     public Long getId() {
@@ -139,28 +126,12 @@ public class Volunteer implements Serializable {
         this.languages = languages;
     }
 
-    public String getAdditionalLanguages() {
-        return additionalLanguages;
-    }
-
-    public void setAdditionalLanguages(String additionalLanguages) {
-        this.additionalLanguages = additionalLanguages;
-    }
-
     public Integer getAge() {
         return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
     }
 
     public String getDescription() {
@@ -201,13 +172,5 @@ public class Volunteer implements Serializable {
 
     public void setChangedAt(Timestamp changedAt) {
         this.changedAt = changedAt;
-    }
-
-    public Set<Report> getReports() {
-        return reports;
-    }
-
-    public void setReports(Set<Report> reports) {
-        this.reports = reports;
     }
 }

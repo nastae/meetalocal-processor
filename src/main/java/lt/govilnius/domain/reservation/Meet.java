@@ -25,6 +25,12 @@ public class Meet {
     private Timestamp changedAt;
 
     @NotNull
+    private String name;
+
+    @NotNull
+    private String surname;
+
+    @NotNull
     private String email;
 
     @NotNull
@@ -32,14 +38,8 @@ public class Meet {
     private String phoneNumber;
 
     @NotNull
-    private String name;
-
-    @NotNull
-    private String surname;
-
-    @NotNull
-    @Column(name = "residence")
-    private String residence;
+    @Column(name = "country")
+    private String country;
 
     @NotNull
     @Column(name = "date")
@@ -57,24 +57,22 @@ public class Meet {
     @Column(name = "age", nullable = false)
     private Integer age;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    @NotNull
-    @Column(name = "age_group")
-    @Enumerated(EnumType.STRING)
-    private AgeGroup ageGroup;
+    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<MeetAgeGroup> meetAgeGroups;
 
     @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetLanguage> languages;
 
     private String preferences;
 
-    private String comment;
+    @Column(name = "additional_preferences")
+    private String additionalPreferences;
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @NotNull
+    private Boolean freezed;
 
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="volunteer", nullable=true)
@@ -84,43 +82,38 @@ public class Meet {
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetEngagement> meetEngagements;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<Report> reports;
-
     @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetStatus> statuses;
 
     public Meet() {}
 
-    public Meet(Timestamp createdAt, Timestamp changedAt, String email,
-                String phoneNumber, String name, String surname,
-                String residence, Date date, Time time,
-                Integer peopleCount, Integer age, Gender gender,
-                AgeGroup ageGroup, Set<MeetLanguage> languages, String preferences,
-                String comment, Status status, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
-                Set<Report> reports, Set<MeetStatus> statuses) {
+    public Meet(Timestamp createdAt, Timestamp changedAt,
+                @NotNull String name, @NotNull String surname, @NotNull String email,
+                @NotNull String phoneNumber, @NotNull String country, @NotNull Date date,
+                @NotNull Time time, @NotNull Integer peopleCount, @NotNull Integer age,
+                Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, String preferences, String additionalPreferences,
+                Status status, Boolean freezed, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
+                Set<MeetStatus> statuses) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
         this.name = name;
         this.surname = surname;
-        this.residence = residence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.country = country;
         this.date = date;
         this.time = time;
         this.peopleCount = peopleCount;
         this.age = age;
-        this.gender = gender;
-        this.ageGroup = ageGroup;
+        this.meetAgeGroups = meetAgeGroups;
         this.languages = languages;
         this.preferences = preferences;
-        this.comment = comment;
+        this.additionalPreferences = additionalPreferences;
         this.status = status;
         this.volunteer = volunteer;
         this.meetEngagements = meetEngagements;
-        this.reports = reports;
         this.statuses = statuses;
+        this.freezed = freezed;
     }
 
     public Long getId() {
@@ -147,22 +140,6 @@ public class Meet {
         this.changedAt = changedAt;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getName() {
         return name;
     }
@@ -179,12 +156,28 @@ public class Meet {
         this.surname = surname;
     }
 
-    public String getResidence() {
-        return residence;
+    public String getEmail() {
+        return email;
     }
 
-    public void setResidence(String residence) {
-        this.residence = residence;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public Date getDate() {
@@ -219,20 +212,12 @@ public class Meet {
         this.age = age;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Set<MeetAgeGroup> getMeetAgeGroups() {
+        return meetAgeGroups;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public AgeGroup getAgeGroup() {
-        return ageGroup;
-    }
-
-    public void setAgeGroup(AgeGroup ageGroup) {
-        this.ageGroup = ageGroup;
+    public void setMeetAgeGroups(Set<MeetAgeGroup> meetAgeGroups) {
+        this.meetAgeGroups = meetAgeGroups;
     }
 
     public Set<MeetLanguage> getLanguages() {
@@ -249,14 +234,6 @@ public class Meet {
 
     public void setPreferences(String preferences) {
         this.preferences = preferences;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Status getStatus() {
@@ -283,19 +260,27 @@ public class Meet {
         this.meetEngagements = meetEngagements;
     }
 
-    public Set<Report> getReports() {
-        return reports;
-    }
-
-    public void setReports(Set<Report> reports) {
-        this.reports = reports;
-    }
-
     public Set<MeetStatus> getStatuses() {
         return statuses;
     }
 
     public void setStatuses(Set<MeetStatus> statuses) {
         this.statuses = statuses;
+    }
+
+    public Boolean getFreezed() {
+        return freezed;
+    }
+
+    public void setFreezed(Boolean freezed) {
+        this.freezed = freezed;
+    }
+
+    public String getAdditionalPreferences() {
+        return additionalPreferences;
+    }
+
+    public void setAdditionalPreferences(String additionalPreferences) {
+        this.additionalPreferences = additionalPreferences;
     }
 }

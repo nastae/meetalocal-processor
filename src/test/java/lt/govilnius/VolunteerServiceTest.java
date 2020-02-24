@@ -1,150 +1,110 @@
 package lt.govilnius;
 
-import lt.govilnius.domain.reservation.Gender;
+import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.facadeService.reservation.VolunteerLanguageService;
+import lt.govilnius.facadeService.reservation.VolunteerActionService;
 import lt.govilnius.facadeService.reservation.VolunteerService;
 import lt.govilnius.repository.reservation.VolunteerRepository;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.sql.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.booleanThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class VolunteerServiceTest {
 
-    @Autowired
-    private VolunteerService volunteerService;
-
-    @Autowired
+    @Mock
     private VolunteerRepository volunteerRepository;
 
-    @After
-    public void cleanEachTest() {
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-    }
+    @Mock
+    private VolunteerLanguageService volunteerLanguageService;
+
+    @InjectMocks
+    private VolunteerService volunteerService;
 
     @Test
     public void create_Volunteer_ShouldBeCreated() {
         Volunteer volunteer = sampleVolunteer();
-        Volunteer newVolunteer = volunteerService.create(volunteer).get();
-        Assert.assertNotEquals(volunteer.getCreatedAt(), newVolunteer.getCreatedAt());
-        Assert.assertNotEquals(volunteer.getChangedAt(), newVolunteer.getChangedAt());
-        Assert.assertEquals(volunteer.getName(), newVolunteer.getName());
-        Assert.assertEquals(volunteer.getSurname(), newVolunteer.getSurname());
-        Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
-        Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
-        Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
-        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
-        Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
-        Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
-        Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());
-        Assert.assertEquals(volunteer.getDescription(), newVolunteer.getDescription());
-        Assert.assertEquals(volunteer.getActive(), newVolunteer.getActive());
-    }
-
-    @Test
-    public void create_VolunteerWithoutLanguage_ShouldBeCreated() {
-        Volunteer volunteer = sampleVolunteer();
-        volunteer.setLanguages(new HashSet<>());
-        Volunteer newVolunteer = volunteerService.create(volunteer).get();
-        Assert.assertNotEquals(volunteer.getCreatedAt(), newVolunteer.getCreatedAt());
-        Assert.assertNotEquals(volunteer.getChangedAt(), newVolunteer.getChangedAt());
-        Assert.assertEquals(volunteer.getName(), newVolunteer.getName());
-        Assert.assertEquals(volunteer.getSurname(), newVolunteer.getSurname());
-        Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
-        Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
-        Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
-        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
-        Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
-        Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
-        Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());
-        Assert.assertEquals(volunteer.getDescription(), newVolunteer.getDescription());
-        Assert.assertEquals(volunteer.getActive(), newVolunteer.getActive());
+        when(volunteerRepository.save(any())).thenReturn(volunteer);
+        when(volunteerLanguageService.create(any(), any())).thenReturn(Optional.empty());
+        when(volunteerRepository.findById(volunteer.getId())).thenReturn(Optional.of(volunteer));
+        Optional<Volunteer> result = volunteerService.create(volunteer);
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
     public void getAll_Volunteers_ShouldGet() {
-        volunteerService.create(sampleVolunteer());
-        List<Volunteer> volunteers = volunteerService.getAll();
-        Assert.assertEquals(volunteers.size(), 1);
+        when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(new Volunteer()));
+        final List<Volunteer> meets = volunteerService.getAll();
+        Assert.assertEquals(meets.size(), 1L);
     }
 
     @Test
     public void get_Volunteer_ShouldGetById() {
-        volunteerService.create(sampleVolunteer());
-        List<Volunteer> volunteers = volunteerService.getAll();
-        Optional<Volunteer> volunteer = volunteerService.get(volunteers.get(0).getId());
-        Assert.assertTrue(volunteer.isPresent());
+        final Volunteer volunteer = sampleVolunteer();
+        when(volunteerRepository.findById(1L)).thenReturn(Optional.of(volunteer));
+        final Optional<Volunteer> result = volunteerService.get(1L);
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(result.get().getId(), volunteer.getId());
     }
 
     @Test
     public void get_Volunteer_ShouldNotGetById() {
-        volunteerService.create(sampleVolunteer());
-        List<Volunteer> volunteers = volunteerService.getAll();
-        Optional<Volunteer> volunteer = volunteerService.get(volunteers.get(0).getId()+1);
-        Assert.assertFalse(volunteer.isPresent());
+        final Volunteer volunteer = sampleVolunteer();
+        when(volunteerRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Volunteer> result = volunteerService.get(1L);
+        Assert.assertFalse(result.isPresent());
     }
 
     @Test
     public void delete_Volunteer_ShouldBeDeleted() {
-        volunteerService.create(sampleVolunteer());
-        List<Volunteer> volunteers = volunteerService.getAll();
-        Assert.assertEquals(volunteers.size(), 1);
-        final Volunteer volunteer = volunteers.get(0);
-        volunteerService.delete(volunteer.getId());
-        volunteers = volunteerService.getAll();
-        Assert.assertEquals(volunteers.size(), 0);
+        Volunteer volunteer = sampleVolunteer();
+        volunteer.setId(1L);
+        when(volunteerRepository.findById(any())).thenReturn(Optional.of(volunteer));
+        doNothing().when(volunteerRepository).delete(any());
+        boolean result = volunteerService.delete(volunteer.getId());
+        Assert.assertTrue(result);
     }
 
     @Test
     public void edit_Volunteer_ShouldEdit() {
-        Volunteer volunteer = volunteerService.create(sampleVolunteer()).get();
-        volunteer.setName("NEW");
-        volunteer.setSurname("NEW");
-        volunteer.setDateOfBirth(new Date(1999, 1, 1));
-        volunteer.setPhoneNumber("987624");
-        volunteer.setEmail("test@gmail.com");
-        volunteer.setAdditionalLanguages("Spain");
-        volunteer.setAge(22);
-        volunteer.setGender(Gender.OTHER);
-        volunteer.setDescription("NEW");
-        volunteer.setActive(false);
-        Volunteer newVolunteer = volunteerService.edit(volunteer.getId(), volunteer).get();
-        Assert.assertNotEquals(volunteer.getChangedAt(), newVolunteer.getChangedAt());
-        Assert.assertEquals(volunteer.getName(), newVolunteer.getName());
-        Assert.assertEquals(volunteer.getSurname(), newVolunteer.getSurname());
-        Assert.assertEquals(volunteer.getDateOfBirth(), newVolunteer.getDateOfBirth());
-        Assert.assertEquals(volunteer.getPhoneNumber(), newVolunteer.getPhoneNumber());
-        Assert.assertEquals(volunteer.getEmail(), newVolunteer.getEmail());
-        Assert.assertEquals(volunteer.getLanguages().size(), newVolunteer.getLanguages().size());
-        Assert.assertEquals(volunteer.getAdditionalLanguages(), newVolunteer.getAdditionalLanguages());
-        Assert.assertEquals(volunteer.getAge(), newVolunteer.getAge());
-        Assert.assertEquals(volunteer.getGender(), newVolunteer.getGender());
-        Assert.assertEquals(volunteer.getDescription(), newVolunteer.getDescription());
-        Assert.assertEquals(volunteer.getActive(), newVolunteer.getActive());
+        Volunteer oldVolunteer = sampleVolunteer();
+        oldVolunteer.setId(1L);
+        Volunteer newVolunteer = sampleVolunteer();
+        newVolunteer.setId(2L);
+        when(volunteerRepository.findById(oldVolunteer.getId())).thenReturn(Optional.of(oldVolunteer));
+        when(volunteerRepository.save(oldVolunteer)).thenReturn(oldVolunteer);
+        final Optional<Volunteer> result = volunteerService.edit(oldVolunteer.getId(), newVolunteer);
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(result.get().getId(), oldVolunteer.getId());
     }
 
     @Test
-    public void edit_NotExistingVolunteer_ShouldNotEdit() {
-        Optional<Volunteer> volunteerOptional = volunteerService.edit(0L, null);
-        Assert.assertFalse(volunteerOptional.isPresent());
+    public void edit_NotExistVolunteer_ShouldNotEdit() {
+        final Volunteer volunteer = sampleVolunteer();
+        volunteer.setId(1L);
+        when(volunteerRepository.findById(volunteer.getId())).thenReturn(Optional.of(volunteer));
+        when(volunteerRepository.save(any())).thenReturn(volunteer);
+        final Optional<Volunteer> result = volunteerService.edit(1L, volunteer);
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
     public void findActive_Volunteers_ShouldGet() {
-        Assert.assertEquals(volunteerService.findActive().size(), 0);
-        volunteerService.create(sampleVolunteer());
-        Assert.assertEquals(volunteerService.findActive().size(), 1);
+        when(volunteerRepository.findByActive(true)).thenReturn(ImmutableList.of(new Volunteer()));
+        final List<Volunteer> volunteers = volunteerService.findActive();
+        Assert.assertEquals(volunteers.size(), 1L);
     }
 }

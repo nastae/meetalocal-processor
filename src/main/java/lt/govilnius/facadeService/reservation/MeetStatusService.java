@@ -15,21 +15,17 @@ import java.util.Optional;
 public class MeetStatusService {
 
     @Autowired
-    private MeetStatusRepository meetStatusRepository;
+    private MeetStatusRepository repository;
 
     public Optional<MeetStatus> create(Meet meet, Status status) {
-        return Optional.of(add(meet, status));
-    }
-
-    private MeetStatus add(Meet meet, Status status) {
         final MeetStatus entity = new MeetStatus();
         entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         entity.setMeet(meet);
         entity.setStatus(status);
-        return meetStatusRepository.save(entity);
+        return Optional.of(repository.save(entity));
     }
 
     public List<MeetStatus> getByMeetId(Long meetId) {
-        return meetStatusRepository.findByMeetId(meetId);
+        return repository.findByMeetId(meetId);
     }
 }

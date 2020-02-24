@@ -5,6 +5,8 @@ import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.security.Encryptor;
 import lt.govilnius.repository.reservation.MeetEngagementRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,6 @@ public class MeetEngagementService {
     private MeetEngagementRepository meetEngagementRepository;
 
     public Optional<MeetEngagement> create(Meet meet, Volunteer volunteer, Time time) {
-        return Optional.of(add(meet, volunteer, time));
-    }
-
-    private MeetEngagement add(Meet meet, Volunteer volunteer, Time time) {
         final MeetEngagement entity = new MeetEngagement();
         final String token = Encryptor.encrypt(meet.getId().toString() + volunteer.getId().toString());
         final Optional<MeetEngagement> meetEngagement = meetEngagementRepository.findByToken(token);
@@ -34,7 +32,7 @@ public class MeetEngagementService {
         entity.setTime(time);
         entity.setToken(token);
         entity.setConfirmed(false);
-        return meetEngagementRepository.save(entity);
+        return Optional.of(meetEngagementRepository.save(entity));
     }
 
     public Optional<MeetEngagement> edit(Long id, MeetEngagement meetEngagement) {
@@ -62,6 +60,7 @@ public class MeetEngagementService {
     public Optional<MeetEngagement> getByToken(String token) {
         return meetEngagementRepository.findByToken(token);
     }
+
     public Optional<MeetEngagement> findByMeetIdAndVolunteerId(Long meetId, Long volunteerId) {
         return meetEngagementRepository.findByMeetIdAndVolunteerId(meetId, volunteerId);
     }

@@ -1,6 +1,7 @@
 package lt.govilnius.controllers;
 
 import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetDto;
 import lt.govilnius.facadeService.reservation.MeetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class MeetRegistrationController {
     private MeetService meetService;
 
     @PostMapping("/meets")
-    public ResponseEntity<?> newMeet(@Valid @RequestBody Meet meet) {
-        Optional<Meet> meetOptional = meetService.create(meet);
+    public ResponseEntity<?> newMeet(@Valid @RequestBody MeetDto meet) {
+        final Optional<Meet> meetOptional = meetService.create(meet);
         if (meetOptional.isPresent())
             return ResponseEntity.ok(meetOptional.get());
         else

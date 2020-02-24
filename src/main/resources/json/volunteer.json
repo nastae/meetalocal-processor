@@ -1,12 +1,12 @@
 {
   "id":null,
-  "createdAt":"3919-01-31T23:01:01.000+0000",
-  "changedAt":"3919-01-31T23:01:01.000+0000",
-  "name":"Test",
-  "surname":"Test",
-  "dateOfBirth":"3919-02-01",
-  "phoneNumber":"2312345",
-  "email":"meetalocaltest@gmail.com",
+  "createdAt":"2020-01-31T23:01:01.000+0000",
+  "changedAt":"2020-01-31T23:01:01.000+0000",
+  "name":"Joana1",
+  "surname":"Pavarde",
+  "dateOfBirth":"2020-02-01",
+  "phoneNumber":"123123",
+  "email":"Joana.Mikulska@vilnius.lt",
   "languages":[
     {
       "id":null,
@@ -15,7 +15,7 @@
     }
   ],
   "additionalLanguages":"Spain",
-  "age":26,
+  "age":12,
   "gender":"MALE",
   "description":"none",
   "active":true,

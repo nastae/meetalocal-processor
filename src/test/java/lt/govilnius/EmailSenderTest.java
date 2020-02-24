@@ -83,7 +83,8 @@ public class EmailSenderTest {
     @Test
     public void send_TouristEvaluation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(
+                        new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -107,7 +108,7 @@ public class EmailSenderTest {
     @Test
     public void send_VolunteerEvaluation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -115,11 +116,15 @@ public class EmailSenderTest {
         return new Meet(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "meetalocaltest@gmail.com", "123000", "Test", "Test",
-                "Vilnius", new Date(2019, 1, 1), new Time(12, 12, 12),
-                1, 26, Gender.MALE,
-                AgeGroup.YOUTH, ImmutableSet.of(sampleMeetLanguage(Language.ENGLISH)), "none",
-                "comments", Status.NEW, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
+                "name", "surname", "email@email.email",
+                "123", "Lithuania", new Date(2019, 11, 11),
+                new Time(10, 10, 10),
+                1, 20, new HashSet<>(),
+                ImmutableSet.<MeetLanguage>builder()
+                        .add(new MeetLanguage(Language.ENGLISH, null))
+                        .build(),
+                "preferences", "additionalPreferences", Status.NEW,
+                false, null, new HashSet<>(), new HashSet<>());
     }
 
     public static Volunteer sampleVolunteer() {
@@ -130,10 +135,9 @@ public class EmailSenderTest {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "Test", "Test", new Date(2019, 1, 1),
-                "2312345","meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
-                "Spain", age, Gender.MALE,
-                "none", true, new HashSet<>(), new HashSet<>());
+                "name", "surname", new Date(1999, 11, 11),
+                "123", "email@email.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
+                age, "description", true, new HashSet<>());
     }
 
     public static MeetLanguage sampleMeetLanguage(Language language) {

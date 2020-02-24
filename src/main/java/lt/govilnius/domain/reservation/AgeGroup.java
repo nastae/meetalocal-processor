@@ -1,5 +1,8 @@
 package lt.govilnius.domain.reservation;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum AgeGroup {
     YOUTH(18, 29),
     JUNIOR_ADULTS(30, 39),
@@ -19,5 +22,11 @@ public enum AgeGroup {
 
     public Integer getTo() {
         return to;
+    }
+
+    public static Optional<AgeGroup> fromString(String name) {
+        return Arrays.stream(AgeGroup.values())
+                .filter(a -> a.toString().equals(name))
+                .findAny();
     }
 }

@@ -126,7 +126,7 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 35px; padding-bottom: 35px; font-family: Verdana, sans-serif"><![endif]-->
                                     <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:35px;padding-right:10px;padding-bottom:35px;padding-left:10px;">
                                         <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                            <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Ar sutinkate susitikti su turistu vardu <span th:text="${tourist}" th:remove="tag">Name</span> kitu laiku?</p>
+                                            <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Share your experience:</p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -140,7 +140,7 @@
                     </div>
                 </div>
             </div>
-            <form action="#" th:action="@{/meet/engagements-changes}" method="post">
+            <form action="#" th:action="@{/tourist-action-management/evaluations}" method="post" id="evaluation">
                 <input hidden name='token' th:value='${token}'/>
                 <div style="background-color:transparent;">
                     <div class="block-grid two-up" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
@@ -154,8 +154,7 @@
                                         <!--<![endif]-->
                                         <div align="center" class="button-container" style="padding-top:5px;padding-right:5px;padding-bottom:5px;padding-left:5px;">
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:31.5pt; width:182.25pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#efefef"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]-->
-                                            <input type="time" name='time' th:attr="min=${time}" th:value='${time}' style="margin-left:10px;text-decoration:none;display:inline-block;color:#555555;background-color:#efefef;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto; width:auto;;border-top:1px solid #efefef;border-right:1px solid #efefef;border-bottom:1px solid #efefef;border-left:1px solid #efefef;padding-top:12px;padding-bottom:12px;font-family:Verdana, Geneva, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="line-height: 32px; word-break: break-word;">                             </span></span>
-                                            </input>
+                                            <textarea rows="4" cols="50" name="comment" form="evaluation"></textarea>
                                             <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
                                         </div>
                                         <!--[if (!mso)&(!IE)]><!-->
@@ -172,7 +171,7 @@
                                         <!--<![endif]-->
                                         <div align="center" class="button-container" style="padding-top:5px;padding-right:5px;padding-bottom:5px;padding-left:5px;">
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:31.5pt; width:123.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#e03a3d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]-->
-                                            <button type="submit" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#e03a3d;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto; width:auto;;border-top:1px solid #e03a3d;border-right:1px solid #e03a3d;border-bottom:1px solid #e03a3d;border-left:1px solid #e03a3d;padding-top:5px;padding-bottom:5px;font-family:Verdana, Geneva, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong>GALIU KITU LAIKU</strong></span></span>
+                                            <button type="submit" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#e03a3d;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto; width:auto;;border-top:1px solid #e03a3d;border-right:1px solid #e03a3d;border-bottom:1px solid #e03a3d;border-left:1px solid #e03a3d;padding-top:5px;padding-bottom:5px;font-family:Verdana, Geneva, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong>SEND</strong></span></span>
                                             </button>
                                             <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
                                         </div>
@@ -187,28 +186,7 @@
                     </div>
                 </div>
             </form>
-            <div class="block-grid mixed-two-up" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
-                <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
-                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
-                    <!--[if (mso)|(IE)]><td align="center" width="166" style="background-color:#ffffff;width:166px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-                    <div class="col num4" style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 164px; width: 166px;">
-                        <div style="width:100% !important;">
-                            <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
-                                <!--<![endif]-->
-                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 40px; padding-bottom: 10px; font-family: Verdana, sans-serif"><![endif]-->
-                                <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:40px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
-                                    <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                        <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Smagaus susitikimo!</strong></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
             </div>
-        </div>
 
             </div>
             <!--[if (mso)|(IE)]></td></tr></table><![endif]-->

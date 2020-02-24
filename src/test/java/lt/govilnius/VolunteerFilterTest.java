@@ -29,16 +29,16 @@ public class VolunteerFilterTest {
 
     @Test
     public void filterByMeet_Volunteers_ShouldReturnFiltered() {
-        when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(
-                sampleVolunteer(Language.RUSSIAN, 26),
-                sampleVolunteer(Language.RUSSIAN, 30),
-                sampleVolunteer(Language.RUSSIAN, 1),
-                sampleVolunteer(Language.ENGLISH, 26)));
-        List<Volunteer> volunteers = volunteerFilter.filterByMeet(sampleMeet());
+        Volunteer volunteer1 = sampleVolunteer(Language.ENGLISH, 26);
+        Volunteer volunteer3 = sampleVolunteer(Language.ENGLISH, 36);
+        Volunteer volunteer2 = sampleVolunteer(Language.RUSSIAN, 36);
+        when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(volunteer1, volunteer2, volunteer3));
+        Meet meet = sampleMeet();
+        meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));
+        List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
         Assert.assertEquals(volunteers.size(), 1);
         Volunteer volunteer = volunteers.get(0);
         Assert.assertEquals(volunteer.getAge().intValue(), 26);
-        Assert.assertEquals(volunteer.getGender(), Gender.MALE);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class VolunteerFilterTest {
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(
                 sampleVolunteer(Language.RUSSIAN, 36)));
         Meet meet = sampleMeet();
-        meet.setAgeGroup(AgeGroup.YOUTH);
+        meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));
         List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
         Assert.assertEquals(volunteers.size(), 0);
     }
@@ -57,7 +57,7 @@ public class VolunteerFilterTest {
                 sampleVolunteer(Language.ENGLISH, 26)));
         Meet meet = sampleMeet();
         meet.setLanguages(ImmutableSet.of(new MeetLanguage(Language.RUSSIAN, null)));
-        meet.setAgeGroup(AgeGroup.YOUTH);
+        meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));
         List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
         Assert.assertEquals(volunteers.size(), 0);
     }

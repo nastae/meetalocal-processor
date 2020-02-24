@@ -4,9 +4,9 @@ import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Status;
 import lt.govilnius.domain.reservation.Volunteer;
-import lt.govilnius.domainService.schedule.ProactiveMailSendingService;
+import lt.govilnius.domainService.schedule.TouristMailProcessor;
 import lt.govilnius.facadeService.reservation.MeetService;
-import lt.govilnius.facadeService.reservation.VolunteerService;
+import lt.govilnius.facadeService.reservation.VolunteerActionService;
 import lt.govilnius.repository.reservation.*;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,10 +23,10 @@ import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProactiveMailSendingServiceTest {
+public class TouristMailProcessorTest {
 
     @Autowired
-    private ProactiveMailSendingService proactiveMailSendingService;
+    private TouristMailProcessor touristMailProcessor;
 
     @Autowired
     private MeetRepository meetRepository;
@@ -41,16 +41,13 @@ public class ProactiveMailSendingServiceTest {
     private VolunteerRepository volunteerRepository;
 
     @Autowired
-    private VolunteerService volunteerService;
+    private VolunteerActionService volunteerActionService;
 
     @Autowired
     private VolunteerLanguageRepository volunteerLanguageRepository;
 
     @Autowired
     private MeetEngagementRepository meetEngagementRepository;
-
-    @Autowired
-    private ReportRepository reportRepository;
 
     @After
     public void cleanEachTest() {
@@ -67,7 +64,7 @@ public class ProactiveMailSendingServiceTest {
         meet.setStatus(Status.SENT_TOURIST_ADDITION);
         meet = meetRepository.save(meet);
 
-        proactiveMailSendingService.processAddition(meet, new Time(10, 10, 10));
+        touristMailProcessor.processAddition(meet);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 1);
     }
@@ -85,13 +82,14 @@ public class ProactiveMailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagement = meetEngagementRepository.save(meetEngagement);
 
-        proactiveMailSendingService.processTouristRequest(meetEngagement.getVolunteer(), meetEngagement.getMeet());
+        touristMailProcessor.processRequest(meetEngagement.getVolunteer(), meetEngagement.getMeet());
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.AGREED).size(), 1);
     }
 
     @Test
     public void processTouristRequest_SentMeetToTouristWithoutEngagement_ShouldSendCancellation() {
+        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetRepository.save(meet);
@@ -99,7 +97,8 @@ public class ProactiveMailSendingServiceTest {
         Volunteer volunteer = sampleVolunteer();
         volunteer = volunteerRepository.save(volunteer);
 
-        proactiveMailSendingService.processTouristRequest(volunteer, meet);
+        touristMailProcessor.processRequest(volunteer, meet);
+        Assert.assertEquals(meetRepository.findAll().size(), 1);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.CANCELED).size(), 1);
     }

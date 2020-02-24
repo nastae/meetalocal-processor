@@ -1,5 +1,6 @@
 package lt.govilnius;
 
+import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetStatus;
 import lt.govilnius.domain.reservation.Status;
@@ -10,48 +11,47 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class MeetStatusServiceTest {
 
-    @Autowired
+    @Mock
+    private MeetStatusRepository repository;
+
+    @InjectMocks
     private MeetStatusService meetStatusService;
-
-    @Autowired
-    private MeetStatusRepository meetStatusRepository;
-
-    @Autowired
-    private MeetRepository meetRepository;
-
-    @After
-    public void cleanEachTest() {
-        meetStatusRepository.findAll().forEach(status -> meetStatusRepository.delete(status));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-    }
 
     @Test
     public void create_Status_ShouldBeCreated() {
-        Meet meet = meetRepository.save(sampleMeet());
-        MeetStatus status = meetStatusService.create(meet, Status.NEW).get();
-        Assert.assertEquals(status.getMeet().getId(), meet.getId());
-        Assert.assertEquals(status.getStatus(), Status.NEW);
+        Meet meet = sampleMeet();
+        MeetStatus status = new MeetStatus(new Timestamp(100L), meet, Status.NEW);
+        when(repository.save(any())).thenReturn(status);
+        MeetStatus result = meetStatusService.create(meet, Status.NEW).get();
+        Assert.assertEquals(result.getMeet().getId(), meet.getId());
+        Assert.assertEquals(result.getStatus(), Status.NEW);
     }
 
     @Test
     public void getByMeetId_Statuses_ShouldGet() {
-        Meet meet = meetRepository.save(sampleMeet());
-        meetStatusService.create(meet, Status.NEW).get();
-        meetStatusService.create(meet, Status.SENT_VOLUNTEER_REQUEST).get();
-        meetStatusService.create(meet, Status.SENT_TOURIST_REQUEST).get();
+        Meet meet = sampleMeet();
+        meet.setId(1L);
+        MeetStatus status = new MeetStatus(new Timestamp(100L), meet, Status.NEW);
+        when(repository.findByMeetId(meet.getId())).thenReturn(ImmutableList.of(status, status));
         List<MeetStatus> statuses = meetStatusService.getByMeetId(meet.getId());
-        Assert.assertEquals(statuses.size(), 3);
+        Assert.assertEquals(statuses.size(), 2);
     }
 }

@@ -2,6 +2,7 @@ package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetDto;
 import lt.govilnius.repository.reservation.MeetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-
 import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static lt.govilnius.MeetServiceTest.sampleMeetDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,7 +36,9 @@ public class MeetRegistrationControllerTest {
 
     @Test
     public void newMeet_Meet_ShoudCreateNew() throws Exception {
-        Meet meet = sampleMeet();
+        MeetDto meet = sampleMeetDto();
+
+        System.out.println(objectMapper.writeValueAsString(meet));
 
         mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,22 +46,17 @@ public class MeetRegistrationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.email").value(meet.getEmail()))
-                .andExpect(jsonPath("$.phoneNumber").value(meet.getPhoneNumber()))
                 .andExpect(jsonPath("$.name").value(meet.getName()))
                 .andExpect(jsonPath("$.surname").value(meet.getSurname()))
-                .andExpect(jsonPath("$.residence").value(meet.getResidence()))
+                .andExpect(jsonPath("$.email").value(meet.getEmail()))
+                .andExpect(jsonPath("$.phoneNumber").value(meet.getPhoneNumber()))
+                .andExpect(jsonPath("$.country").value(meet.getCountry()))
                 .andExpect(jsonPath("$.date").value(meet.getDate().toString()))
                 .andExpect(jsonPath("$.time").value(meet.getTime().toString()))
                 .andExpect(jsonPath("$.peopleCount").value(meet.getPeopleCount()))
                 .andExpect(jsonPath("$.age").value(meet.getAge()))
-                .andExpect(jsonPath("$.gender").value(meet.getGender().toString()))
-                .andExpect(jsonPath("$.ageGroup").value(meet.getAgeGroup().toString()))
                 .andExpect(jsonPath("$.preferences").value(meet.getPreferences()))
-                .andExpect(jsonPath("$.comment").value(meet.getComment()))
-                .andExpect(jsonPath("$.status").value(meet.getStatus().toString()))
-                .andExpect(jsonPath("$.volunteer").value(meet.getVolunteer()))
-                .andExpect(jsonPath("$.languages[0].language").value(new ArrayList<>(meet.getLanguages()).get(0).getLanguage().toString()));
+                .andExpect(jsonPath("$.additionalPreferences").value(meet.getAdditionalPreferences()));
     }
 
     @Test
@@ -109,7 +106,7 @@ public class MeetRegistrationControllerTest {
     @Test
     public void newMeet_MeetWithNullResidence_ShoudShowBadRequest() throws Exception {
         Meet meet = sampleMeet();
-        meet.setResidence(null);
+        meet.setCountry(null);
 
         mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -162,20 +159,9 @@ public class MeetRegistrationControllerTest {
     }
 
     @Test
-    public void newMeet_MeetWithNullGender_ShoudShowBadRequest() throws Exception {
-        Meet meet = sampleMeet();
-        meet.setGender(null);
-
-        mvc.perform(post(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(meet)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void newMeet_MeetWithNullAgeGroup_ShoudShowBadRequest() throws Exception {
         Meet meet = sampleMeet();
-        meet.setAgeGroup(null);
+        meet.setMeetAgeGroups(null);
 
         mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)

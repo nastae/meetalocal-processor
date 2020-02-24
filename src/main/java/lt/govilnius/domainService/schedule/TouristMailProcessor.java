@@ -7,7 +7,6 @@ import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
 import lt.govilnius.domainService.mail.Mail;
-import lt.govilnius.facadeService.reservation.InteractionWithMeetService;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
 import org.slf4j.Logger;
@@ -16,14 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class ProactiveMailSendingService {
+public class TouristMailProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InteractionWithMeetService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TouristMailProcessor.class);
 
     @Autowired
     private MeetEngagementService meetEngagementService;
@@ -37,7 +35,32 @@ public class ProactiveMailSendingService {
     @Value("${website.url}")
     private String websiteUrl;
 
-    public Optional<Meet> processTouristRequest(Volunteer volunteer, Meet meet) {
+    @Value("${registration.url}")
+    private String registrationUrl;
+
+    @Value("${waiting.sent.tourist.request.milliseconds}")
+    private Long sentTouristRequestWaiting;
+
+    @Value("${waiting.addition.milliseconds}")
+    private Long additionWaiting;
+
+    public void processRequests() {
+        meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
+            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentTouristRequestWaiting) {
+                sendCancellations(meet);
+            }
+        });
+    }
+
+    public void processAdditions() {
+        meetService.findByStatus(Status.SENT_TOURIST_ADDITION).forEach(meet -> {
+            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= additionWaiting) {
+                sendCancellations(meet);
+            }
+        });
+    }
+
+    public Optional<Meet> processRequest(Volunteer volunteer, Meet meet) {
         LOGGER.info("Process tourist request of the meet with id " + meet.getId());
         final Optional<MeetEngagement> meetEngagement = volunteer != null ?
                 meetEngagementService.findByMeetIdAndVolunteerId(meet.getId(), volunteer.getId()) :
@@ -65,27 +88,31 @@ public class ProactiveMailSendingService {
                     });
             return Optional.of(meet);
         } else {
-            meet.setStatus(Status.CANCELED);
-            meetService.edit(meet.getId(), meet);
-            LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist" );
-            EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(meet, websiteUrl);
-            emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
-
-            LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to volunteers ");
-            meetEngagementService.getByMeetId(meet.getId()).forEach(e -> {
-                final Volunteer v  = e.getVolunteer();
-                LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
-                emailSender.send(new Mail(v.getEmail()), emailSenderConfig);
-            });
+            sendCancellations(meet);
             return Optional.empty();
         }
     }
 
-    public Optional<Meet> processAddition(Meet meet, Time time) {
+    private void sendCancellations(Meet meet) {
+        meet.setStatus(Status.CANCELED);
+        meetService.edit(meet.getId(), meet);
+        LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist" );
+        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(meet, registrationUrl);
+        emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
+
+        LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to volunteers ");
+        meetEngagementService.getByMeetId(meet.getId()).forEach(e -> {
+            EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(meet, websiteUrl);
+            final Volunteer v  = e.getVolunteer();
+            LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
+            emailSender.send(new Mail(v.getEmail()), config);
+        });
+    }
+
+    public Optional<Meet> processAddition(Meet meet) {
         LOGGER.info("Process the additional information of the meet with id" + meet.getId());
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-        meet.setTime(time != null ? time : meet.getTime());
-        meetService.edit(meet.getId(), meet).get();
+        meetService.edit(meet.getId(), meet);
         final Set<MeetEngagement> meetEngagements = meet.getMeetEngagements();
         meetEngagements.forEach(meetEngagement -> {
             final Volunteer volunteer = meetEngagement.getVolunteer();

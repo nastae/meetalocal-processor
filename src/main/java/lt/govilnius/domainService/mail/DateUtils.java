@@ -11,23 +11,23 @@ public class DateUtils {
             case 2:
                 return "kovo";
             case 3:
-                return "balandzio";
+                return "balandžio";
             case 4:
-                return "geguzes";
+                return "gegužės";
             case 5:
-                return "birzelio";
+                return "birželio";
             case 6:
                 return "liepos";
             case 7:
-                return "rugpjucio";
+                return "rugpjūčio";
             case 8:
-                return "rugsejo";
+                return "rugsėjo";
             case 9:
                 return "spalio";
             case 10:
-                return "lapkricio";
+                return "lapkričio";
             case 11:
-                return "gruodzio";
+                return "gruodžio";
             default:
                 throw new RuntimeException("Month doesn't exist with index " + month);
         }
@@ -40,7 +40,7 @@ public class DateUtils {
             case 1:
                 return "February";
             case 2:
-                return "Maarch";
+                return "March";
             case 3:
                 return "April";
             case 4:

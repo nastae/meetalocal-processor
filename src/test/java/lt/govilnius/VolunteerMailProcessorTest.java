@@ -1,107 +1,112 @@
 package lt.govilnius;
 
-import lt.govilnius.domain.reservation.*;
-import lt.govilnius.domainService.schedule.MailSendingService;
+import com.google.common.collect.ImmutableList;
+import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetEngagement;
+import lt.govilnius.domain.reservation.Status;
+import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domainService.filter.MeetEngagementFilter;
+import lt.govilnius.domainService.filter.VolunteerFilter;
+import lt.govilnius.domainService.mail.EmailSender;
+import lt.govilnius.domainService.mail.EmailSenderConfig;
+import lt.govilnius.domainService.mail.Mail;
+import lt.govilnius.domainService.schedule.VolunteerMailProcessor;
+import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
-import lt.govilnius.facadeService.reservation.VolunteerService;
-import lt.govilnius.repository.reservation.*;
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.swing.text.html.Option;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class MailSendingServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class VolunteerMailProcessorTest {
 
-    @Autowired
-    private MailSendingService mailSendingService;
-
-    @Autowired
-    private MeetRepository meetRepository;
-
-    @Autowired
-    private MeetLanguageRepository meetLanguageRepository;
-
-    @Autowired
+    @Mock
     private MeetService meetService;
 
-    @Autowired
-    private VolunteerRepository volunteerRepository;
+    @Mock
+    private MeetEngagementService meetEngagementService;
 
-    @Autowired
-    private VolunteerService volunteerService;
+    @Mock
+    private MeetEngagementFilter meetEngagementFilter;
 
-    @Autowired
-    private VolunteerLanguageRepository volunteerLanguageRepository;
+    @Mock
+    private EmailSender emailSender;
 
-    @Autowired
-    private MeetEngagementRepository meetEngagementRepository;
+    @Mock
+    private VolunteerFilter volunteerFilter;
 
-    @Autowired
-    private ReportRepository reportRepository;
+    @InjectMocks
+    private VolunteerMailProcessor volunteerMailProcessor;
 
-    @After
-    public void cleanEachTest() {
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-        meetEngagementRepository.findAll().forEach(meetEngagement -> meetEngagementRepository.delete(meetEngagement));
-        volunteerLanguageRepository.findAll().forEach(volunteerLanguage -> volunteerLanguageRepository.delete(volunteerLanguage));
-        meetLanguageRepository.findAll().forEach(meetLanguage -> meetLanguageRepository.delete(meetLanguage));
-    }
-
-    @Value("${waiting.sent.request.milliseconds}")
-    private Long sentRequestWaiting;
+    @Value("${waiting.sent.volunteer.request.milliseconds}")
+    private Long sentVolunteerRequestWaiting;
 
     @Value("${waiting.evaluation.milliseconds}")
     private Long evaluationWaiting;
 
-    @Test
-    public void processNews_NewMeet_ShouldSetNewStatusAndSend() {
-        Meet meet = sampleMeet();
-        meet.setStatus(Status.NEW);
-        meetService.create(meet);
+    @Before
+    public void setUp() {
+        ReflectionTestUtils.setField(volunteerMailProcessor, "registrationUrl", "test", String.class);
+    }
 
+    @Test
+    public void processNews_Meet_ShouldChangeStatusAndSend() {
+        Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
-        volunteer.setAge(meet.getAgeGroup().getFrom());
-        volunteer.setLanguages(meet.getLanguages()
-                .stream()
-                .map(meetLanguage -> new VolunteerLanguage(meetLanguage.getLanguage(),  null))
-                .collect(Collectors.toSet()));
-        volunteerService.create(volunteer);
-
-        mailSendingService.processNews();
-        Assert.assertEquals(meetRepository.findByStatus(Status.NEW).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 1);
+        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false);
+        when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
+        when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of(volunteer));
+        when(meetEngagementService.create(any(), any(), any())).thenReturn(Optional.of(engagement));
+        when(meetService.setFreezed(any(), anyBoolean())).thenReturn(meet);
+        when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
+        doNothing().when(emailSender).send(any(), any());
+        Assert.assertEquals(meet.getStatus(), Status.NEW);
+        volunteerMailProcessor.processNews();
+        Assert.assertEquals(meet.getStatus(), Status.SENT_VOLUNTEER_REQUEST);
+        verify(emailSender, times(1)).send(any(), any());
+        verify(meetService, times(1)).setFreezed(any(), anyBoolean());
     }
 
     @Test
-    public void processNews_NewMeetWithoutAvailableVolunteers_ShouldSentCancellationToTourist() {
+    public void processNews_Meet_ShouldCancel() {
         Meet meet = sampleMeet();
-        meet.setStatus(Status.NEW);
-        meetRepository.save(meet);
-
-        mailSendingService.processNews();
-        Assert.assertEquals(meetRepository.findByStatus(Status.NEW).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.CANCELED).size(), 1);
+        Volunteer volunteer = sampleVolunteer();
+        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false);
+        when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
+        when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of());
+        when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
+        doNothing().when(emailSender).send(any(), any());
+        Assert.assertEquals(meet.getStatus(), Status.NEW);
+        volunteerMailProcessor.processNews();
+        Assert.assertEquals(meet.getStatus(), Status.CANCELED);
+        verify(emailSender, times(1)).send(any(), any());
+        verify(meetService, times(0)).setFreezed(any(), anyBoolean());
     }
 
+    /*
     @Test
     public void processVolunteerRequests_SentMeetToVolunteer_ShouldSendRequestToTourist() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-                meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+                meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meet = meetRepository.save(meet);
 
         Volunteer volunteer = sampleVolunteer();
@@ -110,7 +115,7 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", true);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processVolunteerRequests();
+        volunteerMailProcessor.processRequests();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 1);
     }
@@ -119,7 +124,7 @@ public class MailSendingServiceTest {
     public void processVolunteerRequests_SentMeetToVolunteerNotConfirmed_ShouldSendAdditionToTourist() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meet = meetRepository.save(meet);
 
         Volunteer volunteer = sampleVolunteer();
@@ -128,37 +133,19 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processVolunteerRequests();
+        volunteerMailProcessor.processRequests();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 1);
-    }
-
-    @Test
-    public void processVolunteerRequests_SentMeetToVolunteer_ShouldSendReport() {
-        Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
-        meet = meetRepository.save(meet);
-
-        Volunteer volunteer = sampleVolunteer();
-        volunteerRepository.save(volunteer);
-
-        Report report = new Report(meet, volunteer, "Comment");
-        reportRepository.save(report);
-
-        mailSendingService.processVolunteerRequests();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.REPORTED).size(), 1);
     }
 
     @Test
     public void processVolunteerRequests_SentMeetToVolunteer_ShouldSendAddition() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meetRepository.save(meet);
 
-        mailSendingService.processVolunteerRequests();
+        volunteerMailProcessor.processRequests();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 1);
     }
@@ -170,7 +157,7 @@ public class MailSendingServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10));
         meetRepository.save(meet);
 
-        mailSendingService.processVolunteerRequests();
+        volunteerMailProcessor.processRequests();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST).size(), 1);
     }
 
@@ -178,7 +165,7 @@ public class MailSendingServiceTest {
     public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldSendRequestToTourist() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meet = meetRepository.save(meet);
 
         Volunteer volunteer = sampleVolunteer();
@@ -187,7 +174,7 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", true);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processRequestsAfterAddition();
+        volunteerMailProcessor.processRequestsAfterAddition();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 1);
     }
@@ -196,7 +183,7 @@ public class MailSendingServiceTest {
     public void processRequestsAfterAdditional_SentMeetToVolunteerNoConfirmed_ShouldSendCancellationToTourist() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meet = meetRepository.save(meet);
 
         Volunteer volunteer = sampleVolunteer();
@@ -205,37 +192,19 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processRequestsAfterAddition();
+        volunteerMailProcessor.processRequestsAfterAddition();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.CANCELED).size(), 1);
-    }
-
-    @Test
-    public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldSendReport() {
-        Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
-        meet = meetRepository.save(meet);
-
-        Volunteer volunteer = sampleVolunteer();
-        volunteerRepository.save(volunteer);
-
-        Report report = new Report(meet, volunteer, "Comment");
-        reportRepository.save(report);
-
-        mailSendingService.processRequestsAfterAddition();
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.REPORTED).size(), 1);
     }
 
     @Test
     public void processRequestsAfterAdditional_SentMeetToVolunteer_ShouldNotFindVolunteers() {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
-        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentRequestWaiting));
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - sentVolunteerRequestWaiting));
         meetRepository.save(meet);
 
-        mailSendingService.processRequestsAfterAddition();
+        volunteerMailProcessor.processRequestsAfterAddition();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.CANCELED).size(), 1);
     }
@@ -247,7 +216,7 @@ public class MailSendingServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10));
         meetRepository.save(meet);
 
-        mailSendingService.processRequestsAfterAddition();
+        volunteerMailProcessor.processRequestsAfterAddition();
         Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 1);
     }
 
@@ -265,7 +234,7 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processAgreements();
+        volunteerMailProcessor.processAgreements();
         Assert.assertEquals(meetRepository.findByStatus(Status.AGREED).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.FINISHED).size(), 1);
     }
@@ -277,7 +246,7 @@ public class MailSendingServiceTest {
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - evaluationWaiting));
         meetRepository.save(meet);
 
-        mailSendingService.processAgreements();
+        volunteerMailProcessor.processAgreements();
         Assert.assertEquals(meetRepository.findByStatus(Status.AGREED).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.ERROR).size(), 1);
     }
@@ -295,7 +264,9 @@ public class MailSendingServiceTest {
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
         meetEngagementRepository.save(meetEngagement);
 
-        mailSendingService.processAgreements();
+        volunteerMailProcessor.processAgreements();
         Assert.assertEquals(meetRepository.findByStatus(Status.AGREED).size(), 1);
     }
+
+     */
 }

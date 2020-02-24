@@ -1,15 +1,14 @@
 package lt.govilnius.facadeService.reservation;
 
-import io.atlassian.fugue.Either;
-import lt.govilnius.domain.reservation.*;
-import lt.govilnius.repository.reservation.VolunteerLanguageRepository;
+import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domain.reservation.VolunteerLanguage;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -19,20 +18,9 @@ public class VolunteerService {
     private VolunteerRepository volunteerRepository;
 
     @Autowired
-    private VolunteerLanguageRepository volunteerLanguageRepository;
+    private VolunteerLanguageService volunteerLanguageService;
 
     public Optional<Volunteer> create(Volunteer volunteer) {
-        return add(volunteer);
-    }
-
-    private Either<Exception, VolunteerLanguage> addLanguage(Long id, Language language) {
-        final Optional<Volunteer> optionalVolunteer = volunteerRepository.findById(id);
-        return optionalVolunteer
-                .<Either<Exception, VolunteerLanguage>>map(volunteer -> Either.right(volunteerLanguageRepository.save(new VolunteerLanguage(language, volunteer))))
-                .orElseGet(() -> Either.left(new NoSuchElementException("Volunteer doesn't exist with id " + id)));
-    }
-
-    private Optional<Volunteer> add(Volunteer volunteer) {
         Volunteer entity = new Volunteer();
         entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
@@ -42,16 +30,15 @@ public class VolunteerService {
         entity.setPhoneNumber(volunteer.getPhoneNumber());
         entity.setEmail(volunteer.getEmail());
         entity.setLanguages(volunteer.getLanguages());
-        entity.setAdditionalLanguages(volunteer.getAdditionalLanguages());
         entity.setAge(volunteer.getAge());
-        entity.setGender(volunteer.getGender());
         entity.setDescription(volunteer.getDescription());
         entity.setActive(volunteer.getActive());
+        entity.setMeetEngagements(new HashSet<>());
         entity = volunteerRepository.save(entity);
         for (VolunteerLanguage language : volunteer.getLanguages()) {
-            addLanguage(entity.getId(), language.getLanguage());
+            volunteerLanguageService.create(language.getLanguage(), entity);
         }
-        return get(entity.getId());
+        return volunteerRepository.findById(entity.getId());
     }
 
     public List<Volunteer> getAll() {
@@ -62,14 +49,13 @@ public class VolunteerService {
         return volunteerRepository.findById(id);
     }
 
-    public Optional<Volunteer> delete(Long id) {
-        return volunteerRepository.findById(id)
-                .map(this::deleteEntity);
-    }
-
-    private Volunteer deleteEntity(Volunteer entity) {
-        volunteerRepository.delete(entity);
-        return entity;
+    public boolean delete(Long id) {
+        Optional<Volunteer> volunteer = volunteerRepository.findById(id);
+        if (volunteer.isPresent()) {
+            volunteerRepository.delete(volunteer.get());
+            return true;
+        }
+        return false;
     }
 
     public Optional<Volunteer> edit(Long id, Volunteer volunteer) {
@@ -85,9 +71,7 @@ public class VolunteerService {
         entity.setPhoneNumber(newData.getPhoneNumber());
         entity.setEmail(newData.getEmail());
         entity.setLanguages(newData.getLanguages());
-        entity.setAdditionalLanguages(newData.getAdditionalLanguages());
         entity.setAge(newData.getAge());
-        entity.setGender(newData.getGender());
         entity.setDescription(newData.getDescription());
         entity.setActive(newData.getActive());
         return volunteerRepository.save(entity);

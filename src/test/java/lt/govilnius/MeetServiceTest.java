@@ -1,184 +1,134 @@
 package lt.govilnius;
 
-import io.atlassian.fugue.Either;
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetStatus;
-import lt.govilnius.domain.reservation.Status;
-import lt.govilnius.domain.reservation.Volunteer;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import lt.govilnius.domain.reservation.*;
+import lt.govilnius.facadeService.reservation.MeetAgeGroupService;
+import lt.govilnius.facadeService.reservation.MeetLanguageService;
 import lt.govilnius.facadeService.reservation.MeetService;
 import lt.govilnius.facadeService.reservation.MeetStatusService;
 import lt.govilnius.repository.reservation.MeetRepository;
-import lt.govilnius.repository.reservation.MeetStatusRepository;
-import lt.govilnius.repository.reservation.VolunteerRepository;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashSet;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class MeetServiceTest {
 
-    @Autowired
-    private MeetService meetService;
-
-    @Autowired
-    private VolunteerRepository volunteerRepository;
-
-    @Autowired
+    @Mock
     private MeetRepository meetRepository;
 
-    @Autowired
-    private MeetStatusRepository meetStatusRepository;
-
-    @Autowired
+    @Mock
     private MeetStatusService meetStatusService;
 
-    @After
-    public void cleanEachTest() {
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-        meetStatusRepository.findAll().forEach(status -> meetStatusRepository.delete(status));
-    }
+    @Mock
+    private MeetLanguageService meetLanguageService;
+
+    @Mock
+    private MeetAgeGroupService meetAgeGroupService;
+
+    @InjectMocks
+    private MeetService meetService;
 
     @Test
     public void create_Meet_ShouldBeCreated() {
         Meet meet = sampleMeet();
-        Meet newMeet = meetService.create(meet).get();
-        Assert.assertEquals(meet.getName(), newMeet.getName());
-        Assert.assertEquals(meet.getSurname(), newMeet.getSurname());
-        Assert.assertEquals(meet.getPhoneNumber(), newMeet.getPhoneNumber());
-        Assert.assertEquals(meet.getResidence(), newMeet.getResidence());
-        Assert.assertEquals(meet.getDate().toString(), newMeet.getDate().toString());
-        Assert.assertEquals(meet.getTime().toString(), newMeet.getTime().toString());
-        Assert.assertEquals(meet.getPeopleCount(), newMeet.getPeopleCount());
-        Assert.assertEquals(meet.getAge(), newMeet.getAge());
-        Assert.assertEquals(meet.getAgeGroup(), newMeet.getAgeGroup());
-        Assert.assertEquals(meet.getLanguages().size(), 1);
-        Assert.assertEquals(meet.getPreferences(), newMeet.getPreferences());
-        Assert.assertEquals(meet.getComment(), newMeet.getComment());
-        Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
-        Assert.assertEquals(meet.getVolunteer(), newMeet.getVolunteer());
-        List<MeetStatus> statuses = meetStatusService.getByMeetId(newMeet.getId());
-        Assert.assertEquals(statuses.size(), 1);
-    }
-
-    @Test
-    public void create_MeetWithoutLanguages_ShouldBeCreated() {
-        Meet meet = sampleMeet();
-        meet.setLanguages(new HashSet<>());
-        Meet newMeet = meetService.create(meet).get();
-        Assert.assertEquals(meet.getName(), newMeet.getName());
-        Assert.assertEquals(meet.getSurname(), newMeet.getSurname());
-        Assert.assertEquals(meet.getPhoneNumber(), newMeet.getPhoneNumber());
-        Assert.assertEquals(meet.getResidence(), newMeet.getResidence());
-        Assert.assertEquals(meet.getDate().toString(), newMeet.getDate().toString());
-        Assert.assertEquals(meet.getTime().toString(), newMeet.getTime().toString());
-        Assert.assertEquals(meet.getPeopleCount(), newMeet.getPeopleCount());
-        Assert.assertEquals(meet.getAge(), newMeet.getAge());
-        Assert.assertEquals(meet.getAgeGroup(), newMeet.getAgeGroup());
-        Assert.assertEquals(newMeet.getLanguages(), meet.getLanguages());
-        Assert.assertEquals(meet.getLanguages().size(), 0);
-        Assert.assertEquals(meet.getPreferences(), newMeet.getPreferences());
-        Assert.assertEquals(meet.getComment(), newMeet.getComment());
-        Assert.assertEquals(meet.getStatus(), newMeet.getStatus());
-        Assert.assertEquals(meet.getVolunteer(), newMeet.getVolunteer());
-        List<MeetStatus> statuses = meetStatusService.getByMeetId(newMeet.getId());
-        Assert.assertEquals(statuses.size(), 1);
+        meet.setId(1L);
+        when(meetRepository.save(any())).thenReturn(meet);
+        when(meetAgeGroupService.create(any(), any())).thenReturn(Optional.empty());
+        when(meetLanguageService.create(any(), any())).thenReturn(Optional.empty());
+        when(meetStatusService.create(any(), any())).thenReturn(Optional.empty());
+        when(meetRepository.findById(meet.getId())).thenReturn(Optional.of(meet));
+        Optional<Meet> result = meetService.create(sampleMeetDto());
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
     public void getAll_Meets_ShouldGet() {
-        meetService.create(sampleMeet());
-        List<Meet> meets = meetService.getAll();
-        Assert.assertEquals(meets.size(), 1);
-        List<MeetStatus> statuses = meetStatusService.getByMeetId(meets.get(0).getId());
-        Assert.assertEquals(statuses.size(), 1);
+        when(meetRepository.findAll()).thenReturn(ImmutableList.of(new Meet()));
+        final List<Meet> meets = meetService.getAll();
+        Assert.assertEquals(meets.size(), 1L);
+    }
+
+    @Test
+    public void setVolunteer_Meet_ShouldSetVolunteer() {
+        Meet meet = sampleMeet();
+        meet.setVolunteer(null);
+        Volunteer volunteer = sampleVolunteer();
+        when(meetRepository.save(meet)).thenReturn(meet);
+        final Meet result = meetService.setVolunteer(meet, volunteer);
+        Assert.assertNotEquals(result.getVolunteer(), null);
+    }
+
+    @Test
+    public void setFreezed_Meet_ShouldSetVolunteer() {
+        Meet meet = sampleMeet();
+        meet.setFreezed(false);
+        when(meetRepository.save(meet)).thenReturn(meet);
+        final Meet result = meetService.setFreezed(meet, true);
+        Assert.assertEquals(result.getFreezed(), true);
     }
 
     @Test
     public void get_Meet_ShouldGetById() {
-        meetService.create(sampleMeet());
-        List<Meet> meets = meetService.getAll();
-        Optional<Meet> meet = meetService.get(meets.get(0).getId());
-        Assert.assertTrue(meet.isPresent());
+        final Meet meet = sampleMeet();
+        when(meetRepository.findById(1L)).thenReturn(Optional.of(meet));
+        final Optional<Meet> result = meetService.get(1L);
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(result.get().getId(), meet.getId());
     }
 
     @Test
     public void get_Meet_ShouldNotGetById() {
-        meetService.create(sampleMeet());
-        List<Meet> meets = meetService.getAll();
-        Optional<Meet> meet = meetService.get(meets.get(0).getId()+1);
-        Assert.assertFalse(meet.isPresent());
-    }
-
-    @Test
-    public void addVolunteer_Volunteer_ShouldBeAddedVolunteer() {
-        meetService.create(sampleMeet());
-        volunteerRepository.save(sampleVolunteer());
-        List<Meet> meets = meetService.getAll();
-        Volunteer newVolunteer = volunteerRepository.findAll().get(0);
-
-        Meet meet = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
-        Assert.assertEquals(meet.getVolunteer().getId(), newVolunteer.getId());
-    }
-
-    @Test
-    public void addVolunteer_ExistingVolunteer_ShouldNotBeAddedVolunteer() {
-        meetService.create(sampleMeet());
-        volunteerRepository.save(sampleVolunteer());
-        List<Meet> meets = meetService.getAll();
-        Volunteer newVolunteer = volunteerRepository.findAll().get(0);
-        Meet meet = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId()).right().get();
-
-        Either<Exception, Meet> meetEither = meetService.setVolunteer(meets.get(0).getId(), newVolunteer.getId());
-        Assert.assertTrue(meetEither.isLeft());
-        Assert.assertFalse(meetEither.left().isEmpty());
-    }
-
-    @Test
-    public void addVolunteer_NotExistingMeet_ShouldNotBeAdded() {
-        Either<Exception, Meet> meetEither = meetService.setVolunteer(0L, 0L);
-        Assert.assertTrue(meetEither.isLeft());
-        Assert.assertFalse(meetEither.left().isEmpty());
-    }
-
-    @Test
-    public void delete_Meet_ShouldBeDeleted() {
-        meetService.create(sampleMeet());
-        List<Meet> meets = meetService.getAll();
-        Assert.assertEquals(meets.size(), 1);
-        final Meet meet = meets.get(0);
-        meetService.delete(meet.getId());
-        meets = meetService.getAll();
-        Assert.assertEquals(meets.size(), 0);
+        final Meet meet = sampleMeet();
+        when(meetRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Meet> result = meetService.get(1L);
+        Assert.assertFalse(result.isPresent());
     }
 
     @Test
     public void edit_Meet_ShouldEdit() {
-        Meet meet = meetService.create(sampleMeet()).get();
-        Assert.assertEquals(meet.getStatus(), Status.NEW);
-        meet.setStatus(Status.REPORTED);
-        Meet newMeet = meetService.edit(meet.getId(), meet).get();
-        Assert.assertEquals(newMeet.getStatus(), Status.REPORTED);
-        Assert.assertNotEquals(meet.getChangedAt(), newMeet.getChangedAt());
-        List<MeetStatus> statuses = meetStatusService.getByMeetId(meet.getId());
-        Assert.assertEquals(statuses.size(), 2);
+        Meet oldMeet = sampleMeet();
+        oldMeet.setId(1L);
+        oldMeet.setStatus(Status.NEW);
+        Meet newMeet = sampleMeet();
+        newMeet.setId(2L);
+        newMeet.setStatus(Status.CANCELED);
+        when(meetStatusService.create(any(), any())).thenReturn(Optional.empty());
+        when(meetRepository.findById(oldMeet.getId())).thenReturn(Optional.of(oldMeet));
+        when(meetRepository.save(oldMeet)).thenReturn(oldMeet);
+        final Optional<Meet> result = meetService.edit(oldMeet.getId(), newMeet);
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(result.get().getStatus(), newMeet.getStatus());
     }
 
     @Test
-    public void edit_NotExistingMeet_ShouldNotEdit() {
-        Optional<Meet> meetOptional = meetService.edit(0L, null);
-        Assert.assertFalse(meetOptional.isPresent());
+    public void edit_NotExistMeet_ShouldNotEdit() {
+        final Meet meet = sampleMeet();
+        when(meetRepository.findById(1L)).thenReturn(Optional.empty());
+        final Optional<Meet> result = meetService.edit(1L, meet);
+        Assert.assertFalse(result.isPresent());
+    }
+
+    public static MeetDto sampleMeetDto() {
+        return new MeetDto("name", "surname", "email@email.email", "123",
+                "Lithuania", new Date(2019, 1, 1),
+                new Time(10, 10, 10),
+                1, 20, ImmutableList.of(AgeGroup.YOUTH),
+                ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "additionalPreferences");
     }
 }

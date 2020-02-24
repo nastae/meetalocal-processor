@@ -3,6 +3,8 @@ package lt.govilnius.domain.reservation;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "meet_engagement_entity")
@@ -32,6 +34,9 @@ public class MeetEngagement {
     @Column(name = "confirmed")
     private Boolean confirmed;
 
+    @OneToMany(mappedBy="engagement", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Evaluation> evaluations;
+
     public MeetEngagement() {
     }
 
@@ -41,6 +46,7 @@ public class MeetEngagement {
         this.time = time;
         this.token = token;
         this.confirmed = confirmed;
+        this.evaluations = new HashSet<>();
     }
 
     public Long getId() {
@@ -89,5 +95,13 @@ public class MeetEngagement {
 
     public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public Set<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(Set<Evaluation> evaluations) {
+        this.evaluations = evaluations;
     }
 }

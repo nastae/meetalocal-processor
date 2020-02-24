@@ -1,9 +1,6 @@
 package lt.govilnius.domainService.filter;
 
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetLanguage;
-import lt.govilnius.domain.reservation.Volunteer;
-import lt.govilnius.domain.reservation.VolunteerLanguage;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,8 +21,7 @@ public class VolunteerFilter {
                 .findAll()
                 .stream()
                 .filter(v -> existJointLanguage(meet.getLanguages(), v.getLanguages()))
-                .filter(v -> meet.getAgeGroup().getFrom() <= v.getAge()
-                        && v.getAge() <= meet.getAgeGroup().getTo())
+                .filter(v -> isBetweenAgeGroup(meet.getMeetAgeGroups(), v.getAge()))
                 .collect(toList());
     }
 
@@ -36,6 +32,15 @@ public class VolunteerFilter {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    private boolean isBetweenAgeGroup(Set<MeetAgeGroup> ageGroups, Integer age) {
+        for (MeetAgeGroup meetAgeGroup : ageGroups) {
+            final AgeGroup ageGroup = meetAgeGroup.getAgeGroup();
+            if (ageGroup.getFrom() <= age && age <= ageGroup.getTo())
+                return true;
         }
         return false;
     }

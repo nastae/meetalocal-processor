@@ -1,6 +1,9 @@
 package lt.govilnius.domainService.schedule;
 
-import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetEngagement;
+import lt.govilnius.domain.reservation.Status;
+import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
@@ -8,25 +11,22 @@ import lt.govilnius.domainService.mail.EmailSenderConfig;
 import lt.govilnius.domainService.mail.Mail;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
-import lt.govilnius.facadeService.reservation.ReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 @Component
-public class MailSendingService {
+public class VolunteerMailProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailSendingService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VolunteerMailProcessor.class);
 
     @Autowired
     private MeetService meetService;
@@ -38,9 +38,6 @@ public class MailSendingService {
     private MeetEngagementFilter meetEngagementFilter;
 
     @Autowired
-    private ReportService reportService;
-
-    @Autowired
     private EmailSender emailSender;
 
     @Autowired
@@ -49,8 +46,11 @@ public class MailSendingService {
     @Value("${website.url}")
     private String websiteUrl;
 
-    @Value("${waiting.sent.request.milliseconds}")
-    private Long sentRequestWaiting;
+    @Value("${registration.url}")
+    private String registrationUrl;
+
+    @Value("${waiting.sent.volunteer.request.milliseconds}")
+    private Long sentVolunteerRequestWaiting;
 
     @Value("${waiting.evaluation.milliseconds}")
     private Long evaluationWaiting;
@@ -61,12 +61,14 @@ public class MailSendingService {
             final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
             if (engagements.size() > 0) {
                 meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+                meet = meetService.setFreezed(meet, false);
                 meetService.edit(meet.getId(), meet);
+                Meet finalMeet = meet;
                 engagements.forEach(engagement -> {
-                    LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
+                    LOGGER.info("Created a meet engagement of the meet with id " + finalMeet.getId());
                     final String token = engagement.getToken();
                     emailSender.send(new Mail(engagement.getVolunteer().getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
-                            meet, token, websiteUrl));
+                            finalMeet, token, websiteUrl));
                 });
             } else {
                 emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
@@ -81,18 +83,16 @@ public class MailSendingService {
                 .collect(toList());
     }
 
-    public void processVolunteerRequests() {
+    public void processRequests() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST).forEach(meet -> {
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentRequestWaiting) {
+            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
                 LOGGER.info("Process the sent request to meet whose id " + meet.getId());
+                meet = meetService.setFreezed(meet, false);
                 final List<MeetEngagement> engagements = meetEngagementFilter.filterForMail(
                         meetEngagementService.getConfirmedByMeetId(meet.getId()), meet);;
-                final List<Report> reports = reportService.getByMeetId(meet.getId());
                 EmailSenderConfig emailSenderConfig = null;
                 if (engagements.size() > 0) {
                     emailSenderConfig = prepareSentTouristRequestConfig(meet, engagements);
-                } else if (reports.size() > 0) {
-                    emailSenderConfig = prepareTouristReportConfig(meet);
                 } else {
                     emailSenderConfig = prepareTouristAdditionConfig(meet);
                 }
@@ -103,15 +103,13 @@ public class MailSendingService {
 
     public void processRequestsAfterAddition() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).forEach(meet -> {
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentRequestWaiting) {
+            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
                 LOGGER.info("Process the sent request of the meet with id " + meet.getId());
+                meet = meetService.setFreezed(meet, false);
                 List<MeetEngagement> meetEngagements = meetEngagementService.getConfirmedByMeetId(meet.getId());
-                List<Report> reports = reportService.getByMeetId(meet.getId());
                 EmailSenderConfig emailSenderConfig = null;
                 if (meetEngagements.size() > 0) {
                     emailSenderConfig = prepareSentTouristRequestConfig(meet, meetEngagements);
-                } else if (reports.size() > 0) {
-                    emailSenderConfig = prepareTouristReportConfig(meet);
                 } else {
                     emailSenderConfig = prepareTouristCanceledConfig(meet);
                 }
@@ -124,18 +122,26 @@ public class MailSendingService {
         meetService.findByStatus(Status.AGREED).forEach(meet -> {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= evaluationWaiting) {
                 LOGGER.info("Process agreement of the meet with id " + meet.getId());
+                meet = meetService.setFreezed(meet, false);
                 final Volunteer volunteer = meet.getVolunteer();
                 if (volunteer != null) {
-                    LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to tourist");
-                    EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(meet, websiteUrl);
-                    emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
+                    Optional<MeetEngagement> engagement = meetEngagementService.findByMeetIdAndVolunteerId(meet.getId(), volunteer.getId());
+                    if (engagement.isPresent()) {
+                        LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to tourist");
+                        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(engagement.get(), websiteUrl);
+                        emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
-                    LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
-                    emailSenderConfig = EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(meet, websiteUrl);
-                    emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
+                        LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
+                        emailSenderConfig = EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(engagement.get(), websiteUrl);
+                        emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
 
-                    meet.setStatus(Status.FINISHED);
-                    meetService.edit(meet.getId(), meet);
+                        meet.setStatus(Status.FINISHED);
+                        meetService.edit(meet.getId(), meet);
+                    } else {
+                        LOGGER.error("Fail to send evaluations of the meet with id " + meet.getId());
+                        meet.setStatus(Status.ERROR);
+                        meetService.edit(meet.getId(), meet);
+                    }
                 } else {
                     LOGGER.error("Fail to send evaluations of the meet with id " + meet.getId());
                     meet.setStatus(Status.ERROR);
@@ -152,18 +158,12 @@ public class MailSendingService {
         return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, meetEngagements, websiteUrl);
     }
 
-    private EmailSenderConfig prepareTouristReportConfig(Meet meet) {
-        LOGGER.info("Send report of the meet with id " + meet.getId() + " to tourist");
-        meet.setStatus(Status.REPORTED);
-        meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, websiteUrl);
-    }
 
     private EmailSenderConfig prepareTouristCanceledConfig(Meet meet) {
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist");
         meet.setStatus(Status.CANCELED);
         meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, websiteUrl);
+        return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, registrationUrl);
     }
 
     private EmailSenderConfig prepareTouristAdditionConfig(Meet meet) {

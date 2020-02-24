@@ -42,17 +42,17 @@ public class EmailSenderConfig {
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
                 .put("day", cal.get(Calendar.DAY_OF_MONTH))
-                .put("time", format("%02d:%02d", 1, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE)))
-                .put("touristName", meet.getName())
+                .put("hours", format("%02d", 1, cal.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", 1, cal.get(Calendar.MINUTE)))
+                .put("name", meet.getName())
                 .put("languages", languages)
                 .put("age", meet.getAge())
-                .put("touristCount", meet.getPeopleCount())
-                .put("hobbies", meet.getPreferences())
-                .put("preferences", meet.getComment())
+                .put("count", meet.getPeopleCount())
+                .put("preferences", meet.getPreferences())
+                .put("additionalPreferences", meet.getAdditionalPreferences())
                 .put("agreementUrl", websiteUrl + "/mail/agreements?token=" + token)
                 .put("cancellationUrl", websiteUrl + "/mail/cancellations?token=" + token)
-                .put("changeUrl", websiteUrl + "/mail/engagements-changes?token=" + token)
-                .put("reportUrl", websiteUrl + "/mail/reports?token=" + token)
+                .put("editUrl", websiteUrl + "/mail/engagements-changes?token=" + token)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -60,7 +60,14 @@ public class EmailSenderConfig {
     public static final TriFunction<Meet, List<MeetEngagement>, String, EmailSenderConfig> TOURIST_REQUEST_CONFIG = (meet, engagements, websiteUrl) -> {
         final Map<String, Object> model = new HashMap<>();
         model.put("name", meet.getName());
-        model.put("engagements", engagements);
+        model.put("engagements", engagements
+                .stream()
+                .filter(e -> e.getTime().equals(meet.getTime()))
+                .collect(Collectors.toList()));
+        model.put("engagementsWithEditedTime", engagements
+                .stream()
+                .filter(e -> !e.getTime().equals(meet.getTime()))
+                .collect(Collectors.toList()));
         model.put("websiteUrl", websiteUrl);
 
         return new EmailSenderConfig(Template.TOURIST_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
@@ -84,7 +91,8 @@ public class EmailSenderConfig {
                 .put("name", meet.getName())
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("time", format("%02d:%02d", 1, time.get(Calendar.HOUR), time.get(Calendar.MINUTE)))
+                .put("hours", format("%02d", 1, time.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", 1, time.get(Calendar.MINUTE)))
                 .put("friendName", v.getName())
                 .put("friendSurname", v.getSurname())
                 .put("phoneNumber", v.getPhoneNumber())
@@ -102,42 +110,53 @@ public class EmailSenderConfig {
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("time", format("%02d:%02d", 1, time.get(Calendar.HOUR), time.get(Calendar.MINUTE)))
-                .put("touristName", v.getName())
+                .put("hours", format("%02d", 1, time.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", 1, time.get(Calendar.MINUTE)))
+                .put("name", v.getName())
                 .put("phoneNumber", meet.getPhoneNumber())
                 .put("email", meet.getEmail())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_EVALUATION_CONFIG = (meet, websiteUrl) ->
-        new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
+    public static final BiFunction<MeetEngagement, String, EmailSenderConfig> TOURIST_EVALUATION_CONFIG = (engagement, websiteUrl) -> {
+        final Meet meet = engagement.getMeet();
+        return new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", meet.getName())
+                .put("evaluationUrl", websiteUrl + "/tourist-action-management/evaluations?token" + engagement.getToken())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
+    };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_EVALUATION_CONFIG = (meet, websiteUrl) ->
-            new EmailSenderConfig(Template.VOLUNTEER_EVALUATION, ImmutableMap.of(),
-                    format("%s # %07d", SUBJECT, meet.getId()));
+    public static final BiFunction<MeetEngagement, String, EmailSenderConfig> VOLUNTEER_EVALUATION_CONFIG = (engagement, websiteUrl) -> {
+        final Meet meet = engagement.getMeet();
+        return new EmailSenderConfig(Template.VOLUNTEER_EVALUATION, ImmutableMap
+                .<String, Object>builder()
+                .put("evaluationUrl", websiteUrl + "/volunteer-action-management/evaluations?token=" + engagement.getToken())
+                .build(),
+                format("%s # %07d", SUBJECT, meet.getId()));
+    };
 
     public static final BiFunction<Meet, String, EmailSenderConfig> VOLUNTEER_CANCELLATION_CONFIG = (meet, websiteUrl) ->
             new EmailSenderConfig(Template.VOLUNTEER_CANCELLATION, ImmutableMap.of(),
                     format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_CONFIG = (meet, websiteUrl) ->
+    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_CONFIG = (meet, registrationUrl) ->
             new EmailSenderConfig(Template.TOURIST_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
-                            .put("touristName", meet.getName())
+                            .put("name", meet.getName())
+                            .put("registrationUrl", registrationUrl)
                             .build(),
                     format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_SELECTED_CONFIG = (meet, websiteUrl) ->
+    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_SELECTED_CONFIG = (meet, registrationUrl) ->
         new EmailSenderConfig(Template.TOURIST_CANCELLATION_NOT_SELECTED,
                 ImmutableMap
                 .<String, Object>builder()
-                .put("touristName", meet.getName())
+                .put("name", meet.getName())
+                .put("registrationUrl", registrationUrl)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
 

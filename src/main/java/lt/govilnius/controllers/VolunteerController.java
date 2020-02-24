@@ -34,10 +34,10 @@ public class VolunteerController {
 
     @DeleteMapping("/volunteers/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        final Optional<Volunteer> volunteerOptional = volunteerService.delete(id);
-        return volunteerOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.unprocessableEntity().build());
+        final boolean deleted = volunteerService.delete(id);
+        return deleted ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.unprocessableEntity().build();
     }
 
     @GetMapping("/volunteers/{id}")
