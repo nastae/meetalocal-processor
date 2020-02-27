@@ -36,7 +36,7 @@ public class VolunteerFilter {
         return false;
     }
 
-    private boolean isBetweenAgeGroup(Set<MeetAgeGroup> ageGroups, Integer age) {
+    private boolean isBetweenAgeGroup(Set<MeetAgeGroup> ageGroups, Long age) {
         for (MeetAgeGroup meetAgeGroup : ageGroups) {
             final AgeGroup ageGroup = meetAgeGroup.getAgeGroup();
             if (ageGroup.getFrom() <= age && age <= ageGroup.getTo())

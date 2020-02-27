@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleMeetDto;
+import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +63,7 @@ public class VolunteerActionControllerTest {
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    private static final String ERROR_MESSAGE = "Veiksmas negalimas!";
+    private static final String ERROR_MESSAGE = "Unfortunately, you've run out of time!";
 
     @After
     public void cleanEachTest() {
@@ -81,8 +82,8 @@ public class VolunteerActionControllerTest {
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
@@ -117,8 +118,8 @@ public class VolunteerActionControllerTest {
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
@@ -153,8 +154,8 @@ public class VolunteerActionControllerTest {
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
@@ -189,8 +190,8 @@ public class VolunteerActionControllerTest {
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();

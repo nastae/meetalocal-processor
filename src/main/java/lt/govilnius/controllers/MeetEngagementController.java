@@ -3,30 +3,31 @@ package lt.govilnius.controllers;
 import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/engagement-management")
 public class MeetEngagementController {
 
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    @GetMapping("/engagements/meets/{id}")
-    public ResponseEntity<?> getByMeet(@PathVariable("id") long id) {
-        final List<MeetEngagement> meetEngagements = meetEngagementService.getByMeetId(id);
-        return ResponseEntity.ok(meetEngagements);
+    @RequestMapping(value = { "", "/" })
+    public String index(@PathVariable("id") long id, Model model) {
+        model.addAttribute("engagements", meetEngagementService.getByMeetId(id));
+        return "engagement/index";
     }
 
-    @GetMapping("/engagements/volunteers/{id}")
-    public ResponseEntity<?> getByVolunteer(@PathVariable("id") long id) {
-        final List<MeetEngagement> meetEngagements = meetEngagementService.getByVolunteerId(id);
-        return ResponseEntity.ok(meetEngagements);
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    public String viewMeet(@RequestParam(name = "token") String token, Model model) {
+        final MeetEngagement engagement = meetEngagementService.getByToken(token).get();
+        model.addAttribute("engagement", engagement);
+        model.addAttribute("activePage", "meets");
+        return "meet/view";
     }
 }

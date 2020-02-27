@@ -29,22 +29,24 @@ public class VolunteerFilterTest {
 
     @Test
     public void filterByMeet_Volunteers_ShouldReturnFiltered() {
-        Volunteer volunteer1 = sampleVolunteer(Language.ENGLISH, 26);
-        Volunteer volunteer3 = sampleVolunteer(Language.ENGLISH, 36);
-        Volunteer volunteer2 = sampleVolunteer(Language.RUSSIAN, 36);
+        Volunteer volunteer1 = sampleVolunteer(Language.ENGLISH);
+        Volunteer volunteer3 = sampleVolunteer(Language.ENGLISH);
+        Volunteer volunteer2 = sampleVolunteer(Language.RUSSIAN);
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(volunteer1, volunteer2, volunteer3));
         Meet meet = sampleMeet();
-        meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));
+        meet.setMeetAgeGroups(ImmutableSet.of(
+                new MeetAgeGroup(AgeGroup.YOUTH, meet),
+                new MeetAgeGroup(AgeGroup.JUNIOR_ADULTS, meet),
+                new MeetAgeGroup(AgeGroup.SENIOR_ADULTS, meet),
+                new MeetAgeGroup(AgeGroup.SENIORS, meet)));
         List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
-        Assert.assertEquals(volunteers.size(), 1);
-        Volunteer volunteer = volunteers.get(0);
-        Assert.assertEquals(volunteer.getAge().intValue(), 26);
+        Assert.assertEquals(volunteers.size(), 2);
     }
 
     @Test
     public void filterByMeet_VolunteersWithBadAge_ShouldReturnFiltered() {
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(
-                sampleVolunteer(Language.RUSSIAN, 36)));
+                sampleVolunteer(Language.RUSSIAN)));
         Meet meet = sampleMeet();
         meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));
         List<Volunteer> volunteers = volunteerFilter.filterByMeet(meet);
@@ -54,7 +56,7 @@ public class VolunteerFilterTest {
     @Test
     public void filterByMeet_VolunteersWithBadLanguage_ShouldReturnFiltered() {
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(
-                sampleVolunteer(Language.ENGLISH, 26)));
+                sampleVolunteer(Language.ENGLISH)));
         Meet meet = sampleMeet();
         meet.setLanguages(ImmutableSet.of(new MeetLanguage(Language.RUSSIAN, null)));
         meet.setMeetAgeGroups(ImmutableSet.of(new MeetAgeGroup(AgeGroup.YOUTH, meet)));

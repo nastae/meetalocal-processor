@@ -128,16 +128,16 @@ public class EmailSenderTest {
     }
 
     public static Volunteer sampleVolunteer() {
-        return sampleVolunteer(Language.RUSSIAN, 26);
+        return sampleVolunteer(Language.RUSSIAN);
     }
 
-    public static Volunteer sampleVolunteer(Language language, Integer age) {
+    public static Volunteer sampleVolunteer(Language language) {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", new Date(1999, 11, 11),
+                "name", "surname", new Date(1980, 11, 11),
                 "123", "email@email.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
-                age, "description", true, new HashSet<>());
+                "description", true, new HashSet<>());
     }
 
     public static MeetLanguage sampleMeetLanguage(Language language) {

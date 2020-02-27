@@ -25,4 +25,13 @@ public class VolunteerLanguageService {
             return Optional.empty();
         }
     }
+
+    public boolean delete(Long id) {
+        Optional<VolunteerLanguage> volunteerLanguage = repository.findById(id);
+        if (volunteerLanguage.isPresent()) {
+            repository.delete(volunteerLanguage.get());
+            return true;
+        }
+        return false;
+    }
 }

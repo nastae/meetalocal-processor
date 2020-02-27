@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Meet a local - administrator page</title>
+            <th:block th:include="fragments/head :: head"></th:block>
+        </head>
+<body>
+<th:block th:include="fragments/header :: body"></th:block>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">View Engagement</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="inputId">ID</label>
+                        <input type="text" class="form-control" id="inputId" placeholder="ID" th:field="*{engagement.id}" name="id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMeetID">Meet ID</label>
+                        <input type="text" class="form-control" id="inputMeetID" placeholder="Meet ID" th:field="*{engagement.meet.id}" name="meet" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputVolunteerID">Volunteer ID</label>
+                        <input type="text" class="form-control" id="inputVolunteerID" placeholder="Volunteer ID" th:field="*{engagement.volunteer.id}" name="volunteer" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTime">Time</label>
+                        <input type="text" class="form-control" id="inputTime" placeholder="Time" th:field="*{engagement.time}" name="time" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputToken">Token</label>
+                        <input type="text" class="form-control" id="inputToken" placeholder="Token" th:field="*{engagement.token}" name="token" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputConfirmed">Confirmed</label>
+                        <input type="text" class="form-control" id="inputConfirmed" placeholder="Confirmed" th:field="*{engagement.confirmed}" name="confirmed" disabled="disabled" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEvaluations">Desirable Meet Age Groups</label><br>
+                        <th:block th:each="evaluation : ${engagement.evaluations}">
+                            <span th:text="${evaluation.evaluator}">Evaluator</span><br>
+                            <input type="text" name="languages" th:value="${evaluation.comment}" id="inputEvaluations" disabled="disabled"/><br>
+                        </th:block>
+                    </div><br>
+
+                    <div class="text-right">
+                        <a href="/meet-management" th:href="@{/meet-management}" class="btn btn-default">Back</a>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="fragments/js :: body"></th:block>
+<script src="../static/js/app.js" th:src="@{/js/app.js}"></script>
+</body>
+</html>

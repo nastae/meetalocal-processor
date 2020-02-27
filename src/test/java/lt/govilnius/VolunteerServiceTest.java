@@ -2,6 +2,7 @@ package lt.govilnius;
 
 import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domain.reservation.VolunteerDto;
 import lt.govilnius.facadeService.reservation.VolunteerLanguageService;
 import lt.govilnius.facadeService.reservation.VolunteerActionService;
 import lt.govilnius.facadeService.reservation.VolunteerService;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.doNothing;
@@ -36,11 +38,12 @@ public class VolunteerServiceTest {
 
     @Test
     public void create_Volunteer_ShouldBeCreated() {
+        VolunteerDto volunteerDto = sampleVolunteerDto();
         Volunteer volunteer = sampleVolunteer();
         when(volunteerRepository.save(any())).thenReturn(volunteer);
         when(volunteerLanguageService.create(any(), any())).thenReturn(Optional.empty());
-        when(volunteerRepository.findById(volunteer.getId())).thenReturn(Optional.of(volunteer));
-        Optional<Volunteer> result = volunteerService.create(volunteer);
+        when(volunteerRepository.findById(any())).thenReturn(Optional.of(volunteer));
+        Optional<Volunteer> result = volunteerService.create(volunteerDto);
         Assert.assertTrue(result.isPresent());
     }
 
@@ -82,7 +85,7 @@ public class VolunteerServiceTest {
     public void edit_Volunteer_ShouldEdit() {
         Volunteer oldVolunteer = sampleVolunteer();
         oldVolunteer.setId(1L);
-        Volunteer newVolunteer = sampleVolunteer();
+        VolunteerDto newVolunteer = sampleVolunteerDto();
         newVolunteer.setId(2L);
         when(volunteerRepository.findById(oldVolunteer.getId())).thenReturn(Optional.of(oldVolunteer));
         when(volunteerRepository.save(oldVolunteer)).thenReturn(oldVolunteer);
@@ -93,11 +96,12 @@ public class VolunteerServiceTest {
 
     @Test
     public void edit_NotExistVolunteer_ShouldNotEdit() {
+        final VolunteerDto volunteerDto = sampleVolunteerDto();
         final Volunteer volunteer = sampleVolunteer();
         volunteer.setId(1L);
         when(volunteerRepository.findById(volunteer.getId())).thenReturn(Optional.of(volunteer));
         when(volunteerRepository.save(any())).thenReturn(volunteer);
-        final Optional<Volunteer> result = volunteerService.edit(1L, volunteer);
+        final Optional<Volunteer> result = volunteerService.edit(1L, volunteerDto);
         Assert.assertTrue(result.isPresent());
     }
 

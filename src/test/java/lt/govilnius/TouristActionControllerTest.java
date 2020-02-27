@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleMeetDto;
+import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,7 +50,7 @@ public class TouristActionControllerTest {
     @Autowired
     private VolunteerService volunteerService;
 
-    private static final String ERROR_MESSAGE = "The action is not available!";
+    private static final String ERROR_MESSAGE = "Unfortunately, you've run out of time!";
 
     @Autowired
     private MeetEngagementRepository meetEngagementRepository;
@@ -135,8 +136,8 @@ public class TouristActionControllerTest {
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
@@ -174,8 +175,8 @@ public class TouristActionControllerTest {
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
@@ -210,8 +211,8 @@ public class TouristActionControllerTest {
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
-        Volunteer volunteer = sampleVolunteer();
-        volunteer = volunteerService.create(volunteer).get();
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
 
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();

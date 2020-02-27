@@ -5,7 +5,6 @@ import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domain.reservation.VolunteerLanguage;
 import lt.govilnius.facadeService.reservation.VolunteerLanguageService;
 import lt.govilnius.repository.reservation.VolunteerLanguageRepository;
-import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,7 @@ import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,5 +45,15 @@ public class VolunteerLanguageServiceTest {
         when(repository.save(any())).thenThrow(new RuntimeException());
         final Optional<VolunteerLanguage> result = service.create(language, volunteer);
         Assert.assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void delete_VolunteerLanguage_ShouldBeDeleted() {
+        VolunteerLanguage volunteerLanguage = new VolunteerLanguage(Language.ENGLISH, sampleVolunteer());
+        volunteerLanguage.setId(1L);
+        when(repository.findById(volunteerLanguage.getId())).thenReturn(Optional.of(volunteerLanguage));
+        doNothing().when(repository).delete(volunteerLanguage);
+        boolean result = service.delete(volunteerLanguage.getId());
+        Assert.assertTrue(result);
     }
 }

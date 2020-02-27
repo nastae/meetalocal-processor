@@ -29,16 +29,16 @@ public class VolunteerActionController {
     public String agree(@RequestParam(name = "token") String token) {
         final Optional<MeetEngagement> engagement = volunteerActionService.agree(token);
         return engagement.isPresent() ?
-                "thanks-for-answer-lt" :
-                "error-lt";
+                "thanks-for-answer-en" :
+                "error-en";
     }
 
     @GetMapping("/cancellations")
     public String cancel(@RequestParam(name = "token") String token) {
         final Optional<MeetEngagement> engagement = volunteerActionService.cancel(token);
         return engagement.isPresent() ?
-                "thanks-for-answer-lt" :
-                "error-lt";
+                "thanks-for-answer-en" :
+                "error-en";
     }
 
     @GetMapping("/engagements")
@@ -51,7 +51,7 @@ public class VolunteerActionController {
             model.addAttribute("tourist", engagement.getMeet().getName());
             return "edit-engagement";
         } else {
-            return "error-lt";
+            return "error-en";
         }
     }
 
@@ -59,8 +59,8 @@ public class VolunteerActionController {
     public String edit(@RequestParam Map<String, String> params) {
         final Optional<MeetEngagement> engagement = volunteerActionService.editEngagement(params.get("token"), params.get("time") + ":00");
         return engagement.isPresent() ?
-                "thanks-for-answer-lt" :
-                "error-lt";
+                "thanks-for-answer-en" :
+                "error-en";
     }
 
     @GetMapping("/evaluations")
@@ -71,7 +71,7 @@ public class VolunteerActionController {
             model.addAttribute("token", token);
             return "volunteer-evaluation";
         } else {
-            return "error-lt";
+            return "error-en";
         }
     }
 
@@ -79,7 +79,7 @@ public class VolunteerActionController {
     public String evaluate(@RequestParam Map<String, String> params) {
         final Optional<Evaluation> engagement = volunteerActionService.evaluate(params.get("token"), params.get("comment"));
         return engagement.isPresent() ?
-                "thanks-for-answer-lt" :
-                "error-lt";
+                "thanks-for-answer-en" :
+                "error-en";
     }
 }

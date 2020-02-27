@@ -1,11 +1,17 @@
 package lt.govilnius.domain.reservation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Set;
 
 @Entity
@@ -39,8 +45,6 @@ public class Volunteer implements Serializable {
     @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<VolunteerLanguage> languages;
 
-    private Integer age;
-
     private String description;
 
     @Column(name = "active", nullable = false)
@@ -55,7 +59,7 @@ public class Volunteer implements Serializable {
 
     public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
-                     Integer age, String description, Boolean active, Set<MeetEngagement> meetEngagements) {
+                     String description, Boolean active, Set<MeetEngagement> meetEngagements) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
@@ -64,7 +68,6 @@ public class Volunteer implements Serializable {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.languages = languages;
-        this.age = age;
         this.description = description;
         this.active = active;
         this.meetEngagements = meetEngagements;
@@ -126,12 +129,11 @@ public class Volunteer implements Serializable {
         this.languages = languages;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+    public Long getAge() {
+        final LocalDateTime now = LocalDateTime.now();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateOfBirth);
+        return (long) now.getYear() - (cal.get(Calendar.YEAR) - 1900);
     }
 
     public String getDescription() {

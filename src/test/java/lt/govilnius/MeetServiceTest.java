@@ -17,7 +17,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,5 +132,12 @@ public class MeetServiceTest {
                 new Time(10, 10, 10),
                 1, 20, ImmutableList.of(AgeGroup.YOUTH),
                 ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "additionalPreferences");
+    }
+
+    public static VolunteerDto sampleVolunteerDto() {
+        return new VolunteerDto(1L,
+                "name", "surname", new Date(1999, 11, 11),
+                "123", "email@email.com", ImmutableList.of(Language.ENGLISH.name()),
+                "description", true);
     }
 }

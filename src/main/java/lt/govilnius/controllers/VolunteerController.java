@@ -1,55 +1,123 @@
 package lt.govilnius.controllers;
 
-import lt.govilnius.domain.reservation.Volunteer;
+import com.google.common.collect.ImmutableList;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/volunteer-management")
 public class VolunteerController {
 
     @Autowired
     private VolunteerService volunteerService;
 
-    @PostMapping("/volunteers")
-    public ResponseEntity<?> add(@RequestBody Volunteer volunteer) {
-        final Optional<Volunteer> volunteerOptional = volunteerService.create(volunteer);
-        return volunteerOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.unprocessableEntity().build());
+    @RequestMapping(value = { "", "/" })
+    public String index(Model model) {
+        model.addAttribute("activePage", "volunteers");
+        model.addAttribute("volunteers", this.volunteerService.getAll());
+        return "volunteer/index";
     }
 
-    @PutMapping("/volunteers/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid @RequestBody Volunteer volunteer) {
-        final Optional<Volunteer> volunteerOptional = volunteerService.edit(id, volunteer);
-        return volunteerOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.unprocessableEntity().build());
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addVolunteerForm(Volunteer volunteer, Model model) {
+        model.addAttribute("activePage", "volunteers");
+        model.addAttribute("availableLanguages", languages());
+        model.addAttribute("volunteerDto", new VolunteerDto());
+        return "volunteer/add";
     }
 
-    @DeleteMapping("/volunteers/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        final boolean deleted = volunteerService.delete(id);
-        return deleted ?
-                ResponseEntity.ok().build() :
-                ResponseEntity.unprocessableEntity().build();
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addVolunteer(@Valid VolunteerDto volunteerDto,
+                               BindingResult bindingResult, Model model) {
+        model.addAttribute("activePage", "volunteers");
+        model.addAttribute("availableLanguages", languages());
+        if (bindingResult == null || bindingResult.hasErrors()) {
+            return "volunteer/add";
+        }
+        volunteerDto.setActive(true);
+        Optional<Volunteer> optional = volunteerService.create(volunteerDto);
+        return optional.isPresent() ?
+                "redirect:/volunteer-management" :
+                "volunteer/add";
     }
 
-    @GetMapping("/volunteers/{id}")
-    public ResponseEntity<?> get(@PathVariable("id") long id) {
-        final Optional<Volunteer> volunteerOptional = volunteerService.get(id);
-        return volunteerOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.unprocessableEntity().build());
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    public String viewVolunteer(@RequestParam(name = "id") String id, Model model) {
+        final Volunteer volunteer = this.volunteerService.get(Long.parseLong(id)).get();
+        model.addAttribute("volunteer", volunteer);
+        model.addAttribute("languages", checkedLanguages(volunteer.getLanguages()));
+        model.addAttribute("activePage", "volunteers");
+        return "volunteer/view";
     }
 
-    @GetMapping("/volunteers")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(volunteerService.getAll());
+    private List<CheckedLanguage> checkedLanguages(Set<VolunteerLanguage> languages) {
+        List<CheckedLanguage> checkedLanguages = new ArrayList<>();
+        for (Language language : languages()) {
+            for (Language checked : languages
+                    .stream()
+                    .map(VolunteerLanguage::getLanguage)
+                    .collect(Collectors.toList())) {
+                if (checked.getName().equals(language.getName())) {
+                    checkedLanguages.add(new CheckedLanguage(language, true));
+                }
+            }
+        }
+        for (Language language : languages()) {
+            if (!containLanguage(checkedLanguages, language)) {
+                checkedLanguages.add(new CheckedLanguage(language, false));
+            }
+        }
+        return checkedLanguages;
+    }
+
+    private boolean containLanguage(List<CheckedLanguage> languages, Language language) {
+        return languages.stream().anyMatch(l -> l.getLanguage().getName().equals(language.getName()));
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String editVolunteer(@RequestParam(name = "id") String id, Model model) {
+        model.addAttribute("activePage", "volunteers");
+        final Optional<Volunteer> volunteer = volunteerService.get(Long.parseLong(id));
+        if (volunteer.isPresent()) {
+            model.addAttribute("volunteerDto", new VolunteerDto(volunteer.get()));
+            model.addAttribute("availableLanguages", checkedLanguages(volunteer.get().getLanguages()));
+            return "volunteer/edit";
+        } else {
+            return "redirect:/volunteer-management";
+        }
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String updateVolunteer(VolunteerDto volunteerDto) {
+        volunteerService.edit(volunteerDto.getId(), volunteerDto);
+        return "redirect:/volunteer-management/view?id=" + volunteerDto.getId();
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String deleteVolunteer(@RequestParam(name = "id") String id) {
+        this.volunteerService.delete(Long.parseLong(id));
+        return "redirect:/volunteer-management";
+    }
+
+    private List<Language> languages() {
+        return ImmutableList
+                .<Language>builder()
+                .add(Language.ENGLISH)
+                .add(Language.RUSSIAN)
+                .build();
     }
 }
