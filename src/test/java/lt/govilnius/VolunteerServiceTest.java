@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domain.reservation.VolunteerDto;
 import lt.govilnius.facadeService.reservation.VolunteerLanguageService;
-import lt.govilnius.facadeService.reservation.VolunteerActionService;
 import lt.govilnius.facadeService.reservation.VolunteerService;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.Assert;
@@ -20,7 +19,6 @@ import java.util.Optional;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
