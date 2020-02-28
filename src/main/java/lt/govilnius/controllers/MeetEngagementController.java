@@ -23,10 +23,10 @@ public class MeetEngagementController {
     }
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String viewMeet(@RequestParam(name = "token") String token, Model model) {
+    public String viewEngagement(@RequestParam(name = "token") String token, Model model) {
         final MeetEngagement engagement = meetEngagementService.getByToken(token).get();
         model.addAttribute("engagement", engagement);
         model.addAttribute("activePage", "meets");
-        return "meet/view";
+        return "engagement/view";
     }
 }

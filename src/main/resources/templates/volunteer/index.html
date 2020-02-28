@@ -24,7 +24,6 @@
                         <th>Phone Number</th>
                         <th>Email</th>
                         <th>Date of Birth</th>
-                        <th>Description</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -36,7 +35,6 @@
                             <td th:text = "${volunteer.phoneNumber}"></td>
                             <td th:text = "${volunteer.email}"></td>
                             <td th:text = "${volunteer.dateOfBirth}"></td>
-                            <td th:text = "${volunteer.description}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <form th:action="${'/volunteer-management/view'}" method="GET" style='display:inline;'>

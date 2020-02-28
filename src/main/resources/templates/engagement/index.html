@@ -21,7 +21,6 @@
                         <th>Meet ID</th>
                         <th>Volunteer ID</th>
                         <th>Time</th>
-                        <th>Token</th>
                         <th>Confirmed</th>
                         <th>Meet Status</th>
                         <th>Evaluations Size</th>
@@ -34,10 +33,9 @@
                             <td th:text = "${engagement.meet.id}"></td>
                             <td th:text = "${engagement.volunteer.id}"></td>
                             <td th:text = "${engagement.time}"></td>
-                            <td th:text = "${engagement.token}"></td>
                             <td th:text = "${engagement.confirmed}"></td>
                             <td th:text = "${engagement.meet.status}"></td>
-                            <td th:text = "${engagement.evaluations.size}"></td>
+                            <td th:text = "${#lists.size(engagement.evaluations)}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <form th:action="${'/engagement-management/view'}" method="GET" style='display:inline;'>

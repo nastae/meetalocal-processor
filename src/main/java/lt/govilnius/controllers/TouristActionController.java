@@ -42,10 +42,10 @@ public class TouristActionController {
                 model.addAttribute("meet", meetId);
                 return "edit-meet";
             } else {
-                return "error-en";
+                return "run-out-of-time";
             }
         } catch (RuntimeException ex) {
-            return "error-en";
+            return "run-out-of-time";
         }
     }
 
@@ -59,7 +59,7 @@ public class TouristActionController {
         final Optional<Meet> meet = touristActionService.editMeet(params.get("meet"), ageGroups);
         return meet.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 
     @GetMapping("/selections")
@@ -68,7 +68,7 @@ public class TouristActionController {
         if (meet.isPresent()) {
             return "thanks-for-answer-en";
         } else {
-            return "error-en";
+            return "run-out-of-time";
         }
     }
 
@@ -79,7 +79,7 @@ public class TouristActionController {
             model.addAttribute("token", token);
             return "tourist-evaluation";
         } else {
-            return "error-en";
+            return "run-out-of-time";
         }
     }
 
@@ -88,6 +88,6 @@ public class TouristActionController {
         final Optional<Evaluation> engagement = touristActionService.evaluate(params.get("token"), params.get("comment"));
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 }
