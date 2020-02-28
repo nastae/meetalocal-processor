@@ -116,7 +116,7 @@ public class EmailSenderTest {
         return new Meet(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", "email@email.email",
+                "name", "surname", "meetalocaltest@gmail.com",
                 "123", "Lithuania", new Date(2019, 11, 11),
                 new Time(10, 10, 10),
                 1, 20, new HashSet<>(),
@@ -136,7 +136,7 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "name", "surname", new Date(1980, 11, 11),
-                "123", "email@email.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
+                "123", "meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
                 "description", true, new HashSet<>());
     }
 

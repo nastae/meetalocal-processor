@@ -127,7 +127,7 @@ public class MeetServiceTest {
     }
 
     public static MeetDto sampleMeetDto() {
-        return new MeetDto("name", "surname", "email@email.email", "123",
+        return new MeetDto("name", "surname", "meetalocaltest@gmail.com", "123",
                 "Lithuania", new Date(2019, 1, 1),
                 new Time(10, 10, 10),
                 1, 20, ImmutableList.of(AgeGroup.YOUTH),
@@ -137,7 +137,7 @@ public class MeetServiceTest {
     public static VolunteerDto sampleVolunteerDto() {
         return new VolunteerDto(1L,
                 "name", "surname", new Date(1999, 11, 11),
-                "123", "email@email.com", ImmutableList.of(Language.ENGLISH.name()),
+                "123", "meetalocaltest@gmail.com", ImmutableList.of(Language.ENGLISH.name()),
                 "description", true);
     }
 }
