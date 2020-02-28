@@ -49,8 +49,12 @@ public class TouristMailProcessorTest {
     @Autowired
     private MeetEngagementRepository meetEngagementRepository;
 
+    @Autowired
+    private MeetStatusRepository meetStatusRepository;
+
     @After
     public void cleanEachTest() {
+        meetStatusRepository.findAll().forEach(status -> meetStatusRepository.delete(status));
         meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
         volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
         meetEngagementRepository.findAll().forEach(meetEngagement -> meetEngagementRepository.delete(meetEngagement));
@@ -89,13 +93,15 @@ public class TouristMailProcessorTest {
 
     @Test
     public void processTouristRequest_SentMeetToTouristWithoutEngagement_ShouldSendCancellation() {
+        meetStatusRepository.findAll().forEach(status -> meetStatusRepository.delete(status));
         meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
-        meet = meetRepository.save(meet);
-
         Volunteer volunteer = sampleVolunteer();
         volunteer = volunteerRepository.save(volunteer);
+
+        Meet meet = sampleMeet();
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setVolunteer(volunteer);
+        meet = meetRepository.save(meet);
 
         touristMailProcessor.processRequest(volunteer, meet);
         Assert.assertEquals(meetRepository.findAll().size(), 1);

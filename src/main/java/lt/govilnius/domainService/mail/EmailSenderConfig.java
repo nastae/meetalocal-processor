@@ -50,9 +50,9 @@ public class EmailSenderConfig {
                 .put("count", meet.getPeopleCount())
                 .put("preferences", meet.getPreferences())
                 .put("additionalPreferences", meet.getAdditionalPreferences())
-                .put("agreementUrl", websiteUrl + "/mail/agreements?token=" + token)
-                .put("cancellationUrl", websiteUrl + "/mail/cancellations?token=" + token)
-                .put("editUrl", websiteUrl + "/mail/engagements-changes?token=" + token)
+                .put("agreementUrl", websiteUrl + "/volunteer-action-management/agreements?token=" + token)
+                .put("cancellationUrl", websiteUrl + "/volunteer-action-management/cancellations?token=" + token)
+                .put("editUrl", websiteUrl + "/volunteer-action-management/engagements?token=" + token)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -77,7 +77,7 @@ public class EmailSenderConfig {
         new EmailSenderConfig(Template.TOURIST_ADDITION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", meet.getName())
-                .put("changeMeetAfterAdditionUrl", websiteUrl + "/mail/meets-changes?meet=" + meet.getId().toString())
+                .put("changeMeetAfterAdditionUrl", websiteUrl + "/tourist-action-management/meets?meet=" + meet.getId().toString())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
 
