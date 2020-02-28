@@ -26,21 +26,19 @@ function onSubmit(e) {
   data.peopleCount = itemResponses[7].getResponse();
   data.age = itemResponses[8].getResponse();
   var ageGroupsResponses = itemResponses[9].getResponse();
-  if (ageGroupsResponses != null) {
-    var ageGroups = [];
-    for (var j = 0; j < ageGroupsResponses.length; j++) {
-      ageGroups.push(toAgeGroupName(ageGroupsResponses[j]));
-    }
-    data.ageGroups = ageGroups;
+  var ageGroups = [];
+  for (var j = 0; j < ageGroupsResponses.length; j++) {
+    ageGroups.push(toAgeGroupName(ageGroupsResponses[j]));
   }
+  data.ageGroups = ageGroups;
   var languagesResponses = itemResponses[10].getResponse();
   var languages = [];
   for (var j = 0; j < languagesResponses.length; j++) {
     languages.push(languagesResponses[j].toUpperCase());
   }
   data.languages = languages;
-  var preferencesResponses = itemResponses[11].getResponse();
-  if (preferencesResponses != null) {
+  if (itemResponses[11] != undefined) {
+    var preferencesResponses = itemResponses[11].getResponse();
     var preferences = "";
     for (var j = 0; j < preferencesResponses.length; j++) {
         preferences += preferencesResponses[j];
@@ -49,8 +47,8 @@ function onSubmit(e) {
     }
     data.preferences = preferences;
   }
-  var additionalPreferencesResponse = itemResponses[12].getResponse();
-  if (additionalPreferencesResponse != null) {
+  if (itemResponses[12] != undefined) {
+    var additionalPreferencesResponse = itemResponses[12].getResponse();
     data.additionalPreferences = additionalPreferencesResponse;
   }
 
@@ -65,7 +63,7 @@ function onSubmit(e) {
     'contentType': 'application/json',
     'payload' : JSON.stringify(data)
   };
-  var url = "http://localhost:8080/registration/meets";
+  var url = "http://meet-a-local-267803.appspot.com/registration/meets";
   UrlFetchApp.fetch(url, options);
 }
 

@@ -65,27 +65,23 @@ public class VolunteerController {
     }
 
     private List<CheckedLanguage> checkedLanguages(Set<VolunteerLanguage> languages) {
-        List<CheckedLanguage> checkedLanguages = new ArrayList<>();
-        for (Language language : languages()) {
+        List<CheckedLanguage> checkedLanguages = languages()
+                .stream()
+                .map(e -> new CheckedLanguage(e, false))
+                .collect(Collectors.toList());
+        for (int i = 0; i < checkedLanguages.size(); i++) {
             for (Language checked : languages
                     .stream()
                     .map(VolunteerLanguage::getLanguage)
                     .collect(Collectors.toList())) {
-                if (checked.getName().equals(language.getName())) {
-                    checkedLanguages.add(new CheckedLanguage(language, true));
+                if (checked.getName().equals(checkedLanguages.get(i).getLanguage().getName())) {
+                    final CheckedLanguage checkedLanguage = checkedLanguages.get(i);
+                    checkedLanguage.setChecked(true);
+                    checkedLanguages.set(i, checkedLanguage);
                 }
             }
         }
-        for (Language language : languages()) {
-            if (!containLanguage(checkedLanguages, language)) {
-                checkedLanguages.add(new CheckedLanguage(language, false));
-            }
-        }
         return checkedLanguages;
-    }
-
-    private boolean containLanguage(List<CheckedLanguage> languages, Language language) {
-        return languages.stream().anyMatch(l -> l.getLanguage().getName().equals(language.getName()));
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
