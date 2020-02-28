@@ -1,6 +1,7 @@
 package lt.govilnius.domainService.filter;
 
 import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.time.DateUtils;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class VolunteerFilter {
                 .findAll()
                 .stream()
                 .filter(v -> existJointLanguage(meet.getLanguages(), v.getLanguages()))
-                .filter(v -> isBetweenAgeGroup(meet.getMeetAgeGroups(), v.getAge()))
+                .filter(v -> isBetweenAgeGroup(meet.getMeetAgeGroups(), DateUtils.yearsFromNow(v.getDateOfBirth())))
                 .collect(toList());
     }
 

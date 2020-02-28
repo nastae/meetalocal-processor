@@ -129,13 +129,6 @@ public class Volunteer implements Serializable {
         this.languages = languages;
     }
 
-    public Long getAge() {
-        final LocalDateTime now = LocalDateTime.now();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateOfBirth);
-        return (long) now.getYear() - (cal.get(Calendar.YEAR) - 1900);
-    }
-
     public String getDescription() {
         return description;
     }
