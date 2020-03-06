@@ -51,7 +51,7 @@ public class TouristActionController {
 
     @PostMapping("/meets")
     public String edit(@RequestParam Map<String, String> params) {
-        List<AgeGroup> ageGroups = Arrays.stream(params.get("ageGroup").split(","))
+        List<AgeGroup> ageGroups = Arrays.stream(params.get("ageGroup").substring(1, params.get("ageGroup").length()-1).split(","))
                 .map(AgeGroup::fromString)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

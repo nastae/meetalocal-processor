@@ -21,9 +21,9 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleMeetDto;
 import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,7 +91,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/agreements?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/agreements?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -103,7 +104,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/agreements?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/agreements?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -127,7 +129,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/cancellations?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/cancellations?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -139,7 +142,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/cancellations?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/cancellations?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -163,7 +167,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/engagements?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/engagements?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -175,7 +180,8 @@ public class VolunteerActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
 
-        MvcResult result = mvc.perform(get("/volunteer-action-management/engagements?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/volunteer-action-management/engagements?token=" + params.get("token"))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -199,6 +205,7 @@ public class VolunteerActionControllerTest {
         meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
 
         MvcResult result = mvc.perform(post("/volunteer-action-management/evaluations")
+                .with(csrf())
                 .param("comment", "comment")
                 .param("token", meetEngagement.getToken()))
                 .andExpect(status().isOk())
@@ -221,7 +228,8 @@ public class VolunteerActionControllerTest {
         params.put("token", "TOKEN");
         params.put("comment", "comment");
 
-        MvcResult result = mvc.perform(post("/volunteer-action-management/evaluations"))
+        MvcResult result = mvc.perform(post("/volunteer-action-management/evaluations")
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
