@@ -71,25 +71,25 @@ public class VolunteerMailProcessorTest {
     public void processNews_Meet_ShouldChangeStatusAndSend() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
-        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false);
+        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
         when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of(volunteer));
         when(meetEngagementService.create(any(), any(), any())).thenReturn(Optional.of(engagement));
-        when(meetService.setFreezed(any(), anyBoolean())).thenReturn(meet);
+        when(meetEngagementService.setFreezed(any(), anyBoolean())).thenReturn(engagement);
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
         doNothing().when(emailSender).send(any(), any());
         Assert.assertEquals(meet.getStatus(), Status.NEW);
         volunteerMailProcessor.processNews();
         Assert.assertEquals(meet.getStatus(), Status.SENT_VOLUNTEER_REQUEST);
         verify(emailSender, times(1)).send(any(), any());
-        verify(meetService, times(1)).setFreezed(any(), anyBoolean());
+        verify(meetEngagementService, times(1)).setFreezed(any(), anyBoolean());
     }
 
     @Test
     public void processNews_Meet_ShouldCancel() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
-        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false);
+        MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
         when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of());
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));

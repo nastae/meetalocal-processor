@@ -37,15 +37,19 @@ public class MeetEngagement {
     @OneToMany(mappedBy="engagement", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Evaluation> evaluations;
 
+    @NotNull
+    private Boolean freezed;
+
     public MeetEngagement() {
     }
 
-    public MeetEngagement(Meet meet, Volunteer volunteer, Time time, String token, Boolean confirmed) {
+    public MeetEngagement(Meet meet, Volunteer volunteer, Time time, String token, Boolean confirmed, Boolean freezed) {
         this.meet = meet;
         this.volunteer = volunteer;
         this.time = time;
         this.token = token;
         this.confirmed = confirmed;
+        this.freezed = freezed;
         this.evaluations = new HashSet<>();
     }
 
@@ -103,5 +107,13 @@ public class MeetEngagement {
 
     public void setEvaluations(Set<Evaluation> evaluations) {
         this.evaluations = evaluations;
+    }
+
+    public Boolean getFreezed() {
+        return freezed;
+    }
+
+    public void setFreezed(Boolean freezed) {
+        this.freezed = freezed;
     }
 }

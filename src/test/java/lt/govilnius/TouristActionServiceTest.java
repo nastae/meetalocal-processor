@@ -112,7 +112,7 @@ public class TouristActionServiceTest {
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         Meet result = sampleMeet();
         result.setStatus(Status.SENT_TOURIST_REQUEST);
@@ -133,7 +133,7 @@ public class TouristActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -148,7 +148,7 @@ public class TouristActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -164,7 +164,7 @@ public class TouristActionServiceTest {
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         Meet result = sampleMeet();
         result.setStatus(Status.SENT_TOURIST_REQUEST);
@@ -183,9 +183,9 @@ public class TouristActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));

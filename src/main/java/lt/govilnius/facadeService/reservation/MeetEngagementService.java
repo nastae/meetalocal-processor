@@ -32,6 +32,7 @@ public class MeetEngagementService {
         entity.setTime(time);
         entity.setToken(token);
         entity.setConfirmed(false);
+        entity.setFreezed(false);
         return Optional.of(meetEngagementRepository.save(entity));
     }
 
@@ -70,5 +71,10 @@ public class MeetEngagementService {
                 .stream()
                 .filter(MeetEngagement::getConfirmed)
                 .collect(toList());
+    }
+
+    public MeetEngagement setFreezed(MeetEngagement meetEngagement, boolean freezed) {
+        meetEngagement.setFreezed(freezed);
+        return meetEngagementRepository.save(meetEngagement);
     }
 }

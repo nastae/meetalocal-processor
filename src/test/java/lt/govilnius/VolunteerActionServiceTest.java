@@ -50,9 +50,9 @@ public class VolunteerActionServiceTest {
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setFreezed(false);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -71,7 +71,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.NEW);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -86,7 +86,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -101,9 +101,9 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -119,9 +119,9 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -140,7 +140,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.NEW);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -155,7 +155,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -170,9 +170,9 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -189,9 +189,9 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -211,7 +211,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.NEW);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -227,7 +227,7 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));
@@ -243,9 +243,9 @@ public class VolunteerActionServiceTest {
         Meet meet = sampleMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
-        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         when(meetEngagementService.getByToken(token)).
                 thenReturn(Optional.of(engagement));

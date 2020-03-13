@@ -61,14 +61,13 @@ public class VolunteerMailProcessor {
             final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
             if (engagements.size() > 0) {
                 meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-                meet = meetService.setFreezed(meet, false);
                 meetService.edit(meet.getId(), meet);
-                Meet finalMeet = meet;
                 engagements.forEach(engagement -> {
-                    LOGGER.info("Created a meet engagement of the meet with id " + finalMeet.getId());
+                    engagement = meetEngagementService.setFreezed(engagement, false);
+                    LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
                     final String token = engagement.getToken();
                     emailSender.send(new Mail(engagement.getVolunteer().getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
-                            finalMeet, token, websiteUrl));
+                            meet, token, websiteUrl));
                 });
             } else {
                 emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
@@ -125,14 +124,16 @@ public class VolunteerMailProcessor {
                 meet = meetService.setFreezed(meet, false);
                 final Volunteer volunteer = meet.getVolunteer();
                 if (volunteer != null) {
-                    Optional<MeetEngagement> engagement = meetEngagementService.findByMeetIdAndVolunteerId(meet.getId(), volunteer.getId());
-                    if (engagement.isPresent()) {
+                    Optional<MeetEngagement> engagementOptional = meetEngagementService.findByMeetIdAndVolunteerId(meet.getId(), volunteer.getId());
+                    if (engagementOptional.isPresent()) {
+                        MeetEngagement engagement = engagementOptional.get();
+                        engagement = meetEngagementService.setFreezed(engagement, false);
                         LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to tourist");
-                        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(engagement.get(), websiteUrl);
+                        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(engagement, websiteUrl);
                         emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
                         LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
-                        emailSenderConfig = EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(engagement.get(), websiteUrl);
+                        emailSenderConfig = EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(engagement, websiteUrl);
                         emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
 
                         meet.setStatus(Status.FINISHED);

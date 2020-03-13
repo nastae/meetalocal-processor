@@ -1,8 +1,6 @@
 package lt.govilnius.domain.reservation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;

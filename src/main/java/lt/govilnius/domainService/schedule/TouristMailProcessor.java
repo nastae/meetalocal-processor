@@ -69,22 +69,25 @@ public class TouristMailProcessor {
             meet.setVolunteer(volunteer);
             meet.setStatus(Status.AGREED);
             meetService.edit(meet.getId(), meet);
-            final MeetEngagement engagement = meetEngagement.get();
+            MeetEngagement engagement = meetEngagement.get();
+            engagement = meetEngagementService.setFreezed(engagement, false);
             LOGGER.info("Send information of the meet with id " + meet.getId() + " to tourist");
             EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
+            meet = meetService.setFreezed(meet, false);
             emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
             LOGGER.info("Send information of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
             emailSenderConfig = EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
             emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
 
+            Meet finalMeet = meet;
             meetEngagementService.getConfirmedByMeetId(meet.getId())
                     .stream().
                     filter(e -> !e.getVolunteer().getId().equals(volunteer.getId()))
                     .forEach(e -> {
                         final Volunteer v  = e.getVolunteer();
-                        LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
-                        emailSender.send(new Mail(v.getEmail()), EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(meet, websiteUrl));
+                        LOGGER.info("Send cancellation for the meet with id " + finalMeet.getId() + " to volunteer with id " + v.getId());
+                        emailSender.send(new Mail(v.getEmail()), EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(finalMeet, websiteUrl));
                     });
             return Optional.of(meet);
         } else {
@@ -117,6 +120,7 @@ public class TouristMailProcessor {
         meetEngagements.forEach(meetEngagement -> {
             final Volunteer volunteer = meetEngagement.getVolunteer();
             LOGGER.info("Send an additional request to volunteer with id " + volunteer.getId());
+            meetEngagement = meetEngagementService.setFreezed(meetEngagement, false);
             emailSender.send(new Mail(volunteer.getEmail()),
                     EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(meet, meetEngagement.getToken(), websiteUrl));
         });
