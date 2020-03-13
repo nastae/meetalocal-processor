@@ -30,7 +30,7 @@ public class VolunteerActionController {
         final Optional<MeetEngagement> engagement = volunteerActionService.agree(token);
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 
     @GetMapping("/cancellations")
@@ -38,7 +38,7 @@ public class VolunteerActionController {
         final Optional<MeetEngagement> engagement = volunteerActionService.cancel(token);
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 
     @GetMapping("/engagements")
@@ -51,7 +51,7 @@ public class VolunteerActionController {
             model.addAttribute("tourist", engagement.getMeet().getName());
             return "edit-engagement";
         } else {
-            return "error-en";
+            return "run-out-of-time";
         }
     }
 
@@ -60,7 +60,7 @@ public class VolunteerActionController {
         final Optional<MeetEngagement> engagement = volunteerActionService.editEngagement(params.get("token"), params.get("time") + ":00");
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 
     @GetMapping("/evaluations")
@@ -71,7 +71,7 @@ public class VolunteerActionController {
             model.addAttribute("token", token);
             return "volunteer-evaluation";
         } else {
-            return "error-en";
+            return "run-out-of-time";
         }
     }
 
@@ -80,6 +80,6 @@ public class VolunteerActionController {
         final Optional<Evaluation> engagement = volunteerActionService.evaluate(params.get("token"), params.get("comment"));
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "error-en";
+                "run-out-of-time";
     }
 }

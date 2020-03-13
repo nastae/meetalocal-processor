@@ -18,7 +18,12 @@
       <ul class="nav navbar-nav">
         <li th:class="${activePage} == 'volunteers'? 'active' : ''"><a href="#" th:href="@{/volunteer-management}">Volunteers</a></li>
         <li th:class="${activePage} == 'meets'? 'active' : ''"><a href="#" th:href="@{/meet-management}">Meets</a></li>
-        <li th:class="${activePage} == 'logout'? 'active' : ''"><a href="#" th:href="@{/login/logout}">Log out</a></li>
+<!--        <li th:class="${activePage} == 'logout'? 'active' : ''"><a href="#" th:href="@{/auth/logout}">Log out</a></li>-->
+        <li style="float:right; ">
+          <form th:action="@{/appLogout}" method="POST">
+            <input style="margin: 10px;" class="btn btn-default" type="submit" value="Logout"/>
+          </form>
+        </li>
       </ul>
     </div>
   </div>

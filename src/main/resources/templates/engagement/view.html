@@ -42,18 +42,20 @@
                         <label for="inputConfirmed">Confirmed</label>
                         <input type="text" class="form-control" id="inputConfirmed" placeholder="Confirmed" th:field="*{engagement.confirmed}" name="confirmed" disabled="disabled" />
                     </div>
-
                     <div class="form-group">
-                        <label for="inputEvaluations">Desirable Meet Age Groups</label><br>
+                        <label for="inputEvaluations">Evaluations</label><br>
                         <th:block th:each="evaluation : ${engagement.evaluations}">
                             <span th:text="${evaluation.evaluator}">Evaluator</span><br>
                             <input type="text" name="languages" th:value="${evaluation.comment}" id="inputEvaluations" disabled="disabled"/><br>
                         </th:block>
                     </div><br>
-
-                    <div class="text-right">
-                        <a href="/meet-management" th:href="@{/meet-management}" class="btn btn-default">Back</a>
+                    <div th:if="${#lists.isEmpty(engagement.evaluations)}">
+                        <label>No evluation exists!</label>
                     </div>
+                    <form th:action="${'/engagement-management'}" method="GET" style='display:inline;'>
+                        <input type="hidden" name="id" th:value="${engagement.id}">
+                        <button type="submit" name="view" class="btn btn-default">Back</button>
+                    </form>
                 </div>
                 <div class="panel-footer">
                 </div>

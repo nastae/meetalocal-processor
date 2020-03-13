@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,9 +24,9 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleMeetDto;
 import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -109,7 +110,8 @@ public class TouristActionControllerTest {
 
         MvcResult result = mvc.perform(post("/tourist-action-management/meets")
                 .param("meet", meet.getId().toString())
-                .param("ageGroup", "YOUTH,JUNIOR_ADULTS"))
+                .param("ageGroup", "YOUTH,JUNIOR_ADULTS")
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -120,7 +122,8 @@ public class TouristActionControllerTest {
     public void editMeets_PostToken_ShoudOpenError() throws Exception {
         MvcResult result = mvc.perform(post("/tourist-action-management/meets")
                 .param("meet", "10")
-                .param("ageGroup", "YOUTH,JUNIOR_ADULTS"))
+                .param("ageGroup", "YOUTH,JUNIOR_ADULTS")
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -221,7 +224,8 @@ public class TouristActionControllerTest {
 
         MvcResult result = mvc.perform(post("/tourist-action-management/evaluations")
                 .param("comment", "comment")
-                .param("token", meetEngagement.getToken()))
+                .param("token", meetEngagement.getToken())
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -236,13 +240,15 @@ public class TouristActionControllerTest {
         }
     }
 
+    @WithMockUser(roles = "ADMIN")
     @Test
     public void evaluate_PostToken_ShouldOpenError() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
         params.put("comment", "comment");
 
-        MvcResult result = mvc.perform(post("/tourist-action-management/evaluations"))
+        MvcResult result = mvc.perform(post("/tourist-action-management/evaluations")
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();

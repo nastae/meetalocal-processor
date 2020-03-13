@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.MeetServiceTest.sampleMeetDto;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,6 +42,7 @@ public class MeetRegistrationControllerTest {
         System.out.println(objectMapper.writeValueAsString(meet));
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isOk())
@@ -65,6 +67,7 @@ public class MeetRegistrationControllerTest {
         meet.setEmail(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -76,6 +79,7 @@ public class MeetRegistrationControllerTest {
         meet.setPhoneNumber(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -87,6 +91,7 @@ public class MeetRegistrationControllerTest {
         meet.setName(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -98,6 +103,7 @@ public class MeetRegistrationControllerTest {
         meet.setSurname(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -109,6 +115,7 @@ public class MeetRegistrationControllerTest {
         meet.setCountry(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -120,6 +127,7 @@ public class MeetRegistrationControllerTest {
         meet.setDate(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -131,6 +139,7 @@ public class MeetRegistrationControllerTest {
         meet.setTime(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -142,6 +151,7 @@ public class MeetRegistrationControllerTest {
         meet.setPeopleCount(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -153,6 +163,7 @@ public class MeetRegistrationControllerTest {
         meet.setAge(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
@@ -164,6 +175,7 @@ public class MeetRegistrationControllerTest {
         meet.setMeetAgeGroups(null);
 
         mvc.perform(post(URL)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(meet)))
                 .andExpect(status().isBadRequest());
