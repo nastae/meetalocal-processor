@@ -68,7 +68,7 @@ public class EmailSenderConfig {
                 .collect(Collectors.toList()));
         model.put("engagementsWithEditedTime", engagements
                 .stream()
-                .filter(e -> !e.getTime().equals(meet.getTime()))
+                .filter(e -> !(e.getTime().equals(meet.getTime())))
                 .collect(Collectors.toList()));
         model.put("websiteUrl", websiteUrl);
 
@@ -126,7 +126,7 @@ public class EmailSenderConfig {
         return new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", meet.getName())
-                .put("evaluationUrl", websiteUrl + "/tourist-action-management/evaluations?token" + engagement.getToken())
+                .put("evaluationUrl", websiteUrl + "/tourist-action-management/evaluations?token=" + engagement.getToken())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
