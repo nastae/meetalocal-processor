@@ -1,7 +1,7 @@
 package lt.govilnius.domain.reservation;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 public class MeetDto {
@@ -12,7 +12,7 @@ public class MeetDto {
     private String phoneNumber;
     private String country;
     private Date date;
-    private Time time;
+    private LocalTime time;
     private Integer peopleCount;
     private Integer age;
     private List<AgeGroup> ageGroups;
@@ -24,7 +24,7 @@ public class MeetDto {
     }
 
     public MeetDto(String name, String surname, String email, String phoneNumber,
-                   String country, Date date, Time time, Integer peopleCount,
+                   String country, Date date, LocalTime time, Integer peopleCount,
                    Integer age, List<AgeGroup> ageGroups, List<Language> languages,
                    String preferences, String additionalPreferences) {
         this.name = name;
@@ -90,14 +90,6 @@ public class MeetDto {
         this.date = date;
     }
 
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
-    }
-
     public Integer getPeopleCount() {
         return peopleCount;
     }
@@ -144,5 +136,13 @@ public class MeetDto {
 
     public void setAdditionalPreferences(String additionalPreferences) {
         this.additionalPreferences = additionalPreferences;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 }

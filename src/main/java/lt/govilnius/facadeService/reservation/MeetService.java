@@ -5,7 +5,11 @@ import lt.govilnius.repository.reservation.MeetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +38,13 @@ public class MeetService {
         entity.setEmail(meet.getEmail());
         entity.setPhoneNumber(meet.getPhoneNumber());
         entity.setCountry(meet.getCountry());
-        entity.setDate(meet.getDate());
-        entity.setTime(meet.getTime());
+        Calendar date = Calendar.getInstance();
+        date.setTime(meet.getDate());
+        entity.setDate(new Date(date.getTimeInMillis()));
+        Calendar time = Calendar.getInstance();
+        LocalTime localTime = meet.getTime();
+        time.set(0, 0, 0, localTime.getHour(), localTime.getMinute(), localTime.getSecond());
+        entity.setTime(new Time(time.getTimeInMillis()));
         entity.setPeopleCount(meet.getPeopleCount());
         entity.setAge(meet.getAge());
         entity.setMeetAgeGroups(new HashSet<>());
