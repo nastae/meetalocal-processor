@@ -1,7 +1,6 @@
 package lt.govilnius;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.MeetAgeGroupService;
 import lt.govilnius.facadeService.reservation.MeetLanguageService;
@@ -16,10 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,7 +125,7 @@ public class MeetServiceTest {
     public static MeetDto sampleMeetDto() {
         return new MeetDto("name", "surname", "meetalocaltest@gmail.com", "123",
                 "Lithuania", new Date(2019, 1, 1),
-                new Time(10, 10, 10),
+                LocalTime.of(11, 11, 11),
                 1, 20, ImmutableList.of(AgeGroup.YOUTH),
                 ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "additionalPreferences");
     }

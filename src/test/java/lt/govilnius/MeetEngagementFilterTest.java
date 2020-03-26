@@ -26,12 +26,12 @@ public class MeetEngagementFilterTest {
         Meet meet = sampleMeet();
         meet.setTime(new Time(10, 10, 10));
         List<MeetEngagement> meetEngagements = ImmutableList.of(
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false)
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false)
         );
         Assert.assertEquals(meetEngagements.size(), 6);
         meetEngagements = meetEngagementFilter.filterForMail(meetEngagements, meet);
@@ -43,12 +43,12 @@ public class MeetEngagementFilterTest {
         Meet meet = sampleMeet();
         meet.setTime(new Time(10, 10, 10));
         List<MeetEngagement> meetEngagements = ImmutableList.of(
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 14, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 13, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 12, 10), "", false),
-                new MeetEngagement(meet, null, new Time(10, 15, 10), "", false)
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 14, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 13, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 12, 10), "", false, false),
+                new MeetEngagement(meet, null, new Time(10, 15, 10), "", false, false)
         );
         Assert.assertEquals(meetEngagements.size(), 6);
         meetEngagements = meetEngagementFilter.filterForMail(meetEngagements, meet);

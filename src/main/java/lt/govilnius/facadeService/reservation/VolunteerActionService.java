@@ -45,11 +45,11 @@ public class VolunteerActionService {
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < sentVolunteerRequestWaiting)
-                .filter(e -> !e.getMeet().getFreezed())
+                .filter(e -> !e.getFreezed())
                 .map(e -> {
                     LOGGER.info("Edit the meet engagement with token " + e.getToken());
                     e.setConfirmed(true);
-                    e.setMeet(meetService.setFreezed(e.getMeet(), true));
+                    meetEngagementService.setFreezed(e, true);
                     return meetEngagementService.edit(e.getId(), e).orElse(null);
                 });
     }
@@ -60,11 +60,11 @@ public class VolunteerActionService {
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < sentVolunteerRequestWaiting)
-                .filter(e -> !e.getMeet().getFreezed())
+                .filter(e -> !e.getFreezed())
                 .map(e -> {
                     LOGGER.info("Edit the meet engagement with token " + e.getToken());
                     e.setConfirmed(false);
-                    e.setMeet(meetService.setFreezed(e.getMeet(), true));
+                    meetEngagementService.setFreezed(e, true);
                     return meetEngagementService.edit(e.getId(), e).orElse(null);
                 });
     }
@@ -86,12 +86,12 @@ public class VolunteerActionService {
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < sentVolunteerRequestWaiting)
-                .filter(e -> !e.getMeet().getFreezed())
+                .filter(e -> !e.getFreezed())
                 .map(e -> {
                     LOGGER.info("Edit the meet engagement with token " + e.getToken());
                     e.setConfirmed(true);
                     e.setTime(time != null ? time : e.getTime());
-                    e.setMeet(meetService.setFreezed(e.getMeet(), true));
+                    meetEngagementService.setFreezed(e, true);
                     return meetEngagementService.edit(e.getId(), e).orElse(null);
                 });
     }
@@ -101,10 +101,10 @@ public class VolunteerActionService {
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.FINISHED))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < evaluationWaiting)
-                .filter(e -> !e.getMeet().getFreezed())
+                .filter(e -> !e.getFreezed())
                 .map(e -> {
                     LOGGER.info("Evaluate the meet engagement with token " + e.getToken());
-                    meetService.setFreezed(e.getMeet(), true);
+                    meetEngagementService.setFreezed(e, true);
                     return evaluationService.create(e, comment, UserType.VOLUNTEER).orElse(null);
                 });
     }

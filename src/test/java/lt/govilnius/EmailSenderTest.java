@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,10 +43,9 @@ public class EmailSenderTest {
         Volunteer volunteer = sampleVolunteer();
         final EmailSenderConfig config =
                 EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
-                        meet, ImmutableList.of(new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true)), WEBSITE_URL);
+                        meet, ImmutableList.of(new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
-
 
     @Test
     public void send_TouristCancellation_ShouldSend() {
@@ -74,7 +74,7 @@ public class EmailSenderTest {
     public void send_TouristInformation_ShouldSend() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true);
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true, false);
         final EmailSenderConfig config =
                 EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
         emailSender.send(new Mail(RECEIVER), config);
@@ -84,7 +84,7 @@ public class EmailSenderTest {
     public void send_TouristEvaluation_ShouldSend() {
         final EmailSenderConfig config =
                 EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(
-                        new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true), WEBSITE_URL);
+                        new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -99,7 +99,7 @@ public class EmailSenderTest {
     public void send_VolunteerInformation_ShouldSend() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true);
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true, false);
         final EmailSenderConfig config =
                 EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
         emailSender.send(new Mail(RECEIVER), config);
@@ -108,7 +108,7 @@ public class EmailSenderTest {
     @Test
     public void send_VolunteerEvaluation_ShouldSend() {
         final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -132,10 +132,12 @@ public class EmailSenderTest {
     }
 
     public static Volunteer sampleVolunteer(Language language) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1998, 11, 11);
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", new Date(1980, 11, 11),
+                "name", "surname", new Date(cal.getTimeInMillis()),
                 "123", "meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
                 "description", true, new HashSet<>());
     }

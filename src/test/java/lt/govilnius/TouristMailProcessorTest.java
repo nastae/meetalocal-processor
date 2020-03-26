@@ -83,7 +83,7 @@ public class TouristMailProcessorTest {
         meet.setVolunteer(volunteer);
         meetRepository.save(meet);
 
-        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false);
+        MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false, false);
         meetEngagement = meetEngagementRepository.save(meetEngagement);
 
         touristMailProcessor.processRequest(meetEngagement.getVolunteer(), meetEngagement.getMeet());
