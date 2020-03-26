@@ -154,7 +154,9 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:30px;padding-right:30px;padding-bottom:30px;padding-left:30px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Name</strong>: ${engagement.volunteer.name}</p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Age</strong>: ${engagement.volunteer.age}</p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages ) ${language.language.name} #if( $foreach.hasNext ), #end #end
                                                     </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
@@ -234,10 +236,14 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:30px;padding-right:30px;padding-bottom:30px;padding-left:30px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Name</strong>: ${engagement.volunteer.name}</p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Age</strong>: ${engagement.volunteer.age}</p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages ) ${language.language.name} #if( $foreach.hasNext ), #end #end
                                                     </p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Date</strong>: ${engagement.meet.date}</p>
+                                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Time</strong>: ${engagement.time}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">${engagement.volunteer.description}</p>
