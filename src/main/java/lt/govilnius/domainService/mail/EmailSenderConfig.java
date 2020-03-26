@@ -34,6 +34,8 @@ public class EmailSenderConfig {
     public static final TriFunction<Meet, String, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, token, websiteUrl) -> {
         Calendar cal = Calendar.getInstance();
         cal.setTime(meet.getDate());
+        Calendar time = Calendar.getInstance();
+        time.setTime(meet.getTime());
         String languages = meet.getLanguages()
                 .stream()
                 .map(l -> l.getLanguage().getName())
@@ -42,8 +44,8 @@ public class EmailSenderConfig {
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
                 .put("day", cal.get(Calendar.DAY_OF_MONTH))
-                .put("hours", format("%02d", 1, cal.get(Calendar.HOUR)))
-                .put("minutes", format("%02d", 1, cal.get(Calendar.MINUTE)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", meet.getName())
                 .put("languages", languages)
                 .put("age", meet.getAge())
@@ -91,8 +93,8 @@ public class EmailSenderConfig {
                 .put("name", meet.getName())
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("hours", format("%02d", 1, time.get(Calendar.HOUR)))
-                .put("minutes", format("%02d", 1, time.get(Calendar.MINUTE)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("friendName", v.getName())
                 .put("friendSurname", v.getSurname())
                 .put("phoneNumber", v.getPhoneNumber())
@@ -110,8 +112,8 @@ public class EmailSenderConfig {
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("hours", format("%02d", 1, time.get(Calendar.HOUR)))
-                .put("minutes", format("%02d", 1, time.get(Calendar.MINUTE)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", v.getName())
                 .put("phoneNumber", meet.getPhoneNumber())
                 .put("email", meet.getEmail())
