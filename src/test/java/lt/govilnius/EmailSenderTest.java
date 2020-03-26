@@ -46,7 +46,6 @@ public class EmailSenderTest {
         emailSender.send(new Mail(RECEIVER), config);
     }
 
-
     @Test
     public void send_TouristCancellation_ShouldSend() {
         final EmailSenderConfig config =

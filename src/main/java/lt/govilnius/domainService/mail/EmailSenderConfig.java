@@ -110,7 +110,7 @@ public class EmailSenderConfig {
         time.setTime(e.getTime());
         return new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
+                .put("month", DateUtils.monthToLithuanian(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
                 .put("hours", format("%02d", time.get(Calendar.HOUR)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
