@@ -8,11 +8,9 @@ import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class VolunteerService {
@@ -29,7 +27,9 @@ public class VolunteerService {
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
         entity.setName(volunteer.getName());
         entity.setSurname(volunteer.getSurname());
-        entity.setDateOfBirth(volunteer.getDateOfBirth());
+        Calendar date = Calendar.getInstance();
+        date.setTime(volunteer.getDateOfBirth());
+        entity.setDateOfBirth(new Date(date.getTimeInMillis()));
         entity.setPhoneNumber(volunteer.getPhoneNumber());
         entity.setEmail(volunteer.getEmail());
         entity.setLanguages(new HashSet<>());
@@ -75,7 +75,9 @@ public class VolunteerService {
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
         entity.setName(newData.getName());
         entity.setSurname(newData.getSurname());
-        entity.setDateOfBirth(newData.getDateOfBirth());
+        Calendar date = Calendar.getInstance();
+        date.setTime(newData.getDateOfBirth());
+        entity.setDateOfBirth(new Date(date.getTimeInMillis()));
         entity.setPhoneNumber(newData.getPhoneNumber());
         entity.setEmail(newData.getEmail());
         for (VolunteerLanguage language : entity.getLanguages()) {

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -131,10 +132,12 @@ public class EmailSenderTest {
     }
 
     public static Volunteer sampleVolunteer(Language language) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1998, 11, 11);
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", new Date(1980, 11, 11),
+                "name", "surname", new Date(cal.getTimeInMillis()),
                 "123", "meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
                 "description", true, new HashSet<>());
     }
