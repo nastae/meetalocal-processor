@@ -7,13 +7,6 @@ import java.text.SimpleDateFormat;
 public class DateUtils {
 
     public static Long yearsFromNow(Date sqlDate) {
-//        Long val = ((long) (System.currentTimeMillis() - (sqlDate.getTime() - 31556952000L * 1900)) / 31556952000L);
-//        return  val < -1700 ?
-//                val - 1900 :
-//                val;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(sqlDate);
-        System.out.println(strDate);
-        return 40L;
+        return ((long) (System.currentTimeMillis() - (sqlDate.getTime() - 31556952000L * 1900)) / 31556952000L) - 1900;
     }
 }
