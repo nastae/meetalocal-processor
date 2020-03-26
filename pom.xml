@@ -141,12 +141,6 @@
 			<artifactId>tool-deploy</artifactId>
 			<version>3.0.2</version>
 		</dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
