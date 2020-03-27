@@ -231,7 +231,11 @@
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Age</strong>: ${engagement.volunteer.age}</p>
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+<<<<<<< HEAD
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages )${language.language.name}#if( $foreach.hasNext ), #end #end
+=======
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages )${language.language.englishName}#if( $foreach.hasNext ), #end #end
+>>>>>>> d516efca8269579ae97dfbbe69d500abeddb6382
                                                     </p>
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Date</strong>: ${engagement.meet.date}</p>
