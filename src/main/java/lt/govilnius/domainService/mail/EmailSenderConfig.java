@@ -38,8 +38,8 @@ public class EmailSenderConfig {
         time.setTime(meet.getTime());
         String languages = meet.getLanguages()
                 .stream()
-                .map(l -> l.getLanguage().getLithuanianName())
-                .collect(Collectors.joining(","));
+                .map(l -> l.getLanguage().getEnglishName())
+                .collect(Collectors.joining(", "));
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))

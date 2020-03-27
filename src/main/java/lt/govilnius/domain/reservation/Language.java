@@ -4,22 +4,16 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Language {
-    ENGLISH("english", "anglų"),
-    RUSSIAN("russian", "rusų");
+    ENGLISH("english"),
+    RUSSIAN("russian");
 
     private String englishName;
-    private String lithuanianName;
-    Language(String englishName, String lithuanianName) {
+    Language(String englishName) {
         this.englishName = englishName;
-        this.lithuanianName = lithuanianName;
     }
 
     public String getEnglishName() {
         return englishName;
-    }
-
-    public String getLithuanianName() {
-        return lithuanianName;
     }
 
     public static Optional<Language> fromEnglishName(String name) {
