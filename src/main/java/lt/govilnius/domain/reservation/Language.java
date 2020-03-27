@@ -4,21 +4,27 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Language {
-    ENGLISH("English"),
-    RUSSIAN("Russian");
+    ENGLISH("english", "anglų"),
+    RUSSIAN("russian", "rusų");
 
-    private String name;
-    Language(String name) {
-        this.name = name;
+    private String englishName;
+    private String lithuanianName;
+    Language(String englishName, String lithuanianName) {
+        this.englishName = englishName;
+        this.lithuanianName = lithuanianName;
     }
 
-    public String getName() {
-        return name;
+    public String getEnglishName() {
+        return englishName;
     }
 
-    public static Optional<Language> fromName(String name) {
+    public String getLithuanianName() {
+        return lithuanianName;
+    }
+
+    public static Optional<Language> fromEnglishName(String name) {
         return Arrays.stream(Language.values())
-                .filter(a -> a.getName().equals(name))
+                .filter(a -> a.getEnglishName().equals(name))
                 .findFirst();
     }
 }

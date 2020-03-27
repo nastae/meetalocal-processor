@@ -29,13 +29,14 @@ public class VolunteerFilter {
     private boolean existJointLanguage(Set<MeetLanguage> meetLanguages, Set<VolunteerLanguage> volunteerLanguages) {
         for (MeetLanguage meetLanguage: meetLanguages) {
             for (VolunteerLanguage volunteerLanguage: volunteerLanguages) {
-                if (meetLanguage.getLanguage().getName().equals(volunteerLanguage.getLanguage().getName())) {
+                if (meetLanguage.getLanguage().getEnglishName().equals(volunteerLanguage.getLanguage().getEnglishName())) {
                     return true;
                 }
             }
         }
         return false;
     }
+
 
     private boolean isBetweenAgeGroup(Set<MeetAgeGroup> ageGroups, Long age) {
         for (MeetAgeGroup meetAgeGroup : ageGroups) {

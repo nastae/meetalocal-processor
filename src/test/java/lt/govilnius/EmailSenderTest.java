@@ -118,7 +118,7 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "name", "surname", "meetalocaltest@gmail.com",
                 "123", "Lithuania", new Date(2019, 11, 11),
-                new Time(10, 10, 10),
+                new Time(20, 10, 10),
                 1, 20, new HashSet<>(),
                 ImmutableSet.<MeetLanguage>builder()
                         .add(new MeetLanguage(Language.ENGLISH, null))
