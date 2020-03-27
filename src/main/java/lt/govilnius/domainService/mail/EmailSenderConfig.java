@@ -38,13 +38,13 @@ public class EmailSenderConfig {
         time.setTime(meet.getTime());
         String languages = meet.getLanguages()
                 .stream()
-                .map(l -> l.getLanguage().getName())
+                .map(l -> l.getLanguage().getLithuanianName())
                 .collect(Collectors.joining(","));
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
                 .put("day", cal.get(Calendar.DAY_OF_MONTH))
-                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", meet.getName())
                 .put("languages", languages)
@@ -93,7 +93,7 @@ public class EmailSenderConfig {
                 .put("name", meet.getName())
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("friendName", v.getName())
                 .put("friendSurname", v.getSurname())
@@ -112,7 +112,7 @@ public class EmailSenderConfig {
                 .<String, Object>builder()
                 .put("month", DateUtils.monthToLithuanian(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
-                .put("hours", format("%02d", time.get(Calendar.HOUR)))
+                .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", v.getName())
                 .put("phoneNumber", meet.getPhoneNumber())

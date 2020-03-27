@@ -29,7 +29,7 @@ public class VolunteerDto {
 
     public VolunteerDto(Volunteer volunteer) {
         this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getPhoneNumber(),
-                volunteer.getEmail(), volunteer.getLanguages().stream().map(l -> l.getLanguage().getName()).collect(Collectors.toList()),
+                volunteer.getEmail(), volunteer.getLanguages().stream().map(l -> l.getLanguage().getEnglishName()).collect(Collectors.toList()),
                 volunteer.getDescription(), volunteer.getActive());
     }
 

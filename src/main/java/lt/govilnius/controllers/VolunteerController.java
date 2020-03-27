@@ -73,7 +73,7 @@ public class VolunteerController {
                     .stream()
                     .map(VolunteerLanguage::getLanguage)
                     .collect(Collectors.toList())) {
-                if (checked.getName().equals(checkedLanguages.get(i).getLanguage().getName())) {
+                if (checked.getEnglishName().equals(checkedLanguages.get(i).getLanguage().getEnglishName())) {
                     final CheckedLanguage checkedLanguage = checkedLanguages.get(i);
                     checkedLanguage.setChecked(true);
                     checkedLanguages.set(i, checkedLanguage);
