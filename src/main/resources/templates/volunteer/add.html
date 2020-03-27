@@ -45,8 +45,8 @@
                         <div class="form-group">
                             <label for="inputLanguage">Language</label><br>
                             <th:block th:each="language : ${availableLanguages}">
-                                <input type="checkbox" th:field="*{languages}" name="languages" th:value="${language.name}" id="inputLanguage" />
-                                <label th:text="${language.name}"></label>
+                                <input type="checkbox" th:field="*{languages}" name="languages" th:value="${language.englishName}" id="inputLanguage" />
+                                <label th:text="${language.englishName}"></label>
                             </th:block>
                         </div><br>
                         <div class="form-group">

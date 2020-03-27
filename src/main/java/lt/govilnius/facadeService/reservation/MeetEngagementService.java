@@ -5,8 +5,6 @@ import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.security.Encryptor;
 import lt.govilnius.repository.reservation.MeetEngagementRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
