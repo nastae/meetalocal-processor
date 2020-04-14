@@ -63,7 +63,7 @@ public class VolunteerActionControllerTest {
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    private static final String ERROR_MESSAGE = "Unfortunately, you've run out of time!";
+    private static final String ERROR_MESSAGE = "Deja, jums pritrūko laiko!";
 
     @After
     public void cleanEachTest() {
