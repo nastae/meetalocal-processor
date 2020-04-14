@@ -4,21 +4,21 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Language {
-    ENGLISH("english"),
-    RUSSIAN("russian");
+    ENGLISH("English"),
+    RUSSIAN("Russian");
 
-    private String englishName;
-    Language(String englishName) {
-        this.englishName = englishName;
+    private String name;
+    Language(String name) {
+        this.name = name;
     }
 
-    public String getEnglishName() {
-        return englishName;
+    public String getName() {
+        return name;
     }
 
-    public static Optional<Language> fromEnglishName(String name) {
+    public static Optional<Language> fromName(String name) {
         return Arrays.stream(Language.values())
-                .filter(a -> a.getEnglishName().equals(name))
+                .filter(a -> a.getName().equals(name))
                 .findFirst();
     }
 }

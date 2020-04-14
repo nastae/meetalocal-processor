@@ -29,7 +29,7 @@ public class VolunteerFilter {
     private boolean existJointLanguage(Set<MeetLanguage> meetLanguages, Set<VolunteerLanguage> volunteerLanguages) {
         for (MeetLanguage meetLanguage: meetLanguages) {
             for (VolunteerLanguage volunteerLanguage: volunteerLanguages) {
-                if (meetLanguage.getLanguage().getEnglishName().equals(volunteerLanguage.getLanguage().getEnglishName())) {
+                if (meetLanguage.getLanguage().getName().equals(volunteerLanguage.getLanguage().getName())) {
                     return true;
                 }
             }

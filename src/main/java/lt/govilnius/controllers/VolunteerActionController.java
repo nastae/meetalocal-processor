@@ -27,22 +27,28 @@ public class VolunteerActionController {
 
     @GetMapping("/agreements")
     public String agree(@RequestParam(name = "token") String token) {
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
         final Optional<MeetEngagement> engagement = volunteerActionService.agree(token);
         return engagement.isPresent() ?
-                "thanks-for-answer-en" :
-                "run-out-of-time";
+                "thanks-for-answer-lt" :
+                "run-out-of-time-lt";
     }
 
     @GetMapping("/cancellations")
     public String cancel(@RequestParam(name = "token") String token) {
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
         final Optional<MeetEngagement> engagement = volunteerActionService.cancel(token);
         return engagement.isPresent() ?
-                "thanks-for-answer-en" :
-                "run-out-of-time";
+                "thanks-for-answer-lt" :
+                "run-out-of-time-lt";
     }
 
     @GetMapping("/engagements")
     public String edit(@RequestParam(name = "token") String token, Model model) {
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
         final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
         if (meetEngagement.isPresent()) {
             MeetEngagement engagement = meetEngagement.get();
@@ -51,35 +57,43 @@ public class VolunteerActionController {
             model.addAttribute("tourist", engagement.getMeet().getName());
             return "edit-engagement";
         } else {
-            return "run-out-of-time";
+            return "run-out-of-time-lt";
         }
     }
 
     @PostMapping("/engagements")
     public String edit(@RequestParam Map<String, String> params) {
-        final Optional<MeetEngagement> engagement = volunteerActionService.editEngagement(params.get("token"), params.get("time") + ":00");
+        final String token = params.get("token");
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
+        final Optional<MeetEngagement> engagement = volunteerActionService.editEngagement(token, params.get("time") + ":00");
         return engagement.isPresent() ?
-                "thanks-for-answer-en" :
-                "run-out-of-time";
+                "thanks-for-answer-lt" :
+                "run-out-of-time-lt";
     }
 
     @GetMapping("/evaluations")
     public String evaluate(@RequestParam(name = "token") String token, Model model) {
         final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
         if (meetEngagement.isPresent()) {
             MeetEngagement engagement = meetEngagement.get();
             model.addAttribute("token", token);
             return "volunteer-evaluation";
         } else {
-            return "run-out-of-time";
+            return "run-out-of-time-lt";
         }
     }
 
     @PostMapping("/evaluations")
     public String evaluate(@RequestParam Map<String, String> params) {
-        final Optional<Evaluation> engagement = volunteerActionService.evaluate(params.get("token"), params.get("comment"));
+        final String token = params.get("token");
+        if (volunteerActionService.isFreezed(token))
+            return "currently-selected-lt";
+        final Optional<Evaluation> engagement = volunteerActionService.evaluate(token, params.get("comment"));
         return engagement.isPresent() ?
-                "thanks-for-answer-en" :
-                "run-out-of-time";
+                "thanks-for-answer-lt" :
+                "run-out-of-time-lt";
     }
 }

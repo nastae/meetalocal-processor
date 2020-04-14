@@ -161,9 +161,9 @@
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Turistų skaičius</strong>: ${count}</p>
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Pomėgiai</strong>: ${preferences}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Pageidavimai</strong>: ${preferences}</p>
                                                     <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Pageidavimai</strong>: ${additionalPreferences}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; font-family: inherit; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Papildoma informacija</strong>: ${additionalPreferences}</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

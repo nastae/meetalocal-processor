@@ -38,7 +38,7 @@ public class EmailSenderConfig {
         time.setTime(meet.getTime());
         String languages = meet.getLanguages()
                 .stream()
-                .map(l -> l.getLanguage().getEnglishName())
+                .map(l -> l.getLanguage().getName())
                 .collect(Collectors.joining(", "));
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
@@ -96,7 +96,6 @@ public class EmailSenderConfig {
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("friendName", v.getName())
-                .put("friendSurname", v.getSurname())
                 .put("phoneNumber", v.getPhoneNumber())
                 .put("email", v.getEmail())
                 .build(),

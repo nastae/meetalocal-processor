@@ -35,7 +35,7 @@ public class MeetEngagementFilterTest {
         );
         Assert.assertEquals(meetEngagements.size(), 6);
         meetEngagements = meetEngagementFilter.filterForMail(meetEngagements, meet);
-        Assert.assertEquals(meetEngagements.size(), 5);
+        Assert.assertEquals(meetEngagements.size(), 6);
     }
 
     @Test
@@ -52,12 +52,11 @@ public class MeetEngagementFilterTest {
         );
         Assert.assertEquals(meetEngagements.size(), 6);
         meetEngagements = meetEngagementFilter.filterForMail(meetEngagements, meet);
-        Assert.assertEquals(meetEngagements.size(), 5);
+        Assert.assertEquals(meetEngagements.size(), 6);
         Assert.assertEquals(meetEngagements.get(0).getTime(), new Time(10, 10, 10));
         Assert.assertEquals(meetEngagements.get(1).getTime(), new Time(10, 10, 10));
         Assert.assertEquals(meetEngagements.get(2).getTime(), new Time(10, 12, 10));
         Assert.assertEquals(meetEngagements.get(3).getTime(), new Time(10, 13, 10));
         Assert.assertEquals(meetEngagements.get(4).getTime(), new Time(10, 14, 10));
-
     }
 }

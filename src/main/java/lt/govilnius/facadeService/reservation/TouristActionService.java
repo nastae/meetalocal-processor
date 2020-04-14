@@ -93,4 +93,13 @@ public class TouristActionService {
                     return evaluationService.create(e, comment, UserType.TOURIST).orElse(null);
                 });
     }
+
+    public boolean isFreezed(String token) {
+        final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
+        return engagement.isPresent() ? engagement.get().getMeet().getFreezed() : false;
+    }
+
+    public boolean isFreezed(Optional<Meet> meet) {
+        return meet.isPresent() ? meet.get().getFreezed() : false;
+    }
 }

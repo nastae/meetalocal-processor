@@ -77,6 +77,7 @@ public class VolunteerMailProcessor {
 
     private List<MeetEngagement> createEngagements(List<Volunteer> volunteers, Meet meet) {
         return volunteers.stream()
+                .limit(10)
                 .map(volunteer -> meetEngagementService.create(meet, volunteer, meet.getTime()))
                 .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                 .collect(toList());
@@ -87,13 +88,27 @@ public class VolunteerMailProcessor {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
                 LOGGER.info("Process the sent request to meet whose id " + meet.getId());
                 meet = meetService.setFreezed(meet, false);
-                final List<MeetEngagement> engagements = meetEngagementFilter.filterForMail(
-                        meetEngagementService.getConfirmedByMeetId(meet.getId()), meet);;
+                List<MeetEngagement> engagements = meetEngagementFilter.filterForMail(
+                        meetEngagementService.getConfirmedByMeetId(meet.getId()), meet);
                 EmailSenderConfig emailSenderConfig = null;
                 if (engagements.size() > 0) {
-                    emailSenderConfig = prepareSentTouristRequestConfig(meet, engagements);
+                    emailSenderConfig = prepareSentTouristRequestConfig(meet, engagements.stream().limit(5).collect(toList()));
+                    for (int i = 5; i < engagements.size(); i++) {
+                        MeetEngagement mEngagement = engagements.get(i);
+                        LOGGER.info("Send cancellation form of the meet with id " + mEngagement.getMeet().getId() +
+                                " to volunteer with id " + mEngagement.getVolunteer().getId());
+                        EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(mEngagement.getMeet(), websiteUrl);
+                        emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
+                    }
                 } else {
                     emailSenderConfig = prepareTouristAdditionConfig(meet);
+                }
+                engagements = meetEngagementService.getNotConfirmedByMeetId(meet.getId());
+                for (MeetEngagement mEngagement : engagements) {
+                    LOGGER.info("Send cancellation form of the meet with id " + mEngagement.getMeet().getId() +
+                            " to volunteer with id " + mEngagement.getVolunteer().getId());
+                    EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(mEngagement.getMeet(), websiteUrl);
+                    emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
                 }
                 emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
             }

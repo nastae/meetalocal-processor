@@ -82,8 +82,8 @@
                     <div class="form-group">
                         <label for="inputLanguages">Desirable Meet Age Groups</label><br>
                         <th:block th:each="language : ${meet.languages}">
-                            <input type="checkbox" name="languages" th:value="${language.language.englishName}" id="inputLanguages" checked disabled="disabled"/>
-                            <label th:text="${language.language.englishName}"></label>
+                            <input type="checkbox" name="languages" th:value="${language.language.name}" id="inputLanguages" checked disabled="disabled"/>
+                            <label th:text="${language.language.name}"></label>
                         </th:block>
                     </div><br>
                     <div class="form-group">

@@ -108,4 +108,9 @@ public class VolunteerActionService {
                     return evaluationService.create(e, comment, UserType.VOLUNTEER).orElse(null);
                 });
     }
+
+    public boolean isFreezed(String token) {
+        final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
+        return engagement.isPresent() ? engagement.get().getFreezed() : false;
+    }
 }

@@ -23,7 +23,6 @@ public class MeetEngagementFilter {
                     else
                         return -1;
                 })
-                .limit(5)
                 .collect(Collectors.toList());
     }
 }

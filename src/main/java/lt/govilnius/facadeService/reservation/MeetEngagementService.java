@@ -71,6 +71,13 @@ public class MeetEngagementService {
                 .collect(toList());
     }
 
+    public List<MeetEngagement> getNotConfirmedByMeetId(Long meetId) {
+        return getByMeetId(meetId)
+                .stream()
+                .filter(meet -> !meet.getConfirmed())
+                .collect(toList());
+    }
+
     public MeetEngagement setFreezed(MeetEngagement meetEngagement, boolean freezed) {
         meetEngagement.setFreezed(freezed);
         return meetEngagementRepository.save(meetEngagement);
