@@ -39,7 +39,7 @@ public class VolunteerService {
         entity = volunteerRepository.save(entity);
         Set<VolunteerLanguage> languages = new HashSet<>();
         for (String language : volunteer.getLanguages()) {
-            final Optional<Language> languageOptional = Language.fromName(language.toLowerCase());
+            final Optional<Language> languageOptional = Language.fromName(language);
             if (languageOptional.isPresent()) {
                 Optional<VolunteerLanguage> volunteerLanguage  = volunteerLanguageService.create(languageOptional.get(), entity);
                 volunteerLanguage.ifPresent(languages::add);

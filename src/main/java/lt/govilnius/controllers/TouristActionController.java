@@ -1,9 +1,7 @@
 package lt.govilnius.controllers;
 
-import lt.govilnius.domain.reservation.AgeGroup;
-import lt.govilnius.domain.reservation.Evaluation;
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
+import com.google.common.collect.ImmutableList;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
 import lt.govilnius.facadeService.reservation.TouristActionService;
@@ -15,10 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +37,8 @@ public class TouristActionController {
                 return "currently-selected-en";
             if (meetOptional.isPresent()) {
                 model.addAttribute("meet", meetId);
+                model.addAttribute("ageGroups", ageGroups());
+                model.addAttribute("selectedAgeGroups", new ArrayList<Integer>());
                 return "edit-meet";
             } else {
                 return "run-out-of-time-en";
@@ -52,8 +49,8 @@ public class TouristActionController {
     }
 
     @PostMapping("/meets")
-    public String edit(@RequestParam Map<String, String> params) {
-        List<AgeGroup> ageGroups = Arrays.stream(params.get("ageGroup").substring(1, params.get("ageGroup").length()-1).split(","))
+    public String edit(@RequestParam Map<String, String> params, @RequestParam List<String> selectedAgeGroups) {
+        List<AgeGroup> ageGroups = selectedAgeGroups.stream()
                 .map(AgeGroup::fromString)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -100,5 +97,15 @@ public class TouristActionController {
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
                 "run-out-of-time-en";
+    }
+
+    private List<AgeGroup> ageGroups() {
+        return ImmutableList
+                .<AgeGroup>builder()
+                .add(AgeGroup.YOUTH)
+                .add(AgeGroup.JUNIOR_ADULTS)
+                .add(AgeGroup.SENIOR_ADULTS)
+                .add(AgeGroup.SENIORS)
+                .build();
     }
 }

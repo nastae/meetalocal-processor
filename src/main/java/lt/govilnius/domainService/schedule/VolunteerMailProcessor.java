@@ -77,9 +77,9 @@ public class VolunteerMailProcessor {
 
     private List<MeetEngagement> createEngagements(List<Volunteer> volunteers, Meet meet) {
         return volunteers.stream()
-                .limit(10)
                 .map(volunteer -> meetEngagementService.create(meet, volunteer, meet.getTime()))
                 .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                .limit(10)
                 .collect(toList());
     }
 

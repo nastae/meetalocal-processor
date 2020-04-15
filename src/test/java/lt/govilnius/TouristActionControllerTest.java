@@ -1,6 +1,7 @@
 package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -110,7 +111,13 @@ public class TouristActionControllerTest {
 
         MvcResult result = mvc.perform(post("/tourist-action-management/meets")
                 .param("meet", meet.getId().toString())
-                .param("ageGroup", "YOUTH,JUNIOR_ADULTS")
+                .param("selectedAgeGroups", String.valueOf(ImmutableList
+                        .<String>builder()
+                        .add(AgeGroup.YOUTH.toString())
+                        .add(AgeGroup.JUNIOR_ADULTS.toString())
+                        .add(AgeGroup.SENIOR_ADULTS.toString())
+                        .add(AgeGroup.SENIORS.toString())
+                        .build()))
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -122,7 +129,13 @@ public class TouristActionControllerTest {
     public void editMeets_PostToken_ShoudOpenError() throws Exception {
         MvcResult result = mvc.perform(post("/tourist-action-management/meets")
                 .param("meet", "10")
-                .param("ageGroup", "YOUTH,JUNIOR_ADULTS")
+                .param("selectedAgeGroups", String.valueOf(ImmutableList
+                        .<String>builder()
+                        .add(AgeGroup.YOUTH.toString())
+                        .add(AgeGroup.JUNIOR_ADULTS.toString())
+                        .add(AgeGroup.SENIOR_ADULTS.toString())
+                        .add(AgeGroup.SENIORS.toString())
+                        .build()))
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();

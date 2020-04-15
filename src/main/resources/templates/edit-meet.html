@@ -210,22 +210,14 @@
                         <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
                             <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
                             <!--[if (mso)|(IE)]><td align="center" width="250" style="background-color:#ffffff;width:250px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-                            <label class="container">18-29
-                                <input type="checkbox" name="ageGroup"  value="YOUTH">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">30-39
-                                <input type="checkbox" name="ageGroup"  value="JUNIOR_ADULTS">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">40-49
-                                <input type="checkbox" name="ageGroup"  value="SENIOR_ADULTS">
-                                <span class="checkmark"></span>
-                            </label>
-                            <label class="container">50+
-                                <input type="checkbox" name="ageGroup"  value="SENIORS">
-                                <span class="checkmark"></span>
-                            </label>
+                            <ul>
+                                <li th:each="ageGroup : ${ageGroups}">
+                                    <label class="container"><label th:text="${ageGroup.from}">FROM</label>-<label th:text="${ageGroup.to}">TO</label>
+                                        <input type="checkbox" name="selectedAgeGroups" th:value="${ageGroup.toString()}">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </li>
+                            </ul>
                             <!--                            <div class="col num6" style="max-width: 320px; min-width: 250px; display: table-cell; vertical-align: top; width: 250px;">-->
 <!--                                <div style="width:100% !important;">-->
 <!--                                    &lt;!&ndash;[if (!mso)&(!IE)]>&lt;!&ndash;>-->
@@ -233,15 +225,7 @@
 <!--                                        &lt;!&ndash;<![endif]&ndash;&gt;-->
 <!--                                        <div align="center" class="button-container" style="padding-top:5px;padding-right:5px;padding-bottom:5px;padding-left:5px;">-->
 <!--                                            &lt;!&ndash;[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:31.5pt; width:182.25pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#efefef"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]&ndash;&gt;-->
-<!--                                            <input type="time" name='time' th:attr="min=${time}" th:value='${time}' style="margin-left:10px;text-decoration:none;display:inline-block;color:#555555;background-color:#efefef;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto; width:auto;;border-top:1px solid #efefef;border-right:1px solid #efefef;border-bottom:1px solid #efefef;border-left:1px solid #efefef;padding-top:12px;padding-bottom:12px;font-family:Verdana, Geneva, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="line-height: 32px; word-break: break-word;">                             </span></span>-->
-<!--                                            </input>-->
 <!--                                            &lt;!&ndash;[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]&ndash;&gt;-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash;[if (!mso)&(!IE)]>&lt;!&ndash;>-->
-<!--                                    </div>-->
-<!--                                    &lt;!&ndash;<![endif]&ndash;&gt;-->
-<!--                                </div>-->
-<!--                            </div>-->
                             <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
                             <!--[if (mso)|(IE)]></td><td align="center" width="250" style="background-color:#ffffff;width:250px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
                             <div class="col num6" style="max-width: 320px; min-width: 250px; display: table-cell; vertical-align: top; width: 250px;">
