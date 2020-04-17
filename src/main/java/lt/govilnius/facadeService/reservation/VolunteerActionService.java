@@ -43,7 +43,8 @@ public class VolunteerActionService {
         LOGGER.info("Process agreement of the meet engagement with token " + token);
         final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
         return engagement
-                .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST))
+                .filter(e -> e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST) ||
+                        e.getMeet().getStatus().equals(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION))
                 .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < sentVolunteerRequestWaiting)
                 .filter(e -> !e.getFreezed())
                 .map(e -> {

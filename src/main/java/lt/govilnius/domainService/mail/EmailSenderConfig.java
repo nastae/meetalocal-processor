@@ -42,7 +42,7 @@ public class EmailSenderConfig {
                 .collect(Collectors.joining(", "));
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
-                .put("month", DateUtils.monthToLithuanian(cal.get(Calendar.MONTH)))
+                .put("month", cal.get(Calendar.MONTH))
                 .put("day", cal.get(Calendar.DAY_OF_MONTH))
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
@@ -109,7 +109,7 @@ public class EmailSenderConfig {
         time.setTime(e.getTime());
         return new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("month", DateUtils.monthToLithuanian(date.get(Calendar.MONTH)))
+                .put("month", date.get(Calendar.MONTH))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))

@@ -212,7 +212,7 @@
                             <!--[if (mso)|(IE)]><td align="center" width="250" style="background-color:#ffffff;width:250px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
                             <ul>
                                 <li th:each="ageGroup : ${ageGroups}">
-                                    <label class="container"><label th:text="${ageGroup.from}">FROM</label>-<label th:text="${ageGroup.to}">TO</label>
+                                    <label class="container"><label th:text="${ageGroup.from}">FROM</label><label th:text="${ageGroupStat.last} ? '+' : '-${ageGroup.to}'"></label>
                                         <input type="checkbox" name="selectedAgeGroups" th:value="${ageGroup.toString()}">
                                         <span class="checkmark"></span>
                                     </label>

@@ -115,6 +115,7 @@ public class TouristMailProcessor {
     public Optional<Meet> processAddition(Meet meet) {
         LOGGER.info("Process the additional information of the meet with id" + meet.getId());
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION);
+        meet.setFreezed(false);
         meetService.edit(meet.getId(), meet);
         final Set<MeetEngagement> meetEngagements = meet.getMeetEngagements();
         meetEngagements.forEach(meetEngagement -> {

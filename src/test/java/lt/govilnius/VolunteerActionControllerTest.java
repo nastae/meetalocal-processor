@@ -63,7 +63,7 @@ public class VolunteerActionControllerTest {
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    private static final String ERROR_MESSAGE = "Deja, jums pritrūko laiko!";
+    private static final String ERROR_MESSAGE = "Deja, Jums pritrūko laiko.";
 
     @After
     public void cleanEachTest() {

@@ -53,7 +53,7 @@ public class VolunteerActionController {
         if (meetEngagement.isPresent()) {
             MeetEngagement engagement = meetEngagement.get();
             model.addAttribute("token", token);
-            model.addAttribute("time", engagement.getMeet().getTime().toString());
+            model.addAttribute("time", engagement.getMeet().getTime().toString().substring(0, engagement.getMeet().getTime().toString().length() - 3));
             model.addAttribute("tourist", engagement.getMeet().getName());
             return "edit-engagement";
         } else {
