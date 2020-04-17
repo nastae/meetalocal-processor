@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -55,22 +56,32 @@ public class VolunteerMailProcessor {
     @Value("${waiting.evaluation.milliseconds}")
     private Long evaluationWaiting;
 
+    @Value("${mail.accepting.start.hours}")
+    private Long mailAcceptingStartHours;
+
+    @Value("${mail.accepting.end.hours}")
+    private Long mailAcceptingEndHours;
+
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
-            LOGGER.info("Process the new meet with id " + meet.getId());
-            final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
-            if (engagements.size() > 0) {
-                meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-                meetService.edit(meet.getId(), meet);
-                engagements.forEach(engagement -> {
-                    engagement = meetEngagementService.setFreezed(engagement, false);
-                    LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
-                    final String token = engagement.getToken();
-                    emailSender.send(new Mail(engagement.getVolunteer().getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
-                            meet, token, websiteUrl));
-                });
-            } else {
-                emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(meet.getCreatedAt());
+            if (cal.get(Calendar.HOUR) < mailAcceptingEndHours && cal.get(Calendar.HOUR) > mailAcceptingStartHours) {
+                LOGGER.info("Process the new meet with id " + meet.getId());
+                final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
+                if (engagements.size() > 0) {
+                    meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+                    meetService.edit(meet.getId(), meet);
+                    engagements.forEach(engagement -> {
+                        engagement = meetEngagementService.setFreezed(engagement, false);
+                        LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
+                        final String token = engagement.getToken();
+                        emailSender.send(new Mail(engagement.getVolunteer().getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
+                                meet, token, websiteUrl));
+                    });
+                } else {
+                    emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
+                }
             }
         });
     }

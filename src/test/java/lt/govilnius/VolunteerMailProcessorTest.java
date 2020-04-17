@@ -8,8 +8,6 @@ import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
-import lt.govilnius.domainService.mail.EmailSenderConfig;
-import lt.govilnius.domainService.mail.Mail;
 import lt.govilnius.domainService.schedule.VolunteerMailProcessor;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -19,14 +17,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.swing.text.html.Option;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
@@ -62,9 +57,15 @@ public class VolunteerMailProcessorTest {
     @Value("${waiting.evaluation.milliseconds}")
     private Long evaluationWaiting;
 
+    private final static Long mailAcceptingStartHours = 0L;
+
+    private final static Long mailAcceptingEndHours = 24L;
+
     @Before
     public void setUp() {
         ReflectionTestUtils.setField(volunteerMailProcessor, "registrationUrl", "test", String.class);
+        ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingStartHours", mailAcceptingStartHours, Long.class);
+        ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingEndHours", mailAcceptingEndHours, Long.class);
     }
 
     @Test
