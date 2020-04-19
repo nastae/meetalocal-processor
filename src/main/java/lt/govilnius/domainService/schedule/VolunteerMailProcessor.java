@@ -65,8 +65,12 @@ public class VolunteerMailProcessor {
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(meet.getCreatedAt());
-            if (cal.get(Calendar.HOUR) < mailAcceptingEndHours && cal.get(Calendar.HOUR) > mailAcceptingStartHours) {
+            cal.setTimeInMillis(meet.getCreatedAt().getTime());
+            Calendar currentCal = Calendar.getInstance();
+            currentCal.setTimeInMillis(System.currentTimeMillis());
+            if ((cal.getTime().getHours() < mailAcceptingEndHours && cal.getTime().getHours() > mailAcceptingStartHours) ||
+                    ((cal.getTime().getHours() >= mailAcceptingEndHours && cal.getTime().getHours() <= mailAcceptingStartHours) &&
+                            (currentCal.getTime().getHours() < mailAcceptingEndHours && currentCal.getTime().getHours() > mailAcceptingStartHours))) {
                 LOGGER.info("Process the new meet with id " + meet.getId());
                 final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
                 if (engagements.size() > 0) {
