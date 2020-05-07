@@ -68,6 +68,7 @@ public class VolunteerMailProcessorTest {
         ReflectionTestUtils.setField(volunteerMailProcessor, "registrationUrl", "test", String.class);
         ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingStartHours", mailAcceptingStartHours, Long.class);
         ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingEndHours", mailAcceptingEndHours, Long.class);
+        ReflectionTestUtils.setField(volunteerMailProcessor, "maxMeetWaitingHours", -10000000L, Long.class);
     }
 
     @Test
@@ -83,9 +84,9 @@ public class VolunteerMailProcessorTest {
         doNothing().when(emailSender).send(any(), any());
         Assert.assertEquals(meet.getStatus(), Status.NEW);
         volunteerMailProcessor.processNews();
-        Assert.assertEquals(meet.getStatus(), Status.SENT_VOLUNTEER_REQUEST);
+        Assert.assertEquals(meet.getStatus(), Status.CANCELED);
         verify(emailSender, times(1)).send(any(), any());
-        verify(meetEngagementService, times(1)).setFreezed(any(), anyBoolean());
+//        verify(meetService, times(1)).setFreezed(any(), anyBoolean());
     }
 
     @Test

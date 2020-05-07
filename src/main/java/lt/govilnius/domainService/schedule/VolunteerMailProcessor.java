@@ -62,13 +62,20 @@ public class VolunteerMailProcessor {
     @Value("${mail.accepting.end.hours}")
     private Long mailAcceptingEndHours;
 
+    @Value("${max.meet.waiting.hours}")
+    private Long maxMeetWaitingHours;
+
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(meet.getCreatedAt().getTime());
+            Calendar meetingCal = Calendar.getInstance();
+            meetingCal.setTimeInMillis(System.currentTimeMillis() + maxMeetWaitingHours * 3600000 - 360000);
             Calendar currentCal = Calendar.getInstance();
             currentCal.setTimeInMillis(System.currentTimeMillis());
-            if ((cal.getTime().getHours() < mailAcceptingEndHours && cal.getTime().getHours() > mailAcceptingStartHours) ||
+            if (meetingCal.getTime().getTime() < cal.getTime().getTime()) {
+                emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledOverDateLimitConfig(meet));
+            } else if ((cal.getTime().getHours() < mailAcceptingEndHours && cal.getTime().getHours() > mailAcceptingStartHours) ||
                     ((cal.getTime().getHours() >= mailAcceptingEndHours && cal.getTime().getHours() <= mailAcceptingStartHours) &&
                             (currentCal.getTime().getHours() < mailAcceptingEndHours && currentCal.getTime().getHours() > mailAcceptingStartHours))) {
                 LOGGER.info("Process the new meet with id " + meet.getId());
@@ -172,11 +179,19 @@ public class VolunteerMailProcessor {
         return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, meetEngagements, websiteUrl);
     }
 
-
     private EmailSenderConfig prepareTouristCanceledConfig(Meet meet) {
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist");
         meet.setStatus(Status.CANCELED);
+        meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
         return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, registrationUrl);
+    }
+
+    private EmailSenderConfig prepareTouristCanceledOverDateLimitConfig(Meet meet) {
+        LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist");
+        meet.setStatus(Status.CANCELED);
+        meet.setFreezed(true);
+        meetService.edit(meet.getId(), meet);
+        return EmailSenderConfig.TOURIST_CANCELLATION_OVER_DATE_LIMIT_CONFIG.apply(meet, registrationUrl);
     }
 }
