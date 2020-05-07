@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles(profiles = "dev")
 public class VolunteerFilterTest {
 
     @Mock

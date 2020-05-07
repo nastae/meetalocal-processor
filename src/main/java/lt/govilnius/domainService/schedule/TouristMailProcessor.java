@@ -41,9 +41,6 @@ public class TouristMailProcessor {
     @Value("${waiting.sent.tourist.request.milliseconds}")
     private Long sentTouristRequestWaiting;
 
-    @Value("${waiting.addition.milliseconds}")
-    private Long additionWaiting;
-
     public void processRequests() {
         meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentTouristRequestWaiting) {

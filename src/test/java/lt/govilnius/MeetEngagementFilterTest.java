@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Time;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 
 @RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles(profiles = "dev")
 public class MeetEngagementFilterTest {
 
     @InjectMocks
