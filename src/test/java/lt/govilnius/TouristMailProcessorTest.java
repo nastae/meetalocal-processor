@@ -63,17 +63,6 @@ public class TouristMailProcessorTest {
     }
 
     @Test
-    public void processAddition_MeetWithoutEngagements_ShouldSendRequestToTourist() {
-        Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_ADDITION);
-        meet = meetRepository.save(meet);
-
-        touristMailProcessor.processAddition(meet);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_ADDITION).size(), 0);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).size(), 1);
-    }
-
-    @Test
     public void processTouristRequest_SentMeetToTourist_ShouldSendAgreement() {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);

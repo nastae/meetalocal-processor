@@ -116,7 +116,7 @@ public class VolunteerMailProcessor {
                         emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
                     }
                 } else {
-                    emailSenderConfig = prepareTouristAdditionConfig(meet);
+                    emailSenderConfig = prepareTouristCanceledConfig(meet);
                 }
                 engagements = meetEngagementService.getNotConfirmedByMeetId(meet.getId());
                 for (MeetEngagement mEngagement : engagements) {
@@ -124,23 +124,6 @@ public class VolunteerMailProcessor {
                             " to volunteer with id " + mEngagement.getVolunteer().getId());
                     EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(mEngagement.getMeet(), websiteUrl);
                     emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
-                }
-                emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
-            }
-        });
-    }
-
-    public void processRequestsAfterAddition() {
-        meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST_AFTER_ADDITION).forEach(meet -> {
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
-                LOGGER.info("Process the sent request of the meet with id " + meet.getId());
-                meet = meetService.setFreezed(meet, false);
-                List<MeetEngagement> meetEngagements = meetEngagementService.getConfirmedByMeetId(meet.getId());
-                EmailSenderConfig emailSenderConfig = null;
-                if (meetEngagements.size() > 0) {
-                    emailSenderConfig = prepareSentTouristRequestConfig(meet, meetEngagements);
-                } else {
-                    emailSenderConfig = prepareTouristCanceledConfig(meet);
                 }
                 emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
             }
@@ -195,12 +178,5 @@ public class VolunteerMailProcessor {
         meet.setStatus(Status.CANCELED);
         meetService.edit(meet.getId(), meet);
         return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, registrationUrl);
-    }
-
-    private EmailSenderConfig prepareTouristAdditionConfig(Meet meet) {
-        LOGGER.info("Send addition of the meet with id " + meet.getId() + " to tourist");
-        meet.setStatus(Status.SENT_TOURIST_ADDITION);
-        meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(meet, websiteUrl);
     }
 }

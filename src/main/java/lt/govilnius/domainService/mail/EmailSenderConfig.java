@@ -75,14 +75,6 @@ public class EmailSenderConfig {
         return new EmailSenderConfig(Template.TOURIST_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_ADDITION_CONFIG = (meet, websiteUrl) ->
-        new EmailSenderConfig(Template.TOURIST_ADDITION, ImmutableMap
-                .<String, Object>builder()
-                .put("name", meet.getName())
-                .put("changeMeetAfterAdditionUrl", websiteUrl + "/tourist-action-management/meets?meet=" + meet.getId().toString())
-                .build(),
-                format("%s # %07d", SUBJECT, meet.getId()));
-
     public static final TriFunction<Meet, Volunteer, MeetEngagement, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (meet, v, e) -> {
         Calendar date = Calendar.getInstance();
         date.setTime(meet.getDate());
@@ -179,7 +171,6 @@ public class EmailSenderConfig {
     public enum Template {
         VOLUNTEER_REQUEST(MAIL_TEMPLATE_PATH + "/volunteer-request.vm"),
         TOURIST_REQUEST(MAIL_TEMPLATE_PATH + "/tourist-request.vm"),
-        TOURIST_ADDITION(MAIL_TEMPLATE_PATH + "/tourist-addition.vm"),
         TOURIST_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation.vm"),
         TOURIST_CANCELLATION_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/tourist-cancellation-not-selected.vm"),
         VOLUNTEER_CANCELLATION(MAIL_TEMPLATE_PATH + "/volunteer-cancellation.vm"),

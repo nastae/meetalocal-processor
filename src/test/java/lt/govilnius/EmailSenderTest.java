@@ -62,15 +62,6 @@ public class EmailSenderTest {
     }
 
     @Test
-    public void send_TouristAddition_ShouldSend() {
-        Meet meet = sampleMeet();
-        meet.setId(0L);
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_ADDITION_CONFIG.apply(meet, WEBSITE_URL);
-        emailSender.send(new Mail(RECEIVER), config);
-    }
-
-    @Test
     public void send_TouristInformation_ShouldSend() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();

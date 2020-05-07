@@ -1,17 +1,11 @@
 package lt.govilnius.domain.reservation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lt.govilnius.domainService.time.DateUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Set;
 
 @Entity
@@ -99,10 +93,6 @@ public class Volunteer implements Serializable {
 
     public Date getDateOfBirth() {
         return dateOfBirth;
-    }
-
-    public Long getAge() {
-        return DateUtils.yearsFromNow(dateOfBirth);
     }
 
     public void setDateOfBirth(Date dateOfBirth) {

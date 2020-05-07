@@ -5,22 +5,16 @@ import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetStatus;
 import lt.govilnius.domain.reservation.Status;
 import lt.govilnius.facadeService.reservation.MeetStatusService;
-import lt.govilnius.repository.reservation.MeetRepository;
 import lt.govilnius.repository.reservation.MeetStatusRepository;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static org.mockito.ArgumentMatchers.any;

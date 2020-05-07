@@ -32,13 +32,6 @@ public class MailProcessor {
     }
 
     @Scheduled(fixedDelay = 60000L)
-    public void processRequestsAfterAddition() {
-        LOGGER.info("Starts process sent request of meet after addition");
-        volunteerMailProcessor.processRequestsAfterAddition();
-        LOGGER.info("Ends process sent request of meet after addition");
-    }
-
-    @Scheduled(fixedDelay = 60000L)
     public void processAgreements() {
         LOGGER.info("Starts process agreed meets by tourists");
         volunteerMailProcessor.processAgreements();
@@ -50,12 +43,5 @@ public class MailProcessor {
         LOGGER.info("Starts process tourist sent requested meets");
         touristMailProcessor.processRequests();
         LOGGER.info("Ends process tourist sent requested meets");
-    }
-
-    @Scheduled(fixedDelay = 60000L)
-    public void processAdditions() {
-        LOGGER.info("Starts process additions");
-        touristMailProcessor.processAdditions();
-        LOGGER.info("Ends process additions");
     }
 }
