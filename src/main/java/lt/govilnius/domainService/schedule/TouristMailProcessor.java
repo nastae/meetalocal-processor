@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TouristMailProcessor {
@@ -43,6 +42,7 @@ public class TouristMailProcessor {
 
     public void processRequests() {
         meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
+            LOGGER.info("Try process tourist request of the meet with id " + meet.getId());
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentTouristRequestWaiting) {
                 sendCancellations(meet);
             }

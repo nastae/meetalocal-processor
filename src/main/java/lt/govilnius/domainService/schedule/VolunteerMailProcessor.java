@@ -67,17 +67,10 @@ public class VolunteerMailProcessor {
 
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(meet.getCreatedAt().getTime());
-            Calendar meetingCal = Calendar.getInstance();
-            meetingCal.setTimeInMillis(System.currentTimeMillis() + maxMeetWaitingHours * 3600000 - 360000);
-            Calendar currentCal = Calendar.getInstance();
-            currentCal.setTimeInMillis(System.currentTimeMillis());
-            if (meetingCal.getTime().getTime() < cal.getTime().getTime()) {
-                emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledOverDateLimitConfig(meet));
-            } else if ((cal.getTime().getHours() < mailAcceptingEndHours && cal.getTime().getHours() > mailAcceptingStartHours) ||
-                    ((cal.getTime().getHours() >= mailAcceptingEndHours && cal.getTime().getHours() <= mailAcceptingStartHours) &&
-                            (currentCal.getTime().getHours() < mailAcceptingEndHours && currentCal.getTime().getHours() > mailAcceptingStartHours))) {
+            LOGGER.info("Try process the new meet with id " + meet.getId());
+            if (isValidMeeting(meet)) {
+                emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledMeetDateNotValidConfig(meet));
+            } else if (!isNightTime(meet)) {
                 LOGGER.info("Process the new meet with id " + meet.getId());
                 final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
                 if (engagements.size() > 0) {
@@ -97,6 +90,26 @@ public class VolunteerMailProcessor {
         });
     }
 
+    private boolean isNightTime(Meet meet) {
+        final Calendar formCreated = Calendar.getInstance();
+        formCreated.setTimeInMillis(meet.getCreatedAt().getTime());
+        final Calendar current = Calendar.getInstance();
+        current.setTimeInMillis(System.currentTimeMillis());
+
+        return (mailAcceptingEndHours < formCreated.get(Calendar.HOUR_OF_DAY) || formCreated.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours) &&
+                (mailAcceptingEndHours < current.get(Calendar.HOUR_OF_DAY) || current.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours);
+    }
+
+    private boolean isValidMeeting(Meet meet) {
+        final Calendar availableMeeting = Calendar.getInstance();
+        availableMeeting.setTimeInMillis(System.currentTimeMillis() + maxMeetWaitingHours * 3600000 - (5 * 60 * 1000));
+        final Calendar meeting = Calendar.getInstance();
+        meeting.set(meet.getDate().getYear(), meet.getDate().getMonth(), meet.getDate().getDay(),
+                meet.getTime().getHours(), meet.getTime().getMinutes(), meet.getTime().getSeconds());
+
+        return availableMeeting.before(meeting);
+    }
+
     private List<MeetEngagement> createEngagements(List<Volunteer> volunteers, Meet meet) {
         return volunteers.stream()
                 .map(volunteer -> meetEngagementService.create(meet, volunteer, meet.getTime()))
@@ -107,6 +120,7 @@ public class VolunteerMailProcessor {
 
     public void processRequests() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST).forEach(meet -> {
+            LOGGER.info("Try process the sent request to meet whose id " + meet.getId());
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
                 LOGGER.info("Process the sent request to meet whose id " + meet.getId());
                 meet = meetService.setFreezed(meet, false);
@@ -139,6 +153,7 @@ public class VolunteerMailProcessor {
 
     public void processAgreements() {
         meetService.findByStatus(Status.AGREED).forEach(meet -> {
+            LOGGER.info("Try process agreement of the meet with id " + meet.getId());
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= evaluationWaiting) {
                 LOGGER.info("Process agreement of the meet with id " + meet.getId());
                 meet = meetService.setFreezed(meet, false);
@@ -187,11 +202,11 @@ public class VolunteerMailProcessor {
         return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, registrationUrl);
     }
 
-    private EmailSenderConfig prepareTouristCanceledOverDateLimitConfig(Meet meet) {
+    private EmailSenderConfig prepareTouristCanceledMeetDateNotValidConfig(Meet meet) {
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist");
         meet.setStatus(Status.CANCELED);
         meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_CANCELLATION_OVER_DATE_LIMIT_CONFIG.apply(meet, registrationUrl);
+        return EmailSenderConfig.TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG.apply(meet, registrationUrl);
     }
 }

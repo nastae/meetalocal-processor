@@ -145,8 +145,8 @@ public class EmailSenderConfig {
                             .build(),
                     format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_OVER_DATE_LIMIT_CONFIG = (meet, registrationUrl) ->
-            new EmailSenderConfig(Template.TOURIST_OVER_DATE_LIMIT_CANCELLATION,
+    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG = (meet, registrationUrl) ->
+            new EmailSenderConfig(Template.TOURIST_NOT_VALID_MEET_DATE_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
                             .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
@@ -182,7 +182,7 @@ public class EmailSenderConfig {
         VOLUNTEER_REQUEST(MAIL_TEMPLATE_PATH + "/volunteer-request.vm"),
         TOURIST_REQUEST(MAIL_TEMPLATE_PATH + "/tourist-request.vm"),
         TOURIST_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation.vm"),
-        TOURIST_OVER_DATE_LIMIT_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation-over-meet-limit.vm"),
+        TOURIST_NOT_VALID_MEET_DATE_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation-not-valid-meet-date.vm"),
         TOURIST_CANCELLATION_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/tourist-cancellation-not-selected.vm"),
         VOLUNTEER_CANCELLATION(MAIL_TEMPLATE_PATH + "/volunteer-cancellation.vm"),
         TOURIST_EVALUATION(MAIL_TEMPLATE_PATH + "/tourist-evaluation.vm"),
