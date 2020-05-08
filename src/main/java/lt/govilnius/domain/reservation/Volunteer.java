@@ -1,6 +1,7 @@
 package lt.govilnius.domain.reservation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lt.govilnius.domainService.time.DateUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -161,5 +162,9 @@ public class Volunteer implements Serializable {
 
     public void setChangedAt(Timestamp changedAt) {
         this.changedAt = changedAt;
+    }
+
+    public Long getAge() {
+        return DateUtils.yearsFromNow(dateOfBirth);
     }
 }
