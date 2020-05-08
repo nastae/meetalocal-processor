@@ -100,7 +100,6 @@ public class VolunteerActionService {
         final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
         return engagement
                 .filter(e -> e.getMeet().getStatus().equals(Status.FINISHED))
-                .filter(e -> System.currentTimeMillis() - e.getMeet().getChangedAt().getTime() < evaluationWaiting)
                 .filter(e -> !e.getFreezed())
                 .map(e -> {
                     LOGGER.info("Evaluate the meet engagement with token " + e.getToken());

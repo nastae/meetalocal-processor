@@ -51,7 +51,7 @@
                         </div><br>
                         <div class="form-group">
                             <label for="inputDescription">Description</label>
-                            <input type="text" class="form-control" id="inputDescription" placeholder="Description" th:field="*{description}" name="description" />
+                            <input type="text" maxlength="400" class="form-control" id="inputDescription" placeholder="Description" th:field="*{description}" name="description" />
                             <span  class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
                         </div>
                         <div class="text-right">

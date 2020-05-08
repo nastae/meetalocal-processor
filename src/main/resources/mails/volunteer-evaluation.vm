@@ -159,35 +159,17 @@
                             </div>
                         </div>
                     </div>
-                    <div style="background-color:transparent;">
-                        <div class="block-grid two-up" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
-                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
-                                <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:500px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
-                                <!--[if (mso)|(IE)]><td align="center" width="250" style="background-color:#ffffff;width:250px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-								<!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                                <!--[if (mso)|(IE)]></td><td align="center" width="250" style="background-color:#ffffff;width:250px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-                                <div class="col num6" style="max-width: 320px; min-width: 250px; display: table-cell; vertical-align: top; width: 250px;">
-                                    <div style="width:100% !important;">
-                                        <!--[if (!mso)&(!IE)]><!-->
-                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
-                                            <!--<![endif]-->
-                                            <div align="center" class="button-container" style="padding-top:5px;padding-right:5px;padding-bottom:5px;padding-left:5px;">
-                                                <a href="${evaluationUrl}">
-													<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#e03a3d;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto; width:auto;;border-top:1px solid #e03a3d;border-right:1px solid #e03a3d;border-bottom:1px solid #e03a3d;border-left:1px solid #e03a3d;padding-top:5px;padding-bottom:5px;font-family:Verdana, Geneva, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;">PASIDALINTI PATIRTIMI</span></span>
-													</div>
-												</a>
-                                                <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
-                                            </div>
-                                            <!--[if (!mso)&(!IE)]><!-->
-                                        </div>
-                                        <!--<![endif]-->
-                                    </div>
-                                </div>
-                                <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                                <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
-                            </div>
-                        </div>
-                    </div>
+                    <br>
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:auto;border-radius:5px;border-collapse:collapse;overflow:hidden">
+                        <tbody><tr>
+                            <td style="background:#c0282f;text-align:center">
+                                <a href="${evaluationUrl}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ffffff;font-size:16px;line-height:2;word-break:break-word"><strong>PASIDALINTI PATIRTIMI</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </a>
+                            </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div style="background-color:transparent;">
                         <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 500px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
                             <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
@@ -199,9 +181,9 @@
                                         <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
                                             <!--<![endif]-->
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Verdana, sans-serif"><![endif]-->
-                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:40px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Iki kitų kartų!</strong></p>
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;"><strong>Iki kitų kartų!</strong></p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

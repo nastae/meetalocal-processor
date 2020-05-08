@@ -82,7 +82,7 @@ public class VolunteerActionController {
             model.addAttribute("token", token);
             return "volunteer-evaluation";
         } else {
-            return "run-out-of-time-lt";
+            return "currently-selected-lt";
         }
     }
 
@@ -94,6 +94,6 @@ public class VolunteerActionController {
         final Optional<Evaluation> engagement = volunteerActionService.evaluate(token, params.get("comment"));
         return engagement.isPresent() ?
                 "thanks-for-answer-lt" :
-                "run-out-of-time-lt";
+                "currently-selected-lt";
     }
 }

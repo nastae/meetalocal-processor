@@ -65,7 +65,8 @@ public class VolunteerActionControllerTest {
     @Autowired
     private MeetEngagementService meetEngagementService;
 
-    private static final String ERROR_MESSAGE = "Deja, Jums pritrūko laiko.";
+    private static final String ERROR_MESSAGE_RUN_OUT_OF_TIME = "Deja, Jums pritrūko laiko.";
+    private static final String ERROR_MESSAGE_CURRENTLY_SELECTED = "Jūsų pasirinkimas jau užfiksuotas!";
 
     @After
     public void cleanEachTest() {
@@ -98,7 +99,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -136,7 +137,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -149,7 +150,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -174,7 +175,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -187,7 +188,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     public void evaluate_PostToken_ShouldEvaluate() throws Exception {
@@ -213,7 +214,7 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 
     public static String asJsonString(final Object obj) {
@@ -235,6 +236,6 @@ public class VolunteerActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 }

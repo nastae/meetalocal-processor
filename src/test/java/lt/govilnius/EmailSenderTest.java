@@ -29,7 +29,7 @@ public class EmailSenderTest {
     @Autowired
     private EmailSender emailSender;
 
-    private static final String RECEIVER = "meetalocaltest@gmail.com";
+    private static final String RECEIVER = "schomicenkiene@gmail.com";
     private static final String WEBSITE_URL = "test";
 
     @Test

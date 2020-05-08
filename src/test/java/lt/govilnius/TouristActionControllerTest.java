@@ -54,7 +54,8 @@ public class TouristActionControllerTest {
     @Autowired
     private VolunteerService volunteerService;
 
-    private static final String ERROR_MESSAGE = "Unfortunately, you've run out of time!";
+    private static final String ERROR_MESSAGE_RUN_OUT_OF_TIME = "Unfortunately, you've run out of time!";
+    private static final String ERROR_MESSAGE_CURRENTLY_SELECTED = "Unfortunately, you've currently selected the option!";
 
     @Autowired
     private MeetEngagementRepository meetEngagementRepository;
@@ -96,7 +97,7 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -108,7 +109,7 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 
     @Test
@@ -144,7 +145,7 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 
     @Test
@@ -171,7 +172,7 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 
     public static String asJsonString(final Object obj) {
@@ -194,6 +195,6 @@ public class TouristActionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
-        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE));
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 }

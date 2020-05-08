@@ -4,7 +4,8 @@
 
 <head>
     <!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <!--<meta content="text/html;charset="UTF-8" http-equiv="Content-Type" />-->
+
     <meta content="width=device-width" name="viewport" />
     <!--[if !mso]><!-->
     <meta content="IE=edge" http-equiv="X-UA-Compatible" />
@@ -126,31 +127,7 @@
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Sveiki,</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Gavome naują registraciją susitikimui - <strong>
-                                                    #if( $month == 0 )
-                                                        sausio
-                                                    #elseif( $month == 1 )
-                                                        vasario
-                                                    #elseif( $month == 2 )
-                                                        kovo
-                                                    #elseif( $month == 3 )
-                                                        balandžio
-                                                    #elseif( $month == 4 )
-                                                        gegužės
-                                                    #elseif( $month == 5 )
-                                                        birželio
-                                                    #elseif( $month == 6 )
-                                                        liepos
-                                                    #elseif( $month == 7 )
-                                                        rugpjūčio
-                                                    #elseif( $month == 8 )
-                                                        rūgsėjo
-                                                    #elseif( $month == 9 )
-                                                        spalio
-                                                    #elseif( $month == 10 )
-                                                        lapkričio
-                                                    #else
-                                                        gruodžio
-                                                    #end ${day} d., ${hours}:${minutes}.</strong></p>
+                                                    ${month} ${day} d., ${hours}:${minutes}.</strong></p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->
@@ -210,12 +187,12 @@
                                 <div class="col num12" style="min-width: 320px; max-width: 500px; display: table-cell; vertical-align: top; width: 500px;">
                                     <div style="width:100% !important;">
                                         <!--[if (!mso)&(!IE)]><!-->
-                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                        <div style="border-top:0px solid transparent;border-left:0px solid transparent;border-bottom:0px solid transparent;border-right:0px solid transparent;padding-top:5px;padding-bottom:5px;padding-right:0px;padding-left:0px">
                                             <!--<![endif]-->
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Verdana, sans-serif"><![endif]-->
-                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
-                                                <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Prašome patvirtinti, jeigu (ar) turite galimybę dalyvauti susitikime.</p>
+                                            <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:20px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                <div style="font-size:14px;line-height:1.2;color:#555555;font-family:Verdana,Geneva,sans-serif"">
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0">Prašome patvirtinti, ar turite galimybę dalyvauti susitikime.</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->
@@ -242,7 +219,7 @@
                                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
                                                     <!--<![endif]-->
                                                     <div align="center" class="button-container" style="padding-top:5px;padding-right:10px;padding-bottom:5px;padding-left:10px;">
-                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${agreementUrl}" style="height:31.5pt; width:102.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]--><a href="${agreementUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="font-size: 14px; line-height: 2; font-family: Verdana, Geneva, sans-serif; word-break: break-word; mso-line-height-alt: 32px;"><strong>GALIU</strong></span></span></a>
+                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${agreementUrl}" style="height:31.5pt; width:102.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]--><a href="${agreementUrl}" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#c0282f;border-radius:4px;width:auto;width:auto;border-top:1px solid #c0282f;border-right:1px solid #c0282f;border-bottom:1px solid #c0282f;border-left:1px solid #c0282f;padding-top:5px;padding-bottom:5px;font-family:Verdana,Geneva,sans-serif;text-align:center;word-break:keep-all" target="_blank"><span style="padding-left:37px;padding-right:37px;font-size:14px;display:inline-block"><span style="font-size:14px;line-height:28px"><strong>GALIU</strong></span></span></a>
                                                         <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
                                                     </div>
                                                     <!--[if (!mso)&(!IE)]><!-->
@@ -258,7 +235,7 @@
                                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
                                                     <!--<![endif]-->
                                                     <div align="center" class="button-container" style="padding-top:5px;padding-right:10px;padding-bottom:5px;padding-left:10px;">
-                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${cancellationUrl}" style="height:31.5pt; width:120.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]--><a href="${cancellationUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;"><span style="font-size: 14px; line-height: 2; font-family: Verdana, Geneva, sans-serif; word-break: break-word; mso-line-height-alt: 32px;"><strong>NEGALIU</strong></span></span></a>
+                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${cancellationUrl}" style="height:31.5pt; width:120.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:16px"><![endif]--><a href="${cancellationUrl}" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#c0282f;border-radius:4px;width:auto;width:auto;border-top:1px solid #c0282f;border-right:1px solid #c0282f;border-bottom:1px solid #c0282f;border-left:1px solid #c0282f;padding-top:5px;padding-bottom:5px;font-family:Verdana,Geneva,sans-serif;text-align:center;word-break:keep-all" target="_blank"><span style="padding-left:28px;padding-right:28px;font-size:14px;display:inline-block"><span style="font-size:14px;line-height:28px"><strong>NEGALIU</strong></span></span></a>
                                                         <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
                                                     </div>
                                                     <!--[if (!mso)&(!IE)]><!-->
@@ -274,7 +251,7 @@
                                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
                                                     <!--<![endif]-->
                                                     <div align="center" class="button-container" style="padding-top:5px;padding-right:10px;padding-bottom:5px;padding-left:10px;">
-                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${editUrl}" style="height:31.5pt; width:129.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:14px"><![endif]--><a href="${editUrl}" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #c0272d; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; width: auto; width: auto; border-top: 1px solid #c0272d; border-right: 1px solid #c0272d; border-bottom: 1px solid #c0272d; border-left: 1px solid #c0272d; padding-top: 5px; padding-bottom: 5px; font-family: Verdana, Geneva, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block;"><span style="font-size: 16px; line-height: 2; font-family: Verdana, Geneva, sans-serif; word-break: break-word; mso-line-height-alt: 32px;"><span data-mce-style="font-size: 14px; line-height: 28px;" style="font-size: 14px; line-height: 28px;"><strong>KITU LAIKU</strong></span></span></span></a>
+                                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${editUrl}" style="height:31.5pt; width:129.75pt; v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#c0272d"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Verdana, sans-serif; font-size:14px"><![endif]--><a href="${editUrl}" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#c0282f;border-radius:4px;width:auto;width:auto;border-top:1px solid #c0282f;border-right:1px solid #c0282f;border-bottom:1px solid #c0282f;border-left:1px solid #c0282f;padding-top:5px;padding-bottom:5px;font-family:Verdana,Geneva,sans-serif;text-align:center;word-break:keep-all" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block"><span style="font-size:14px;line-height:28px"><strong>KITU LAIKU</strong></span></span></a>
                                                         <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
                                                         <!--[if (!mso)&(!IE)]><!-->
                                                     </div>

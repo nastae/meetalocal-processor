@@ -5,6 +5,7 @@ import com.speedment.common.function.TriFunction;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domainService.encode.HTMLSymbolEncoderUtils;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,16 +43,16 @@ public class EmailSenderConfig {
                 .collect(Collectors.joining(", "));
         return new EmailSenderConfig(Template.VOLUNTEER_REQUEST, ImmutableMap
                 .<String, Object>builder()
-                .put("month", cal.get(Calendar.MONTH))
+                .put("month", HTMLSymbolEncoderUtils.encode(DateUtils.monthToLithuanian(cal.get(Calendar.MONTH))))
                 .put("day", cal.get(Calendar.DAY_OF_MONTH))
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
-                .put("name", meet.getName())
-                .put("languages", languages)
+                .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
+                .put("languages", HTMLSymbolEncoderUtils.encode(languages))
                 .put("age", meet.getAge())
                 .put("count", meet.getPeopleCount())
-                .put("preferences", meet.getPreferences())
-                .put("additionalPreferences", meet.getAdditionalPreferences())
+                .put("preferences", HTMLSymbolEncoderUtils.encode(meet.getPreferences()))
+                .put("additionalPreferences", HTMLSymbolEncoderUtils.encode(meet.getAdditionalPreferences()))
                 .put("agreementUrl", websiteUrl + "/volunteer-action-management/agreements?token=" + token)
                 .put("cancellationUrl", websiteUrl + "/volunteer-action-management/cancellations?token=" + token)
                 .put("editUrl", websiteUrl + "/volunteer-action-management/engagements?token=" + token)
@@ -61,7 +62,7 @@ public class EmailSenderConfig {
 
     public static final TriFunction<Meet, List<MeetEngagement>, String, EmailSenderConfig> TOURIST_REQUEST_CONFIG = (meet, engagements, websiteUrl) -> {
         final Map<String, Object> model = new HashMap<>();
-        model.put("name", meet.getName());
+        model.put("name", HTMLSymbolEncoderUtils.encode(meet.getName()));
         model.put("engagements", engagements
                 .stream()
                 .filter(e -> e.getTime().equals(meet.getTime()))
@@ -82,14 +83,14 @@ public class EmailSenderConfig {
         time.setTime(e.getTime());
         return new EmailSenderConfig(Template.TOURIST_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("name", meet.getName())
+                .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
-                .put("friendName", v.getName())
+                .put("friendName", HTMLSymbolEncoderUtils.encode(v.getName()))
                 .put("phoneNumber", v.getPhoneNumber())
-                .put("email", v.getEmail())
+                .put("email", HTMLSymbolEncoderUtils.encode(v.getEmail()))
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -101,13 +102,13 @@ public class EmailSenderConfig {
         time.setTime(e.getTime());
         return new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
                 .<String, Object>builder()
-                .put("month", date.get(Calendar.MONTH))
+                .put("month", HTMLSymbolEncoderUtils.encode(DateUtils.monthToLithuanian(date.get(Calendar.MONTH))))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
-                .put("name", v.getName())
+                .put("name", HTMLSymbolEncoderUtils.encode(v.getName()))
                 .put("phoneNumber", meet.getPhoneNumber())
-                .put("email", meet.getEmail())
+                .put("email", HTMLSymbolEncoderUtils.encode(meet.getEmail()))
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -116,7 +117,7 @@ public class EmailSenderConfig {
         final Meet meet = engagement.getMeet();
         return new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
                 .<String, Object>builder()
-                .put("name", meet.getName())
+                .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("evaluationUrl", websiteUrl + "/tourist-action-management/evaluations?token=" + engagement.getToken())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
@@ -139,7 +140,7 @@ public class EmailSenderConfig {
             new EmailSenderConfig(Template.TOURIST_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
-                            .put("name", meet.getName())
+                            .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                             .put("registrationUrl", registrationUrl)
                             .build(),
                     format("%s # %07d", SUBJECT, meet.getId()));
@@ -148,7 +149,7 @@ public class EmailSenderConfig {
             new EmailSenderConfig(Template.TOURIST_OVER_DATE_LIMIT_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
-                            .put("name", meet.getName())
+                            .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                             .put("registrationUrl", registrationUrl)
                             .build(),
                     format("%s # %07d", SUBJECT, meet.getId()));
@@ -157,7 +158,7 @@ public class EmailSenderConfig {
         new EmailSenderConfig(Template.TOURIST_CANCELLATION_NOT_SELECTED,
                 ImmutableMap
                 .<String, Object>builder()
-                .put("name", meet.getName())
+                .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("registrationUrl", registrationUrl)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));

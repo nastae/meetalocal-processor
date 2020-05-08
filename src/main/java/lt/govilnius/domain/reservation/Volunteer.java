@@ -40,6 +40,7 @@ public class Volunteer implements Serializable {
     @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<VolunteerLanguage> languages;
 
+    @Lob
     private String description;
 
     @Column(name = "active", nullable = false)

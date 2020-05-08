@@ -33,6 +33,8 @@ public class TouristActionController {
     @GetMapping("/selections")
     public String select(@RequestParam(name = "token") String token) {
         final Optional<Meet> meet = touristActionService.select(token);
+        if (touristActionService.isFreezed(token))
+            return "currently-selected-en";
         if (meet.isPresent()) {
             return "thanks-for-answer-en";
         } else {
@@ -43,19 +45,24 @@ public class TouristActionController {
     @GetMapping("/evaluations")
     public String evaluate(@RequestParam(name = "token") String token, Model model) {
         final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
+        if (touristActionService.isFreezed(token))
+            return "currently-selected-en";
         if (meetEngagement.isPresent()) {
             model.addAttribute("token", token);
             return "tourist-evaluation";
         } else {
-            return "run-out-of-time-en";
+            return "currently-selected-en";
         }
     }
 
     @PostMapping("/evaluations")
     public String evaluate(@RequestParam Map<String, String> params) {
-        final Optional<Evaluation> engagement = touristActionService.evaluate(params.get("token"), params.get("comment"));
+        String token = params.get("token");
+        if (touristActionService.isFreezed(token))
+            return "currently-selected-en";
+        final Optional<Evaluation> engagement = touristActionService.evaluate(token, params.get("comment"));
         return engagement.isPresent() ?
                 "thanks-for-answer-en" :
-                "run-out-of-time-en";
+                "currently-selected-en";
     }
 }

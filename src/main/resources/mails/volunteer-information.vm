@@ -123,36 +123,11 @@
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 25px; padding-left: 10px; padding-top: 25px; padding-bottom: 25px; font-family: Verdana, sans-serif"><![endif]-->
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:10px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Sveiki,</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Susitikimas patvirtintas!</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Turistai Jūsų lauks turizmo informacijos centre, Pilies g. 2 (
-                                                    #if( $month == 0 )
-                                                        sausio
-                                                    #elseif( $month == 1 )
-                                                        vasario
-                                                    #elseif( $month == 2 )
-                                                        kovo
-                                                    #elseif( $month == 3 )
-                                                        balandžio
-                                                    #elseif( $month == 4 )
-                                                        gegužės
-                                                    #elseif( $month == 5 )
-                                                        birželio
-                                                    #elseif( $month == 6 )
-                                                        liepos
-                                                    #elseif( $month == 7 )
-                                                        rugpjūčio
-                                                    #elseif( $month == 8 )
-                                                        rūgsėjo
-                                                    #elseif( $month == 9 )
-                                                        spalio
-                                                    #elseif( $month == 10 )
-                                                        lapkričio
-                                                    #else
-                                                        gruodžio
-                                                    #end ${day} d., ${hours}:${minutes})</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Sveiki,</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Susitikimas patvirtintas!</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Turistai Jūsų lauks turizmo informacijos centre, Pilies g. 2 (${month} ${day} d., ${hours}:${minutes})</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->
@@ -179,11 +154,9 @@
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 35px; padding-left: 35px; padding-top: 35px; padding-bottom: 35px; font-family: Verdana, sans-serif"><![endif]-->
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:35px;padding-right:35px;padding-bottom:35px;padding-left:35px;">
                                                 <div style="font-size: 7px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Vardas</strong>: ${name}</p>
-                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>Telefono numeris</strong>: ${phoneNumber}</p>
-                                    <p style="font-size: 4px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><strong>El. paštas</strong>: ${email}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>Vardas</strong>: ${name}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>Telefono numeris</strong>: ${phoneNumber}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>El. paštas</strong>: ${email}</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

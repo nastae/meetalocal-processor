@@ -21,7 +21,7 @@ public class EmailSender {
     @Autowired
     private VelocityEngine velocityEngine;
 
-    public void send(Mail mail, EmailSenderConfig config) {
+    public synchronized void send(Mail mail, EmailSenderConfig config) {
         try {
             sendTo(mail.getTo(), config);
         } catch (RuntimeException ex) {
@@ -35,7 +35,7 @@ public class EmailSender {
             message.setTo(to);
             message.setSubject(config.getSubject());
             String text = VelocityEngineUtils.mergeTemplateIntoString(
-                    velocityEngine, config.getTemplate().getPath(), config.getModel());
+                    velocityEngine, config.getTemplate().getPath(), config.getModel()); //"ISO-8859-1",
             message.setText(text, true);
         };
         this.mailSender.send(preparator);
