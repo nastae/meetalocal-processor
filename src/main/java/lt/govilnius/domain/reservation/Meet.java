@@ -35,6 +35,7 @@ public class Meet {
 
     @NotNull
     @Column(name = "phone_number")
+    @Lob
     private String phoneNumber;
 
     @NotNull
@@ -65,6 +66,7 @@ public class Meet {
 
     private String preferences;
 
+    @Lob
     @Column(name = "additional_preferences")
     private String additionalPreferences;
 
