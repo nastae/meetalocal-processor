@@ -29,7 +29,7 @@ public class EmailSenderTest {
     @Autowired
     private EmailSender emailSender;
 
-    private static final String RECEIVER = "schomicenkiene@gmail.com";
+    private static final String RECEIVER = "meetalocaltest@gmail.com";
     private static final String WEBSITE_URL = "test";
 
     @Test
@@ -45,7 +45,20 @@ public class EmailSenderTest {
         Volunteer volunteer = sampleVolunteer();
         final EmailSenderConfig config =
                 EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
-                        meet, ImmutableList.of(new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false)), WEBSITE_URL);
+                        meet, ImmutableList.of(
+                                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false)), WEBSITE_URL);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_TouristRequest_With_Another_Time_ShouldSend() {
+        Meet meet = sampleMeet();
+        Volunteer volunteer = sampleVolunteer();
+        final EmailSenderConfig config =
+                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
+                        meet, ImmutableList.of(
+                                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false),
+                                new MeetEngagement(meet, volunteer, new Time(5, 5, 5), "TOKEN", true, false)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
