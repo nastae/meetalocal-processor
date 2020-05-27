@@ -96,7 +96,7 @@
                 max-height: none !important;
             }
             .goodbye {
-                text-align: center;
+                text-align: left;
             }
         }
     </style>
@@ -126,9 +126,9 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:35px;padding-right:10px;padding-bottom:35px;padding-left:10px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Hello, ${name},</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Thank you for your interest in meeting a local.</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Here is the list of locals who would be glad to meet you. Please select the volunteer you like the most within the next 24 hours and then click select. If you do not choose a volunteer within 24 hours, your registration will be canceled.</p>
                                                 </div>
                                             </div>

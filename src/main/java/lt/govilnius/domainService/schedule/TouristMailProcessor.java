@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -40,6 +41,7 @@ public class TouristMailProcessor {
     @Value("${waiting.sent.tourist.request.milliseconds}")
     private Long sentTouristRequestWaiting;
 
+    @Transactional
     public void processRequests() {
         meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
             LOGGER.info("Try process tourist request of the meet with id " + meet.getId());
@@ -49,6 +51,7 @@ public class TouristMailProcessor {
         });
     }
 
+    @Transactional
     public Optional<Meet> processRequest(Volunteer volunteer, Meet meet) {
         LOGGER.info("Process tourist request of the meet with id " + meet.getId());
         final Optional<MeetEngagement> meetEngagement = volunteer != null ?

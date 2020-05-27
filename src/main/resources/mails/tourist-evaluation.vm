@@ -144,7 +144,7 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:30px;padding-right:20px;padding-bottom:20px;padding-left:5px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Hello, ${name},</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">We hope your meeting with the local has gone well, and we would appreciate it if you could share your experience here:</p>
                                                 </div>
                                             </div>

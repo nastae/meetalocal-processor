@@ -52,7 +52,7 @@
                     <div th:if="${#lists.isEmpty(engagement.evaluations)}">
                         <label>No evluation exists!</label>
                     </div>
-                    <form th:action="${'/engagement-management'}" method="GET" style='display:inline;'>
+                    <form th:action="@{'/engagement-management'}" method="GET" style='display:inline;'>
                         <input type="hidden" name="id" th:value="${engagement.id}">
                         <button type="submit" name="view" class="btn btn-default">Back</button>
                     </form>

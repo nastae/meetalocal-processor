@@ -14,7 +14,7 @@ public class MeetDto {
     private Date date;
     private LocalTime time;
     private Integer peopleCount;
-    private Integer age;
+    private String age;
     private List<AgeGroup> ageGroups;
     private List<Language> languages;
     private String preferences;
@@ -25,7 +25,7 @@ public class MeetDto {
 
     public MeetDto(String name, String surname, String email, String phoneNumber,
                    String country, Date date, LocalTime time, Integer peopleCount,
-                   Integer age, List<AgeGroup> ageGroups, List<Language> languages,
+                   String age, List<AgeGroup> ageGroups, List<Language> languages,
                    String preferences, String additionalPreferences) {
         this.name = name;
         this.surname = surname;
@@ -98,11 +98,11 @@ public class MeetDto {
         this.peopleCount = peopleCount;
     }
 
-    public Integer getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

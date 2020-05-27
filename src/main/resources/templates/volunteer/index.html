@@ -37,15 +37,15 @@
                             <td th:text = "${volunteer.dateOfBirth}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <form th:action="${'/volunteer-management/view'}" method="GET" style='display:inline;'>
+                                    <form th:action="@{'/volunteer-management/view'}" method="GET" style='display:inline;'>
                                         <input type="hidden" name="id" th:value="${volunteer.id}">
                                         <button type="submit" name="view" class="btn btn-info"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
                                     </form>
-                                    <form th:action="${'/volunteer-management/edit'}" method="GET" style='display:inline;'>
+                                    <form th:action="@{'/volunteer-management/edit'}" method="GET" style='display:inline;'>
                                         <input type="hidden" name="id" th:value="${volunteer.id}">
                                         <button type="submit" name="edit" class="btn btn-success"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
                                     </form>
-                                    <form th:action="${'/volunteer-management/delete'}" th:method="DELETE" style='display:inline;'>
+                                    <form th:action="@{'/volunteer-management/delete'}" th:method="DELETE" style='display:inline;'>
                                         <input type="hidden" name="id" th:value="${volunteer.id}">
                                         <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                                     </form>

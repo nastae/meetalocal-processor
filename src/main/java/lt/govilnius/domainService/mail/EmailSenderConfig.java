@@ -52,7 +52,9 @@ public class EmailSenderConfig {
                 .put("age", meet.getAge())
                 .put("count", meet.getPeopleCount())
                 .put("preferences", HTMLSymbolEncoderUtils.encode(meet.getPreferences()))
-                .put("additionalPreferences", HTMLSymbolEncoderUtils.encode(meet.getAdditionalPreferences()))
+                .put("additionalPreferences", HTMLSymbolEncoderUtils.encode(meet.getAdditionalPreferences() == null
+                        ? ""
+                        : meet.getAdditionalPreferences()))
                 .put("agreementUrl", websiteUrl + "/volunteer-action-management/agreements?token=" + token)
                 .put("cancellationUrl", websiteUrl + "/volunteer-action-management/cancellations?token=" + token)
                 .put("editUrl", websiteUrl + "/volunteer-action-management/engagements?token=" + token)

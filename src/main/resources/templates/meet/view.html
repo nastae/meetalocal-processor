@@ -67,7 +67,7 @@
                         <input type="text" class="form-control" id="inputAge" placeholder="Age" th:field="*{meet.age}" name="age" disabled="disabled" />
                     </div>
                     <div class="text-right">
-                        <form th:action="${'/engagement-management'}" th:method="GET" style='display:inline;'>
+                        <form th:action="@{'/engagement-management'}" th:method="GET" style='display:inline;'>
                             <input type="hidden" name="id" th:value="${meet.id}">
                             <button type="submit" class="btn btn-primary">Engagements</button>
                         </form>

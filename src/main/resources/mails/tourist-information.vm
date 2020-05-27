@@ -127,9 +127,9 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Hello ${name},</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Your meeting has been confirmed!</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">We will be waiting for you at the Tourist Information Centre on Pilies g. 2 (${day} ${month}, ${hours}:${minutes}).</p>
                                                 </div>
                                             </div>

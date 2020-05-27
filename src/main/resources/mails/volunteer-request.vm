@@ -125,8 +125,8 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:35px;padding-right:10px;padding-bottom:35px;padding-left:10px;">
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Sveiki,</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Gavome naują registraciją susitikimui - <strong>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Gavome nauj&#261; registracij&#261; susitikimui - <strong>
                                                     ${month} ${day} d., ${hours}:${minutes}.</strong></p>
                                                 </div>
                                             </div>
@@ -155,9 +155,9 @@
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:30px;padding-right:30px;padding-bottom:30px;padding-left:30px;">
                                                 <div style="font-size: 14px; line-height: 1.2; font-family: Verdana, Geneva, sans-serif; color: #555555; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Vardas</strong>: ${name}</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Amžius</strong>: ${age}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Am&#382;ius</strong>: ${age}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Kalba</strong>: ${languages}</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Turistų skaičius</strong>: ${count}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Turist&#371; skai&#269;ius</strong>: ${count}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Pageidavimai</strong>: ${preferences}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Papildoma informacija</strong>: ${additionalPreferences}</p>
                                                 </div>
@@ -186,7 +186,7 @@
                                             <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Verdana, sans-serif"><![endif]-->
                                             <div style="color:#555555;font-family:Verdana, Geneva, sans-serif;line-height:1.2;padding-top:20px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                                 <div style="font-size:14px;line-height:1.2;color:#555555;font-family:Verdana,Geneva,sans-serif"">
-                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0">Prašome patvirtinti, ar turite galimybę dalyvauti susitikime.</p>
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0">Pra&#353;ome patvirtinti, ar turite galimyb&#281; dalyvauti susitikime.</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

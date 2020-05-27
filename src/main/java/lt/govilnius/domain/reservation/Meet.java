@@ -34,7 +34,7 @@ public class Meet {
     private String email;
 
     @NotNull
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 1000)
     @Lob
     private String phoneNumber;
 
@@ -56,7 +56,7 @@ public class Meet {
 
     @NotNull
     @Column(name = "age", nullable = false)
-    private Integer age;
+    private String age;
 
     @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetAgeGroup> meetAgeGroups;
@@ -67,7 +67,7 @@ public class Meet {
     private String preferences;
 
     @Lob
-    @Column(name = "additional_preferences")
+    @Column(name = "additional_preferences", length = 1000)
     private String additionalPreferences;
 
     @Enumerated(EnumType.STRING)
@@ -92,7 +92,7 @@ public class Meet {
     public Meet(Timestamp createdAt, Timestamp changedAt,
                 @NotNull String name, @NotNull String surname, @NotNull String email,
                 @NotNull String phoneNumber, @NotNull String country, @NotNull Date date,
-                @NotNull Time time, @NotNull Integer peopleCount, @NotNull Integer age,
+                @NotNull Time time, @NotNull Integer peopleCount, @NotNull String age,
                 Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, String preferences, String additionalPreferences,
                 Status status, Boolean freezed, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
                 Set<MeetStatus> statuses) {
@@ -206,11 +206,11 @@ public class Meet {
         this.peopleCount = peopleCount;
     }
 
-    public Integer getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

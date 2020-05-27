@@ -42,7 +42,7 @@
                             <td th:text = "${meet.age}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
-                                    <form th:action="${'/meet-management/view'}" method="GET" style='display:inline;'>
+                                    <form th:action="@{'/meet-management/view'}" method="GET" style='display:inline;'>
                                         <input type="hidden" name="id" th:value="${meet.id}">
                                         <button type="submit" name="view" class="btn btn-info"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
                                     </form>

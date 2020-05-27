@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,7 @@ public class VolunteerMailProcessor {
     @Value("${max.meet.waiting.hours}")
     private Long maxMeetWaitingHours;
 
+    @Transactional
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
             LOGGER.info("Try process the new meet with id " + meet.getId());
@@ -96,8 +98,12 @@ public class VolunteerMailProcessor {
         final Calendar current = Calendar.getInstance();
         current.setTimeInMillis(System.currentTimeMillis());
 
-        return (mailAcceptingEndHours < formCreated.get(Calendar.HOUR_OF_DAY) || formCreated.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours) &&
+        boolean isNight = (mailAcceptingEndHours < formCreated.get(Calendar.HOUR_OF_DAY) || formCreated.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours) &&
                 (mailAcceptingEndHours < current.get(Calendar.HOUR_OF_DAY) || current.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours);
+        LOGGER.info("Checking if meeting time is night time!");
+        LOGGER.info("Is night time? " + isNight);
+        LOGGER.info("Form create at " + formCreated.toString() + ", current time is " + current.toString());
+        return isNight;
     }
 
     private boolean isValidMeeting(Meet meet) {
@@ -106,8 +112,11 @@ public class VolunteerMailProcessor {
         final Calendar meeting = Calendar.getInstance();
         meeting.set(meet.getDate().getYear(), meet.getDate().getMonth(), meet.getDate().getDay(),
                 meet.getTime().getHours(), meet.getTime().getMinutes(), meet.getTime().getSeconds());
-
-        return availableMeeting.before(meeting);
+        LOGGER.info("Checking if meeting time is valid!");
+        boolean isValid = availableMeeting.before(meeting);
+        LOGGER.info("Is valid time? " + isValid);
+        LOGGER.info("Available meeting time is " + availableMeeting.toString() + ", meeting time is " + meeting.toString());
+        return isValid;
     }
 
     private List<MeetEngagement> createEngagements(List<Volunteer> volunteers, Meet meet) {
@@ -118,6 +127,7 @@ public class VolunteerMailProcessor {
                 .collect(toList());
     }
 
+    @Transactional
     public void processRequests() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST).forEach(meet -> {
             LOGGER.info("Try process the sent request to meet whose id " + meet.getId());
@@ -151,6 +161,7 @@ public class VolunteerMailProcessor {
         });
     }
 
+    @Transactional
     public void processAgreements() {
         meetService.findByStatus(Status.AGREED).forEach(meet -> {
             LOGGER.info("Try process agreement of the meet with id " + meet.getId());

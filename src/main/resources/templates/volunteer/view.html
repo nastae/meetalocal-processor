@@ -67,7 +67,7 @@
                     </div>
                     <div class="text-right">
                         <a href="/volunteer-management" th:href="@{/volunteer-management}" class="btn btn-default">Back</a>
-                        <form th:action="${'/volunteer-management/edit'}" th:method="GET" style='display:inline;'>
+                        <form th:action="@{'/volunteer-management/edit'}" th:method="GET" style='display:inline;'>
                             <input type="hidden" name="id" th:value="${volunteer.id}">
                             <button type="submit" class="btn btn-primary">Edit</button>
                         </form>

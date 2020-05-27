@@ -128,7 +128,7 @@ public class MeetServiceTest {
         return new MeetDto("name", "surname", "meetalocaltest@gmail.com", "123",
                 "Lithuania", new Date(2019, 1, 1),
                 LocalTime.of(11, 11, 11),
-                1, 20, ImmutableList.of(AgeGroup.YOUTH),
+                1, "18-29", ImmutableList.of(AgeGroup.YOUTH),
                 ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "additionalPreferences");
     }
 
