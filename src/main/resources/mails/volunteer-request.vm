@@ -157,7 +157,6 @@
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Vardas</strong>: ${name}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Am&#382;ius</strong>: ${age}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Kalba</strong>: ${languages}</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Turist&#371; skai&#269;ius</strong>: ${count}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Pageidavimai</strong>: ${preferences}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin:0;padding-top:5px"><strong>Papildoma informacija</strong>: ${additionalPreferences}</p>
                                                 </div>

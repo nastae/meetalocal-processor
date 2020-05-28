@@ -31,8 +31,8 @@ public class Volunteer implements Serializable {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+    @Column(name = "skype_name")
+    private String skypeName;
 
     private String email;
 
@@ -54,14 +54,14 @@ public class Volunteer implements Serializable {
     }
 
     public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
-                     String phoneNumber, String email, Set<VolunteerLanguage> languages,
+                     String skypeName, String email, Set<VolunteerLanguage> languages,
                      String description, Boolean active, Set<MeetEngagement> meetEngagements) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
-        this.phoneNumber = phoneNumber;
+        this.skypeName = skypeName;
         this.email = email;
         this.languages = languages;
         this.description = description;
@@ -101,12 +101,12 @@ public class Volunteer implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getSkypeName() {
+        return skypeName;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
     }
 
     public String getEmail() {

@@ -9,11 +9,10 @@ public class MeetDto {
     private String name;
     private String surname;
     private String email;
-    private String phoneNumber;
+    private String skypeName;
     private String country;
     private Date date;
     private LocalTime time;
-    private Integer peopleCount;
     private String age;
     private List<AgeGroup> ageGroups;
     private List<Language> languages;
@@ -23,18 +22,17 @@ public class MeetDto {
     public MeetDto() {
     }
 
-    public MeetDto(String name, String surname, String email, String phoneNumber,
+    public MeetDto(String name, String surname, String email, String skypeName,
                    String country, Date date, LocalTime time, Integer peopleCount,
                    String age, List<AgeGroup> ageGroups, List<Language> languages,
                    String preferences, String additionalPreferences) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.skypeName = skypeName;
         this.country = country;
         this.date = date;
         this.time = time;
-        this.peopleCount = peopleCount;
         this.age = age;
         this.ageGroups = ageGroups;
         this.languages = languages;
@@ -66,14 +64,6 @@ public class MeetDto {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getCountry() {
         return country;
     }
@@ -88,14 +78,6 @@ public class MeetDto {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Integer getPeopleCount() {
-        return peopleCount;
-    }
-
-    public void setPeopleCount(Integer peopleCount) {
-        this.peopleCount = peopleCount;
     }
 
     public String getAge() {
@@ -144,5 +126,13 @@ public class MeetDto {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public String getSkypeName() {
+        return skypeName;
+    }
+
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
     }
 }

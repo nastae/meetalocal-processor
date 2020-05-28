@@ -30,7 +30,7 @@ public class VolunteerService {
         Calendar date = Calendar.getInstance();
         date.setTime(volunteer.getDateOfBirth());
         entity.setDateOfBirth(new Date(date.getTimeInMillis()));
-        entity.setPhoneNumber(volunteer.getPhoneNumber());
+        entity.setSkypeName(volunteer.getSkypeName());
         entity.setEmail(volunteer.getEmail());
         entity.setLanguages(new HashSet<>());
         entity.setDescription(volunteer.getDescription());
@@ -78,7 +78,7 @@ public class VolunteerService {
         Calendar date = Calendar.getInstance();
         date.setTime(newData.getDateOfBirth());
         entity.setDateOfBirth(new Date(date.getTimeInMillis()));
-        entity.setPhoneNumber(newData.getPhoneNumber());
+        entity.setSkypeName(newData.getSkypeName());
         entity.setEmail(newData.getEmail());
         for (VolunteerLanguage language : entity.getLanguages()) {
             volunteerLanguageService.delete(language.getId());

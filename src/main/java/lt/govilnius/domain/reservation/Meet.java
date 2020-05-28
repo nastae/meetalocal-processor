@@ -34,9 +34,8 @@ public class Meet {
     private String email;
 
     @NotNull
-    @Column(name = "phone_number", length = 1000)
-    @Lob
-    private String phoneNumber;
+    @Column(name = "skype_name")
+    private String skypeName;
 
     @NotNull
     @Column(name = "country")
@@ -51,10 +50,6 @@ public class Meet {
     private Time time;
 
     @NotNull
-    @Column(name = "people_count")
-    private Integer peopleCount;
-
-    @NotNull
     @Column(name = "age", nullable = false)
     private String age;
 
@@ -64,6 +59,8 @@ public class Meet {
     @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<MeetLanguage> languages;
 
+    @Lob
+    @Column(name = "preferences", length = 1000)
     private String preferences;
 
     @Lob
@@ -91,7 +88,7 @@ public class Meet {
 
     public Meet(Timestamp createdAt, Timestamp changedAt,
                 @NotNull String name, @NotNull String surname, @NotNull String email,
-                @NotNull String phoneNumber, @NotNull String country, @NotNull Date date,
+                @NotNull String skypeName, @NotNull String country, @NotNull Date date,
                 @NotNull Time time, @NotNull Integer peopleCount, @NotNull String age,
                 Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, String preferences, String additionalPreferences,
                 Status status, Boolean freezed, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
@@ -101,11 +98,10 @@ public class Meet {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.skypeName = skypeName;
         this.country = country;
         this.date = date;
         this.time = time;
-        this.peopleCount = peopleCount;
         this.age = age;
         this.meetAgeGroups = meetAgeGroups;
         this.languages = languages;
@@ -166,14 +162,6 @@ public class Meet {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getCountry() {
         return country;
     }
@@ -196,14 +184,6 @@ public class Meet {
 
     public void setTime(Time time) {
         this.time = time;
-    }
-
-    public Integer getPeopleCount() {
-        return peopleCount;
-    }
-
-    public void setPeopleCount(Integer peopleCount) {
-        this.peopleCount = peopleCount;
     }
 
     public String getAge() {
@@ -284,5 +264,13 @@ public class Meet {
 
     public void setAdditionalPreferences(String additionalPreferences) {
         this.additionalPreferences = additionalPreferences;
+    }
+
+    public String getSkypeName() {
+        return skypeName;
+    }
+
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
     }
 }

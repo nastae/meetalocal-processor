@@ -50,7 +50,6 @@ public class EmailSenderConfig {
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("languages", HTMLSymbolEncoderUtils.encode(languages))
                 .put("age", meet.getAge())
-                .put("count", meet.getPeopleCount())
                 .put("preferences", HTMLSymbolEncoderUtils.encode(meet.getPreferences()))
                 .put("additionalPreferences", HTMLSymbolEncoderUtils.encode(meet.getAdditionalPreferences() == null
                         ? ""
@@ -91,8 +90,7 @@ public class EmailSenderConfig {
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("friendName", HTMLSymbolEncoderUtils.encode(v.getName()))
-                .put("phoneNumber", v.getPhoneNumber())
-                .put("email", HTMLSymbolEncoderUtils.encode(v.getEmail()))
+                .put("skypeName", v.getSkypeName())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -109,8 +107,7 @@ public class EmailSenderConfig {
                 .put("hours", format("%02d", time.get(Calendar.HOUR_OF_DAY)))
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", HTMLSymbolEncoderUtils.encode(v.getName()))
-                .put("phoneNumber", meet.getPhoneNumber())
-                .put("email", HTMLSymbolEncoderUtils.encode(meet.getEmail()))
+                .put("skypeName", meet.getSkypeName())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };

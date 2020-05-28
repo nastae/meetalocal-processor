@@ -53,11 +53,10 @@ public class MeetRegistrationControllerTest {
                 .andExpect(jsonPath("$.name").value(meet.getName()))
                 .andExpect(jsonPath("$.surname").value(meet.getSurname()))
                 .andExpect(jsonPath("$.email").value(meet.getEmail()))
-                .andExpect(jsonPath("$.phoneNumber").value(meet.getPhoneNumber()))
+                .andExpect(jsonPath("$.skypeName").value(meet.getSkypeName()))
                 .andExpect(jsonPath("$.country").value(meet.getCountry()))
                 .andExpect(jsonPath("$.date").value(meet.getDate().toString()))
                 .andExpect(jsonPath("$.time").value(meet.getTime().toString()))
-                .andExpect(jsonPath("$.peopleCount").value(meet.getPeopleCount()))
                 .andExpect(jsonPath("$.age").value(meet.getAge()))
                 .andExpect(jsonPath("$.preferences").value(meet.getPreferences()))
                 .andExpect(jsonPath("$.additionalPreferences").value(meet.getAdditionalPreferences()));
@@ -78,7 +77,7 @@ public class MeetRegistrationControllerTest {
     @Test
     public void newMeet_MeetWithNullPhoneNumber_ShoudShowBadRequest() throws Exception {
         Meet meet = sampleMeet();
-        meet.setPhoneNumber(null);
+        meet.setSkypeName(null);
 
         mvc.perform(post(URL)
                 .with(csrf())
@@ -139,18 +138,6 @@ public class MeetRegistrationControllerTest {
     public void newMeet_MeetWithNullTime_ShoudShowBadRequest() throws Exception {
         Meet meet = sampleMeet();
         meet.setTime(null);
-
-        mvc.perform(post(URL)
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(meet)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void newMeet_MeetWithNullPeopleCount_ShoudShowBadRequest() throws Exception {
-        Meet meet = sampleMeet();
-        meet.setPeopleCount(null);
 
         mvc.perform(post(URL)
                 .with(csrf())

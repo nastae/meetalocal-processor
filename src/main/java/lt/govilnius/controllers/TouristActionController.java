@@ -36,7 +36,7 @@ public class TouristActionController {
         if (touristActionService.isFreezed(token))
             return "currently-selected-en";
         if (meet.isPresent()) {
-            return "thanks-for-answer-en";
+            return "thanks-for-selection";
         } else {
             return "run-out-of-time-en";
         }

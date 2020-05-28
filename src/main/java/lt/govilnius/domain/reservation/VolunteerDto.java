@@ -15,7 +15,7 @@ public class VolunteerDto {
 
     private Date dateOfBirth;
 
-    private String phoneNumber;
+    private String skypeName;
 
     private String email;
 
@@ -28,19 +28,19 @@ public class VolunteerDto {
     public VolunteerDto() {}
 
     public VolunteerDto(Volunteer volunteer) {
-        this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getPhoneNumber(),
+        this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getSkypeName(),
                 volunteer.getEmail(), volunteer.getLanguages().stream().map(l -> l.getLanguage().getName()).collect(Collectors.toList()),
                 volunteer.getDescription(), volunteer.getActive());
     }
 
-    public VolunteerDto(Long id, String name, String surname, Date dateOfBirth, String phoneNumber,
+    public VolunteerDto(Long id, String name, String surname, Date dateOfBirth, String skypeName,
                         String email, List<String> languages,
                         String description, Boolean active) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
-        this.phoneNumber = phoneNumber;
+        this.skypeName = skypeName;
         this.email = email;
         this.languages = languages;
         this.description = description;
@@ -79,12 +79,12 @@ public class VolunteerDto {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getSkypeName() {
+        return skypeName;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
     }
 
     public String getEmail() {

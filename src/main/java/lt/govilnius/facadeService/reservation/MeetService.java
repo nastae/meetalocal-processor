@@ -36,7 +36,7 @@ public class MeetService {
         entity.setName(meet.getName());
         entity.setSurname(meet.getSurname());
         entity.setEmail(meet.getEmail());
-        entity.setPhoneNumber(meet.getPhoneNumber());
+        entity.setSkypeName(meet.getSkypeName());
         entity.setCountry(meet.getCountry());
         Calendar date = Calendar.getInstance();
         date.setTime(meet.getDate());
@@ -45,7 +45,6 @@ public class MeetService {
         LocalTime localTime = meet.getTime();
         time.set(0, 0, 0, localTime.getHour(), localTime.getMinute(), localTime.getSecond());
         entity.setTime(new Time(time.getTimeInMillis()));
-        entity.setPeopleCount(meet.getPeopleCount());
         entity.setAge(meet.getAge());
         entity.setMeetAgeGroups(new HashSet<>());
         entity.setLanguages(new HashSet<>());
