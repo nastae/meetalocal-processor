@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/tourist-action-management")
+@RequestMapping("/tourist")
 public class TouristActionController {
 
     @Autowired
@@ -32,9 +32,9 @@ public class TouristActionController {
 
     @GetMapping("/selections")
     public String select(@RequestParam(name = "token") String token) {
-        final Optional<Meet> meet = touristActionService.select(token);
         if (touristActionService.isFreezed(token))
             return "currently-selected-en";
+        final Optional<Meet> meet = touristActionService.select(token);
         if (meet.isPresent()) {
             return "thanks-for-answer-en";
         } else {
@@ -44,9 +44,9 @@ public class TouristActionController {
 
     @GetMapping("/evaluations")
     public String evaluate(@RequestParam(name = "token") String token, Model model) {
-        final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
         if (touristActionService.isFreezed(token))
             return "currently-selected-en";
+        final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
         if (meetEngagement.isPresent()) {
             model.addAttribute("token", token);
             return "tourist-evaluation";

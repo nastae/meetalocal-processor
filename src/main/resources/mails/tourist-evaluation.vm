@@ -164,7 +164,7 @@
                         <tbody>
                             <tr>
                                 <td style="background:#c0282f;text-align:center">
-                                    <a href="${evaluationUrl}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank" data-saferedirecturl="https://www.google.com/url?q=http://test/tourist-action-management/evaluations?token%3D&amp;source=gmail&amp;ust=1589014577949000&amp;usg=AFQjCNH5gl4uskNQEaVXssjNPpbtUpJ5aA">
+                                    <a href="${evaluationUrl}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
                                         &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ffffff;font-size:16px;line-height:2;word-break:break-word"><strong>SHARE YOUR EXPERIENCE</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     </a>
                                 </td>

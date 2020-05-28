@@ -74,6 +74,33 @@ public class TouristActionControllerTest {
     }
 
     @Test
+    public void select_Token_ShoudOpenCurrentlySelected() throws Exception {
+        MeetDto meetDto = sampleMeetDto();
+        Meet meet = meetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, true);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        meetEngagement.setConfirmed(true);
+        meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/tourist/selections?token=" + params.get("token")))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+    }
+
+    @Test
     public void select_Token_ShoudOpenSelect() throws Exception {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
@@ -93,11 +120,12 @@ public class TouristActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
 
-        MvcResult result = mvc.perform(get("/tourist-action-management/selections?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/tourist/selections?token=" + params.get("token")))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
         Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
     }
 
     @Test
@@ -105,7 +133,7 @@ public class TouristActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
 
-        MvcResult result = mvc.perform(get("/tourist-action-management/selections?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/tourist/selections?token=" + params.get("token")))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -129,11 +157,12 @@ public class TouristActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", meetEngagement.getToken());
 
-        MvcResult result = mvc.perform(get("/tourist-action-management/evaluations?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/tourist/evaluations?token=" + params.get("token")))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
         Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     @Test
@@ -141,7 +170,7 @@ public class TouristActionControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("token", "TOKEN");
 
-        MvcResult result = mvc.perform(get("/tourist-action-management/evaluations?token=" + params.get("token")))
+        MvcResult result = mvc.perform(get("/tourist/evaluations?token=" + params.get("token")))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
@@ -165,7 +194,7 @@ public class TouristActionControllerTest {
         meetEngagement.setConfirmed(true);
         meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
 
-        MvcResult result = mvc.perform(post("/tourist-action-management/evaluations")
+        MvcResult result = mvc.perform(post("/tourist/evaluations")
                 .param("comment", "comment")
                 .param("token", meetEngagement.getToken())
                 .with(csrf()))
@@ -173,6 +202,7 @@ public class TouristActionControllerTest {
                 .andReturn();
         String actualResponseBody = result.getResponse().getContentAsString();
         Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
     public static String asJsonString(final Object obj) {
@@ -190,7 +220,7 @@ public class TouristActionControllerTest {
         params.put("token", "TOKEN");
         params.put("comment", "comment");
 
-        MvcResult result = mvc.perform(post("/tourist-action-management/evaluations")
+        MvcResult result = mvc.perform(post("/tourist/evaluations")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();

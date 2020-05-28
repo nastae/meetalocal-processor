@@ -166,7 +166,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td style="background:#c0282f;text-align:center">
-                                                            <a href="${websiteUrl}/tourist-action-management/selections?token=${engagement.token}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
+                                                            <a href="${websiteUrl}/tourist/selections?token=${engagement.token}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ffffff;font-size:16px;line-height:2;word-break:break-word">SELECT</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </a>
                                                         </td>
@@ -247,7 +247,7 @@
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages )${language.language.name}#if( $foreach.hasNext ), #end #end
                                                     </p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;"><strong>Date</strong>: ${engagement.meet.date}</p>
-                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;"><strong>Time</strong>: ${engagement.time}</p>
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;"><strong>Time</strong>: ${engagement.getHourAndMinutes()}</p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;">${engagement.volunteer.description}</p>
                                                 </div>
                                             </div>
@@ -256,7 +256,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td style="background:#c0282f;text-align:center">
-                                                            <a href="${websiteUrl}/tourist-action-management/selections?token=${engagement.token}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
+                                                            <a href="${websiteUrl}/tourist/selections?token=${engagement.token}" style="background:#c0282f;border:5px solid #c0282f;font-family:Verdana,Geneva,sans-serif;font-size:16px;line-height:10px;text-align:center;text-decoration:none;display:block;border-radius:3px;font-weight:900;text-transform:uppercase" target="_blank">
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ffffff;font-size:16px;line-height:2;word-break:break-word">SELECT</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </a>
                                                         </td>

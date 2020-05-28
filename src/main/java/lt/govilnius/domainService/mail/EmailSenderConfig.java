@@ -55,9 +55,9 @@ public class EmailSenderConfig {
                 .put("additionalPreferences", HTMLSymbolEncoderUtils.encode(meet.getAdditionalPreferences() == null
                         ? ""
                         : meet.getAdditionalPreferences()))
-                .put("agreementUrl", websiteUrl + "/volunteer-action-management/agreements?token=" + token)
-                .put("cancellationUrl", websiteUrl + "/volunteer-action-management/cancellations?token=" + token)
-                .put("editUrl", websiteUrl + "/volunteer-action-management/engagements?token=" + token)
+                .put("agreementUrl", websiteUrl + "/volunteer/agreements?token=" + token)
+                .put("cancellationUrl", websiteUrl + "/volunteer/cancellations?token=" + token)
+                .put("editUrl", websiteUrl + "/volunteer/engagements?token=" + token)
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -67,10 +67,28 @@ public class EmailSenderConfig {
         model.put("name", HTMLSymbolEncoderUtils.encode(meet.getName()));
         model.put("engagements", engagements
                 .stream()
+                .map(e -> {
+                    Volunteer volunteer = e.getVolunteer();
+                    volunteer.setName(HTMLSymbolEncoderUtils.encode(volunteer.getName()));
+                    volunteer.setSurname(HTMLSymbolEncoderUtils.encode(volunteer.getSurname()));
+                    volunteer.setEmail(HTMLSymbolEncoderUtils.encode(volunteer.getEmail()));
+                    volunteer.setDescription(HTMLSymbolEncoderUtils.encode(volunteer.getDescription()));
+                    e.setVolunteer(volunteer);
+                    return e;
+                })
                 .filter(e -> e.getTime().equals(meet.getTime()))
                 .collect(Collectors.toList()));
         model.put("engagementsWithEditedTime", engagements
                 .stream()
+                .map(e -> {
+                    Volunteer volunteer = e.getVolunteer();
+                    volunteer.setName(HTMLSymbolEncoderUtils.encode(volunteer.getName()));
+                    volunteer.setSurname(HTMLSymbolEncoderUtils.encode(volunteer.getSurname()));
+                    volunteer.setEmail(HTMLSymbolEncoderUtils.encode(volunteer.getEmail()));
+                    volunteer.setDescription(HTMLSymbolEncoderUtils.encode(volunteer.getDescription()));
+                    e.setVolunteer(volunteer);
+                    return e;
+                })
                 .filter(e -> !(e.getTime().equals(meet.getTime())))
                 .collect(Collectors.toList()));
         model.put("websiteUrl", websiteUrl);
@@ -120,7 +138,7 @@ public class EmailSenderConfig {
         return new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
-                .put("evaluationUrl", websiteUrl + "/tourist-action-management/evaluations?token=" + engagement.getToken())
+                .put("evaluationUrl", websiteUrl + "/tourist/evaluations?token=" + engagement.getToken())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
@@ -129,7 +147,7 @@ public class EmailSenderConfig {
         final Meet meet = engagement.getMeet();
         return new EmailSenderConfig(Template.VOLUNTEER_EVALUATION, ImmutableMap
                 .<String, Object>builder()
-                .put("evaluationUrl", websiteUrl + "/volunteer-action-management/evaluations?token=" + engagement.getToken())
+                .put("evaluationUrl", websiteUrl + "/volunteer/evaluations?token=" + engagement.getToken())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };

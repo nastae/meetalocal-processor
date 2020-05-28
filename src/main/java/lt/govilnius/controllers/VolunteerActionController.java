@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/volunteer-action-management")
+@RequestMapping("/volunteer")
 public class VolunteerActionController {
 
     @Autowired
@@ -74,9 +74,9 @@ public class VolunteerActionController {
 
     @GetMapping("/evaluations")
     public String evaluate(@RequestParam(name = "token") String token, Model model) {
-        final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
         if (volunteerActionService.isFreezed(token))
             return "currently-selected-lt";
+        final Optional<MeetEngagement> meetEngagement = meetEngagementService.getByToken(token);
         if (meetEngagement.isPresent()) {
             MeetEngagement engagement = meetEngagement.get();
             model.addAttribute("token", token);
