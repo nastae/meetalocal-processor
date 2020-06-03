@@ -54,11 +54,17 @@ public class EmailSenderTest {
     public void send_TouristRequest_With_Another_Time_ShouldSend() {
         Meet meet = sampleMeet();
         Volunteer volunteer = sampleVolunteer();
+        Volunteer volunteer2 = sampleVolunteer();
+        volunteer2.setName("kitas");
+        Calendar cal = Calendar.getInstance();
+        cal.set(1996, 11, 11);
+        volunteer2.setDateOfBirth(new Date(cal.getTimeInMillis()));
+        volunteer2.setLanguages(ImmutableSet.of(new VolunteerLanguage(Language.ENGLISH, null)));
         final EmailSenderConfig config =
                 EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
                         meet, ImmutableList.of(
                                 new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false),
-                                new MeetEngagement(meet, volunteer, new Time(5, 5, 5), "TOKEN", true, false)), WEBSITE_URL);
+                                new MeetEngagement(meet, volunteer2, new Time(5, 5, 5), "TOKEN", true, false)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 

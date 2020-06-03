@@ -98,8 +98,8 @@ public class VolunteerMailProcessor {
         final Calendar current = Calendar.getInstance();
         current.setTimeInMillis(System.currentTimeMillis());
 
-        boolean isNight = (mailAcceptingEndHours < formCreated.get(Calendar.HOUR_OF_DAY) || formCreated.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours) &&
-                (mailAcceptingEndHours < current.get(Calendar.HOUR_OF_DAY) || current.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours);
+        boolean isNight = (mailAcceptingEndHours <= formCreated.get(Calendar.HOUR_OF_DAY) || formCreated.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours) &&
+                (mailAcceptingEndHours <= current.get(Calendar.HOUR_OF_DAY) || current.get(Calendar.HOUR_OF_DAY) < mailAcceptingStartHours);
         LOGGER.info("Checking if meeting time is night time!");
         LOGGER.info("Is night time? " + isNight);
         LOGGER.info("Form create at " + formCreated.toString() + ", current time is " + current.toString());
@@ -131,11 +131,13 @@ public class VolunteerMailProcessor {
     public void processRequests() {
         meetService.findByStatus(Status.SENT_VOLUNTEER_REQUEST).forEach(meet -> {
             LOGGER.info("Try process the sent request to meet whose id " + meet.getId());
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting) {
+            List<MeetEngagement> meetEngagements = meetEngagementService.getByMeetId(meet.getId());
+            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentVolunteerRequestWaiting  ||
+                    meetEngagements.stream().allMatch(MeetEngagement::getConfirmed)) {
                 LOGGER.info("Process the sent request to meet whose id " + meet.getId());
-                meet = meetService.setFreezed(meet, false);
                 List<MeetEngagement> engagements = meetEngagementFilter.filterForMail(
                         meetEngagementService.getConfirmedByMeetId(meet.getId()), meet);
+                meet = meetService.setFreezed(meet, false);
                 EmailSenderConfig emailSenderConfig = null;
                 if (engagements.size() > 0) {
                     emailSenderConfig = prepareSentTouristRequestConfig(meet, engagements.stream().limit(5).collect(toList()));
@@ -165,7 +167,13 @@ public class VolunteerMailProcessor {
     public void processAgreements() {
         meetService.findByStatus(Status.AGREED).forEach(meet -> {
             LOGGER.info("Try process agreement of the meet with id " + meet.getId());
-            if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= evaluationWaiting) {
+            Calendar date = Calendar.getInstance();
+            date.setTime(meet.getDate());
+            Calendar time = Calendar.getInstance();
+            time.setTimeInMillis(meet.getTime().getTime());
+            Calendar cal = Calendar.getInstance();
+            cal.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.SECOND));
+            if (System.currentTimeMillis() - cal.getTimeInMillis() >= evaluationWaiting) {
                 LOGGER.info("Process agreement of the meet with id " + meet.getId());
                 meet = meetService.setFreezed(meet, false);
                 final Volunteer volunteer = meet.getVolunteer();

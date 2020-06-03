@@ -3,8 +3,11 @@ package lt.govilnius.domain.reservation;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.lang.String.format;
 
 @Entity
 @Table(name = "meet_engagement_entity")
@@ -115,5 +118,11 @@ public class MeetEngagement {
 
     public void setFreezed(Boolean freezed) {
         this.freezed = freezed;
+    }
+
+    public String getHourAndMinutes() {
+        Calendar time = Calendar.getInstance();
+        time.setTime(this.getTime());
+        return format("%02d", time.get(Calendar.HOUR_OF_DAY)) + ":" + format("%02d", time.get(Calendar.HOUR_OF_DAY));
     }
 }
