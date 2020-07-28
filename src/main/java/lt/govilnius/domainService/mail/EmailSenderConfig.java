@@ -24,7 +24,7 @@ public class EmailSenderConfig {
     private Template template;
     private Map<String, Object> model;
 
-    private static final String SUBJECT = "Meet a local";
+    private static final String SUBJECT = "Meet a Local Confirmation";
 
     public EmailSenderConfig(Template template, Map<String, Object> model, String subject) {
         this.template = template;
