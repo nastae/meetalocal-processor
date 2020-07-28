@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -120,6 +121,7 @@ public class VolunteerMailProcessor {
     }
 
     private List<MeetEngagement> createEngagements(List<Volunteer> volunteers, Meet meet) {
+        Collections.shuffle(volunteers);
         return volunteers.stream()
                 .map(volunteer -> meetEngagementService.create(meet, volunteer, meet.getTime()))
                 .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
