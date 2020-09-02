@@ -127,7 +127,7 @@
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Sveiki,</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Gavome nauj&#261; registracij&#261; susitikimui - <strong>
-                                                    ${month} ${day} d., ${hours}:${minutes}.</strong></p>
+                                                     ${month} ${day} d., ${hours}:${minutes}.</strong></p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

@@ -22,7 +22,7 @@ import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 @ActiveProfiles(profiles = "dev")
 public class EmailSenderTest {
 

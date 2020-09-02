@@ -156,6 +156,7 @@
                                                 <div style="font-size: 7px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>Vardas</strong>: ${name}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>Skype</strong>: ${skypeName}</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;"><strong>Email</strong>: ${email}</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

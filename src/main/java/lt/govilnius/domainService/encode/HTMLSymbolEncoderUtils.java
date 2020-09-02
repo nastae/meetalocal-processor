@@ -20,10 +20,6 @@ public class HTMLSymbolEncoderUtils {
                 .replaceAll("Š", "&#352;")
                 .replaceAll("Ų", "&#370;")
                 .replaceAll("Ū", "&#362;")
-                .replaceAll("Ž", "&#381;")
-                .replaceAll("'", "&#39;")
-                .replaceAll("\"", "&#34;")
-                .replaceAll(",", "&#44;")
-                .replaceAll("&", "&#38;");
+                .replaceAll("Ž", "&#381;");
     }
 }

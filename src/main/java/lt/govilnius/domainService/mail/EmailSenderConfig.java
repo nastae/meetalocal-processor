@@ -24,7 +24,7 @@ public class EmailSenderConfig {
     private Template template;
     private Map<String, Object> model;
 
-    private static final String SUBJECT = "Meet a Local Confirmation";
+    private static final String SUBJECT = "Meet a Local Online Confirmation";
 
     public EmailSenderConfig(Template template, Map<String, Object> model, String subject) {
         this.template = template;
@@ -126,6 +126,7 @@ public class EmailSenderConfig {
                 .put("minutes", format("%02d", time.get(Calendar.MINUTE)))
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("skypeName", meet.getSkypeName())
+                .put("email", meet.getEmail())
                 .build(),
                 format("%s # %07d", SUBJECT, meet.getId()));
     };
