@@ -19,7 +19,7 @@ public class MeetController {
     @RequestMapping(value = { "", "/" })
     public String index(Model model) {
         model.addAttribute("activePage", "meets");
-        model.addAttribute("meets", this.meetService.getAll());
+        model.addAttribute("meets", meetService.getSortedByIdAll());
         return "meet/index";
     }
 

@@ -9,10 +9,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MeetService {
@@ -81,6 +78,12 @@ public class MeetService {
 
     public Optional<Meet> get(Long id) {
         return meetRepository.findById(id);
+    }
+
+    public List<Meet> getSortedByIdAll() {
+        List<Meet> meets = this.getAll();
+        meets.sort((e1, e2) -> (int) (e2.getId() - e1.getId()));
+        return meets;
     }
 
     public Optional<Meet> edit(Long id, Meet meet) {
