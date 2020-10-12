@@ -78,6 +78,12 @@ public class MeetService {
         return meetRepository.findAll();
     }
 
+    public List<Meet> getSortedByIdAll() {
+        List<Meet> meets = this.getAll();
+        meets.sort((e1, e2) -> (int) (e2.getId() - e1.getId()));
+        return meets;
+    }
+
     public Optional<Meet> get(Long id) {
         return meetRepository.findById(id);
     }

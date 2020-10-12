@@ -25,6 +25,7 @@
                         <th>Date</th>
                         <th>Time</th>
                         <th>Age</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,7 @@
                             <td th:text = "${meet.date}"></td>
                             <td th:text = "${meet.time}"></td>
                             <td th:text = "${meet.age}"></td>
+                            <td th:text = "${meet.status}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <form th:action="@{'/meet-management/view'}" method="GET" style='display:inline;'>
