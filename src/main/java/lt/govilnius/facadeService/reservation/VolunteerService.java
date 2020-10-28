@@ -1,9 +1,6 @@
 package lt.govilnius.facadeService.reservation;
 
-import lt.govilnius.domain.reservation.Language;
-import lt.govilnius.domain.reservation.Volunteer;
-import lt.govilnius.domain.reservation.VolunteerDto;
-import lt.govilnius.domain.reservation.VolunteerLanguage;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,16 +33,19 @@ public class VolunteerService {
         entity.setDescription(volunteer.getDescription());
         entity.setActive(volunteer.getActive());
         entity.setMeetEngagements(new HashSet<>());
-        entity = volunteerRepository.save(entity);
-        Set<VolunteerLanguage> languages = new HashSet<>();
         for (String language : volunteer.getLanguages()) {
             final Optional<Language> languageOptional = Language.fromName(language);
             if (languageOptional.isPresent()) {
-                Optional<VolunteerLanguage> volunteerLanguage  = volunteerLanguageService.create(languageOptional.get(), entity);
-                volunteerLanguage.ifPresent(languages::add);
+                entity.getLanguages().add(new VolunteerLanguage(languageOptional.get(), entity));
             }
         }
-        entity.setLanguages(languages);
+        for (String purpose : volunteer.getPurposes()) {
+            Optional<Purpose> purposeOptional = Purpose.fromName(purpose);
+            if (purposeOptional.isPresent()) {
+                entity.getPurposes().add(new VolunteerPurpose(purposeOptional.get(), entity));
+            }
+        }
+        entity = volunteerRepository.save(entity);
         return volunteerRepository.findById(entity.getId());
     }
 
@@ -71,24 +71,31 @@ public class VolunteerService {
         return entity.map(e -> updateEntity(e, volunteerDto));
     }
 
+    public List<Volunteer> getSortedByIdAll() {
+        List<Volunteer> volunteers = this.getAll();
+        volunteers.sort((e1, e2) -> (int) (e2.getId() - e1.getId()));
+        return volunteers;
+    }
+
     private Volunteer updateEntity(Volunteer entity, VolunteerDto newData) {
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
         entity.setName(newData.getName());
         entity.setSurname(newData.getSurname());
+        entity.getPurposes().clear();
+        for (String purpose : newData.getPurposes()) {
+            final Volunteer finalEntity = entity;
+            Purpose.fromName(purpose).map(l -> new VolunteerPurpose(l, finalEntity)).ifPresent(p -> entity.getPurposes().add(p));
+        }
         Calendar date = Calendar.getInstance();
         date.setTime(newData.getDateOfBirth());
         entity.setDateOfBirth(new Date(date.getTimeInMillis()));
         entity.setSkypeName(newData.getSkypeName());
         entity.setEmail(newData.getEmail());
-        for (VolunteerLanguage language : entity.getLanguages()) {
-            volunteerLanguageService.delete(language.getId());
-        }
-        Set<VolunteerLanguage> languages = new HashSet<>();
+        entity.getLanguages().clear();
         for (String language : newData.getLanguages()) {
             final Volunteer finalEntity = entity;
-            Language.fromName(language).flatMap(l -> volunteerLanguageService.create(l, finalEntity)).ifPresent(languages::add);
+            Language.fromName(language).map(l -> new VolunteerLanguage(l, finalEntity)).ifPresent(p -> entity.getLanguages().add(p));
         }
-        entity.setLanguages(languages);
         entity.setDescription(newData.getDescription());
         entity.setActive(newData.getActive());
         return volunteerRepository.save(entity);

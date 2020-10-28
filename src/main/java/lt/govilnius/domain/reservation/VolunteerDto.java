@@ -25,17 +25,20 @@ public class VolunteerDto {
 
     private Boolean active = true;
 
+    private List<String> purposes = new ArrayList<>();
+
     public VolunteerDto() {}
 
     public VolunteerDto(Volunteer volunteer) {
         this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getSkypeName(),
                 volunteer.getEmail(), volunteer.getLanguages().stream().map(l -> l.getLanguage().getName()).collect(Collectors.toList()),
-                volunteer.getDescription(), volunteer.getActive());
+                volunteer.getDescription(), volunteer.getActive(), volunteer.getPurposes().stream().map(v -> v.getPurpose().getName()).collect(Collectors.toList()));
     }
 
     public VolunteerDto(Long id, String name, String surname, Date dateOfBirth, String skypeName,
                         String email, List<String> languages,
-                        String description, Boolean active) {
+                        String description, Boolean active,
+                        List<String> purposes) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -45,6 +48,7 @@ public class VolunteerDto {
         this.languages = languages;
         this.description = description;
         this.active = active;
+        this.purposes = purposes;
     }
 
     public Long getId() {
@@ -119,4 +123,11 @@ public class VolunteerDto {
         this.active = active;
     }
 
+    public List<String> getPurposes() {
+        return purposes;
+    }
+
+    public void setPurposes(List<String> purposes) {
+        this.purposes = purposes;
+    }
 }

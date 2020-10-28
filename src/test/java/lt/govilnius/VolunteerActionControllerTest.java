@@ -68,15 +68,6 @@ public class VolunteerActionControllerTest {
     private static final String ERROR_MESSAGE_RUN_OUT_OF_TIME = "Deja, Jums pritrūko laiko.";
     private static final String ERROR_MESSAGE_CURRENTLY_SELECTED = "Jūsų pasirinkimas jau užfiksuotas!";
 
-    @After
-    public void cleanEachTest() {
-        meetAgeGroupRepository.findAll().forEach(age -> meetAgeGroupRepository.delete(age));
-        meetLanguageRepository.findAll().forEach(meetLanguage -> meetLanguageRepository.delete(meetLanguage));
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-    }
-
     @Test
     public void agree_Token_ShoudOpenAgreement() throws Exception {
         MeetDto meetDto = sampleMeetDto();

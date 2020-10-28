@@ -35,6 +35,7 @@ public class VolunteerController {
     public String addVolunteerForm(Volunteer volunteer, Model model) {
         model.addAttribute("activePage", "volunteers");
         model.addAttribute("availableLanguages", languages());
+        model.addAttribute("availablePurposes", purposes());
         model.addAttribute("volunteerDto", new VolunteerDto());
         return "volunteer/add";
     }
@@ -59,8 +60,29 @@ public class VolunteerController {
         final Volunteer volunteer = this.volunteerService.get(Long.parseLong(id)).get();
         model.addAttribute("volunteer", volunteer);
         model.addAttribute("languages", checkedLanguages(volunteer.getLanguages()));
+        model.addAttribute("availablePurposes", checkedPurposes(volunteer.getPurposes()));
         model.addAttribute("activePage", "volunteers");
         return "volunteer/view";
+    }
+
+    private List<CheckedPurpose> checkedPurposes(Set<VolunteerPurpose> purposes) {
+        List<CheckedPurpose> checkedPurposes = purposes()
+                .stream()
+                .map(e -> new CheckedPurpose(e, false))
+                .collect(Collectors.toList());
+        for (int i = 0; i < checkedPurposes.size(); i++) {
+            for (Purpose checked : purposes
+                    .stream()
+                    .map(VolunteerPurpose::getPurpose)
+                    .collect(Collectors.toList())) {
+                if (checked.getName().equals(checkedPurposes.get(i).getPurpose().getName())) {
+                    final CheckedPurpose checkedPurpose = checkedPurposes.get(i);
+                    checkedPurpose.setChecked(true);
+                    checkedPurposes.set(i, checkedPurpose);
+                }
+            }
+        }
+        return checkedPurposes;
     }
 
     private List<CheckedLanguage> checkedLanguages(Set<VolunteerLanguage> languages) {
@@ -90,6 +112,7 @@ public class VolunteerController {
         if (volunteer.isPresent()) {
             model.addAttribute("volunteerDto", new VolunteerDto(volunteer.get()));
             model.addAttribute("availableLanguages", checkedLanguages(volunteer.get().getLanguages()));
+            model.addAttribute("availablePurposes", checkedPurposes(volunteer.get().getPurposes()));
             return "volunteer/edit";
         } else {
             return "redirect:/volunteer-management";
@@ -113,6 +136,14 @@ public class VolunteerController {
                 .<Language>builder()
                 .add(Language.ENGLISH)
                 .add(Language.RUSSIAN)
+                .build();
+    }
+
+    private List<Purpose> purposes() {
+        return ImmutableList
+                .<Purpose>builder()
+                .add(Purpose.TOURISM)
+                .add(Purpose.RELOCATION)
                 .build();
     }
 }

@@ -128,7 +128,7 @@ public class EmailSenderTest {
         return new Meet(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", "meetalocaltest@gmail.com",
+                "name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com",
                 "123", "Lithuania", new Date(2019, 11, 11),
                 new Time(20, 10, 10),
                 1, "19-20", new HashSet<>(),
@@ -150,8 +150,8 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "name", "surname", new Date(cal.getTimeInMillis()),
-                "123", "meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
-                "description", true, new HashSet<>());
+                "123", "meetalocaltest@gmail.com", new HashSet<>(),
+                "description", true, new HashSet<>(), new HashSet<>());
     }
 
     public static MeetLanguage sampleMeetLanguage(Language language) {

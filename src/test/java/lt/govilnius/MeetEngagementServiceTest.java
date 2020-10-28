@@ -41,13 +41,6 @@ public class MeetEngagementServiceTest {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    @After
-    public void cleanEachTest() {
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-    }
-
     @Test
     public void create_MeetEngagement_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
@@ -61,6 +54,7 @@ public class MeetEngagementServiceTest {
 
     @Test
     public void getAll_MeetEngagements_ShouldGet() {
+        volunteerRepository.findAll().forEach(v -> volunteerRepository.delete(v));
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         Time time = new Time(10, 10, 10);

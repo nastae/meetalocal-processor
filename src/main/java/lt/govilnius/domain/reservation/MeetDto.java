@@ -8,6 +8,7 @@ public class MeetDto {
 
     private String name;
     private String surname;
+    private Purpose purpose;
     private String email;
     private String skypeName;
     private String country;
@@ -22,12 +23,13 @@ public class MeetDto {
     public MeetDto() {
     }
 
-    public MeetDto(String name, String surname, String email, String skypeName,
+    public MeetDto(String name, String surname, Purpose purpose, String email, String skypeName,
                    String country, Date date, LocalTime time, Integer peopleCount,
                    String age, List<AgeGroup> ageGroups, List<Language> languages,
                    String preferences, String additionalPreferences) {
         this.name = name;
         this.surname = surname;
+        this.purpose = purpose;
         this.email = email;
         this.skypeName = skypeName;
         this.country = country;
@@ -38,6 +40,14 @@ public class MeetDto {
         this.languages = languages;
         this.preferences = preferences;
         this.additionalPreferences = additionalPreferences;
+    }
+
+    public Purpose getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(Purpose purpose) {
+        this.purpose = purpose;
     }
 
     public String getName() {

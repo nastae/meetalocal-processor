@@ -1,7 +1,6 @@
 package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -66,19 +65,12 @@ public class TouristActionControllerTest {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    @After
-    public void cleanEachTest() {
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-    }
-
     @Test
     public void select_Token_ShoudOpenCurrentlySelected() throws Exception {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, true);
 
@@ -105,7 +97,7 @@ public class TouristActionControllerTest {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
@@ -145,7 +137,7 @@ public class TouristActionControllerTest {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 

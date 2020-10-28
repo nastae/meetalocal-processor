@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.speedment.common.function.TriFunction;
 import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetEngagement;
+import lt.govilnius.domain.reservation.Purpose;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.encode.HTMLSymbolEncoderUtils;
 
@@ -92,7 +93,7 @@ public class EmailSenderConfig {
                 .collect(Collectors.toList()));
         model.put("websiteUrl", websiteUrl);
 
-        return new EmailSenderConfig(Template.TOURIST_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
+        return new EmailSenderConfig(Template.LOCAL_REQUEST, model, format("%s # %07d", SUBJECT, meet.getId()));
     };
 
     public static final TriFunction<Meet, Volunteer, MeetEngagement, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (meet, v, e) -> {
@@ -100,7 +101,7 @@ public class EmailSenderConfig {
         date.setTime(meet.getDate());
         Calendar time = Calendar.getInstance();
         time.setTime(e.getTime());
-        return new EmailSenderConfig(Template.TOURIST_INFORMATION, ImmutableMap
+        return new EmailSenderConfig(Template.LOCAL_INFORMATION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("month", DateUtils.monthToEnglish(date.get(Calendar.MONTH)))
@@ -118,7 +119,11 @@ public class EmailSenderConfig {
         date.setTime(meet.getDate());
         Calendar time = Calendar.getInstance();
         time.setTime(e.getTime());
-        return new EmailSenderConfig(Template.VOLUNTEER_INFORMATION, ImmutableMap
+        Template template = Template.VOLUNTEER_TOURISM_INFORMATION;
+        if (meet.getPurpose().equals(Purpose.RELOCATION)) {
+            template = Template.VOLUNTEER_RELOCATION_INFORMATION;
+        }
+        return new EmailSenderConfig(template, ImmutableMap
                 .<String, Object>builder()
                 .put("month", HTMLSymbolEncoderUtils.encode(DateUtils.monthToLithuanian(date.get(Calendar.MONTH))))
                 .put("day", String.valueOf(date.get(Calendar.DAY_OF_MONTH)))
@@ -133,7 +138,7 @@ public class EmailSenderConfig {
 
     public static final BiFunction<MeetEngagement, String, EmailSenderConfig> TOURIST_EVALUATION_CONFIG = (engagement, websiteUrl) -> {
         final Meet meet = engagement.getMeet();
-        return new EmailSenderConfig(Template.TOURIST_EVALUATION, ImmutableMap
+        return new EmailSenderConfig(Template.LOCAL_EVALUATION, ImmutableMap
                 .<String, Object>builder()
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
                 .put("evaluationUrl", websiteUrl + "/tourist/evaluations?token=" + engagement.getToken())
@@ -143,7 +148,11 @@ public class EmailSenderConfig {
 
     public static final BiFunction<MeetEngagement, String, EmailSenderConfig> VOLUNTEER_EVALUATION_CONFIG = (engagement, websiteUrl) -> {
         final Meet meet = engagement.getMeet();
-        return new EmailSenderConfig(Template.VOLUNTEER_EVALUATION, ImmutableMap
+        Template template = Template.VOLUNTEER_TOURISM_EVALUATION;
+        if (meet.getPurpose().equals(Purpose.RELOCATION)) {
+            template = Template.VOLUNTEER_RELOCATION_EVALUATION;
+        }
+        return new EmailSenderConfig(template, ImmutableMap
                 .<String, Object>builder()
                 .put("evaluationUrl", websiteUrl + "/volunteer/evaluations?token=" + engagement.getToken())
                 .build(),
@@ -155,7 +164,7 @@ public class EmailSenderConfig {
                     format("%s # %07d", SUBJECT, meet.getId()));
 
     public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_CONFIG = (meet, registrationUrl) ->
-            new EmailSenderConfig(Template.TOURIST_CANCELLATION,
+            new EmailSenderConfig(Template.LOCAL_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
                             .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
@@ -164,7 +173,7 @@ public class EmailSenderConfig {
                     format("%s # %07d", SUBJECT, meet.getId()));
 
     public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG = (meet, registrationUrl) ->
-            new EmailSenderConfig(Template.TOURIST_NOT_VALID_MEET_DATE_CANCELLATION,
+            new EmailSenderConfig(Template.LOCAL_NOT_VALID_MEET_DATE_CANCELLATION,
                     ImmutableMap
                             .<String, Object>builder()
                             .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
@@ -173,7 +182,7 @@ public class EmailSenderConfig {
                     format("%s # %07d", SUBJECT, meet.getId()));
 
     public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_SELECTED_CONFIG = (meet, registrationUrl) ->
-        new EmailSenderConfig(Template.TOURIST_CANCELLATION_NOT_SELECTED,
+        new EmailSenderConfig(Template.LOCAL_CANCELLATION_NOT_SELECTED,
                 ImmutableMap
                 .<String, Object>builder()
                 .put("name", HTMLSymbolEncoderUtils.encode(meet.getName()))
@@ -198,15 +207,20 @@ public class EmailSenderConfig {
      */
     public enum Template {
         VOLUNTEER_REQUEST(MAIL_TEMPLATE_PATH + "/volunteer-request.vm"),
-        TOURIST_REQUEST(MAIL_TEMPLATE_PATH + "/tourist-request.vm"),
-        TOURIST_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation.vm"),
-        TOURIST_NOT_VALID_MEET_DATE_CANCELLATION(MAIL_TEMPLATE_PATH + "/tourist-cancellation-not-valid-meet-date.vm"),
-        TOURIST_CANCELLATION_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/tourist-cancellation-not-selected.vm"),
+        LOCAL_REQUEST(MAIL_TEMPLATE_PATH + "/local-request.vm"),
+        LOCAL_CANCELLATION(MAIL_TEMPLATE_PATH + "/local-cancellation.vm"),
+        LOCAL_NOT_VALID_MEET_DATE_CANCELLATION(MAIL_TEMPLATE_PATH + "/local-cancellation-not-valid-meet-date.vm"),
+        LOCAL_CANCELLATION_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/local-cancellation-not-selected.vm"),
         VOLUNTEER_CANCELLATION(MAIL_TEMPLATE_PATH + "/volunteer-cancellation.vm"),
-        TOURIST_EVALUATION(MAIL_TEMPLATE_PATH + "/tourist-evaluation.vm"),
-        VOLUNTEER_EVALUATION(MAIL_TEMPLATE_PATH + "/volunteer-evaluation.vm"),
-        TOURIST_INFORMATION(MAIL_TEMPLATE_PATH + "/tourist-information.vm"),
-        VOLUNTEER_INFORMATION(MAIL_TEMPLATE_PATH + "/volunteer-information.vm"),;
+        LOCAL_EVALUATION(MAIL_TEMPLATE_PATH + "/local-evaluation.vm"),
+
+        VOLUNTEER_RELOCATION_EVALUATION(MAIL_TEMPLATE_PATH + "/relocation/volunteer-evaluation.vm"),
+        VOLUNTEER_TOURISM_EVALUATION(MAIL_TEMPLATE_PATH + "/tourism/volunteer-evaluation.vm"),
+
+        LOCAL_INFORMATION(MAIL_TEMPLATE_PATH + "/local-information.vm"),
+
+        VOLUNTEER_RELOCATION_INFORMATION(MAIL_TEMPLATE_PATH + "/relocation/volunteer-information.vm"),
+        VOLUNTEER_TOURISM_INFORMATION(MAIL_TEMPLATE_PATH + "/tourism/volunteer-information.vm");
 
         public final String path;
 

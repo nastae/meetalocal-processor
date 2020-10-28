@@ -127,7 +127,7 @@
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Hello, ${name},</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">&nbsp;</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Here is the list of locals who would be glad to meet you. Please select the volunteer you like the most within the next 24 hours and then click select. If you do not choose a volunteer within 24 hours, your registration will be canceled.</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Here is the list of locals who would be glad to meet you. Please select the local you like the most within <strong>the next 24 hours</strong> and then click select. If you do not choose a local within 24 hours, your registration will be canceled.</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->
@@ -154,6 +154,7 @@
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif;">
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;"><strong>Name</strong>: ${engagement.volunteer.name}</p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Age</strong>: ${engagement.volunteer.getAge()}</p>
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Purpose</strong>: ${engagement.volunteer.purpose.name}</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; padding-top:5px;; margin: 0;"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages )${language.language.name}#if( $foreach.hasNext ), #end #end
                                                     </p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px">${engagement.volunteer.description}</p>
@@ -242,6 +243,7 @@
                                                 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: Verdana, Geneva, sans-serif; mso-line-height-alt: 17px;">
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Name</strong>: ${engagement.volunteer.name}</p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Age</strong>: ${engagement.volunteer.age}</p>
+                                                    <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Purpose</strong>: ${engagement.volunteer.purpose.name}</p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px"><strong>Language(s)</strong>: #foreach( $language in $engagement.volunteer.languages )${language.language.name}#if( $foreach.hasNext ), #end #end
                                                     </p>
                                                     <p style="font-size:14px;line-height:1.2;word-break:break-word;margin:0;padding-top:5px;"><strong>Date</strong>: ${engagement.meet.date}</p>

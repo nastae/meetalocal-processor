@@ -32,8 +32,11 @@ public class VolunteerFilterTest {
     @Test
     public void filterByMeet_VolunteersWithTimes_ShouldReturnFiltered() {
         Volunteer volunteer1 = sampleVolunteer(Language.ENGLISH);
+        volunteer1.getLanguages().add(new VolunteerLanguage(Language.ENGLISH, volunteer1));
         Volunteer volunteer3 = sampleVolunteer(Language.ENGLISH);
+        volunteer3.getLanguages().add(new VolunteerLanguage(Language.ENGLISH, volunteer3));
         Volunteer volunteer2 = sampleVolunteer(Language.RUSSIAN);
+        volunteer2.getLanguages().add(new VolunteerLanguage(Language.RUSSIAN, volunteer2));
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(volunteer1, volunteer2, volunteer3));
         Meet meet = sampleMeet();
         meet.setMeetAgeGroups(ImmutableSet.of(
@@ -48,8 +51,11 @@ public class VolunteerFilterTest {
     @Test
     public void filterByMeet_Volunteers_ShouldReturnFiltered() {
         Volunteer volunteer1 = sampleVolunteer(Language.ENGLISH);
+        volunteer1.getLanguages().add(new VolunteerLanguage(Language.ENGLISH, volunteer1));
         Volunteer volunteer3 = sampleVolunteer(Language.ENGLISH);
+        volunteer3.getLanguages().add(new VolunteerLanguage(Language.ENGLISH, volunteer3));
         Volunteer volunteer2 = sampleVolunteer(Language.RUSSIAN);
+        volunteer2.getLanguages().add(new VolunteerLanguage(Language.RUSSIAN, volunteer2));
         when(volunteerRepository.findAll()).thenReturn(ImmutableList.of(volunteer1, volunteer2, volunteer3));
         Meet meet = sampleMeet();
         meet.setMeetAgeGroups(ImmutableSet.of(

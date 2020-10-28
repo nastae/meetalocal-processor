@@ -127,7 +127,7 @@
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">&nbsp;</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Susitikimas patvirtintas!</p>
                                                     <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">&nbsp;</p>
-                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Turistas lauks J&#363;s&#371; Skype skambu&#269;io sutartu laiku (${month} ${day} d., ${hours}:${minutes})</p>
+                                                    <p style="font-size: 14px; line-height: 1.2; word-break: break-word; margin: 0; padding-top: 5px;">Svečiai lauks J&#363;s&#371; Skype skambu&#269;io sutartu laiku (${month} ${day} d., ${hours}:${minutes})</p>
                                                 </div>
                                             </div>
                                             <!--[if mso]></td></tr></table><![endif]-->

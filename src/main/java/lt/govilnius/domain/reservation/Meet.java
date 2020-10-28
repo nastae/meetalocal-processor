@@ -30,6 +30,9 @@ public class Meet {
     @NotNull
     private String surname;
 
+    @Enumerated(EnumType.STRING)
+    private Purpose purpose;
+
     @NotNull
     private String email;
 
@@ -87,7 +90,7 @@ public class Meet {
     public Meet() {}
 
     public Meet(Timestamp createdAt, Timestamp changedAt,
-                @NotNull String name, @NotNull String surname, @NotNull String email,
+                @NotNull String name, @NotNull String surname, Purpose purpose, @NotNull String email,
                 @NotNull String skypeName, @NotNull String country, @NotNull Date date,
                 @NotNull Time time, @NotNull Integer peopleCount, @NotNull String age,
                 Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, String preferences, String additionalPreferences,
@@ -97,6 +100,7 @@ public class Meet {
         this.changedAt = changedAt;
         this.name = name;
         this.surname = surname;
+        this.purpose = purpose;
         this.email = email;
         this.skypeName = skypeName;
         this.country = country;
@@ -112,6 +116,14 @@ public class Meet {
         this.meetEngagements = meetEngagements;
         this.statuses = statuses;
         this.freezed = freezed;
+    }
+
+    public Purpose getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(Purpose purpose) {
+        this.purpose = purpose;
     }
 
     public Long getId() {

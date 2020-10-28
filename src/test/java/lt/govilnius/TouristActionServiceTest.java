@@ -52,13 +52,13 @@ public class TouristActionServiceTest {
         String token = "A";
         Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
         Meet result = sampleMeet();
-        result.setStatus(Status.SENT_TOURIST_REQUEST);
+        result.setStatus(Status.SENT_LOCAL_REQUEST);
         result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         result.setVolunteer(sampleVolunteer());
         when(meetEngagementService.getByToken(token)).
@@ -89,7 +89,7 @@ public class TouristActionServiceTest {
         String token = "A";
         Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
@@ -104,13 +104,13 @@ public class TouristActionServiceTest {
         String token = "A";
         Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
         Meet result = sampleMeet();
-        result.setStatus(Status.SENT_TOURIST_REQUEST);
+        result.setStatus(Status.SENT_LOCAL_REQUEST);
         result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         result.setVolunteer(sampleVolunteer());
         when(meetEngagementService.getByToken(token)).
@@ -124,7 +124,7 @@ public class TouristActionServiceTest {
         String token = "A";
         Time time = new Time(10, 10, 10);
         Meet meet = sampleMeet();
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);

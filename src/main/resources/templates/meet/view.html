@@ -2,17 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title><!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Meet a local - administrator page</title>
-            <th:block th:include="fragments/head :: head"></th:block>
-        </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meet a local - administrator page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
 <body>
 <th:block th:include="fragments/header :: body"></th:block>
-<div class="container">
+<div class="container" style="padding-top: 100px;">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <div class="panel panel-default">
@@ -82,6 +80,10 @@
                             <label th:text="${language.language.name}"></label>
                         </th:block>
                     </div><br>
+                    <div class="form-group">
+                        <label for="inputPurpose">Purpose</label>
+                        <input type="text" class="form-control" id="inputPurpose" placeholder="Purpose" th:field="*{meet.purpose.name}" name="purpose" disabled="disabled" />
+                    </div>
                     <div class="form-group">
                         <label for="inputPreferences">Preferences</label>
                         <input type="text" class="form-control" id="inputPreferences" placeholder="Preferences" th:field="*{meet.preferences}" name="preferences" disabled="disabled" />
