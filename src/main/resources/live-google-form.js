@@ -56,7 +56,7 @@ function onSubmit(e) {
   }
   data.preferences = preferences;
   var comment = itemResponses[13].getResponse();
-  data.comment = comment == 'Submit' ? null : itemResponses[14].getResponse();
+  data.comment = comment == 'Submit' ? null : itemResponses[13].getResponse();
 
   var options = {
     'method' : 'post',
