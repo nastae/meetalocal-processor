@@ -7,7 +7,7 @@ function onSubmit(e) {
       phoneNumber: null,
       name: null,
       surname: null,
-      purpose: "TOURISM",
+      purpose: null,
       country: null,
       date: "2020-01-01",
       time: "00:00:00",
@@ -16,7 +16,7 @@ function onSubmit(e) {
       ageGroups: null,
       languages: [],
       preferences: "",
-      comment: "",
+      additionalPreferences: "",
       status: null,
       volunteer: null,
       meetEngagements: null,
@@ -27,7 +27,7 @@ function onSubmit(e) {
   var itemResponses = response.getItemResponses();
   data.name = itemResponses[0].getResponse();
   data.surname = itemResponses[1].getResponse();
-  data.purpose = toPurpose(itemResponses[2].getResponse());
+  data.surname = toPurpose(itemResponses[2].getResponse());
   data.country = itemResponses[3].getResponse();
   data.age = itemResponses[4].getResponse();
   data.email = itemResponses[5].getResponse();
@@ -56,7 +56,7 @@ function onSubmit(e) {
   }
   data.preferences = preferences;
   var comment = itemResponses[13].getResponse();
-  data.comment = comment == 'Submit' ? null : itemResponses[14].getResponse();
+  data.additionalPreferences = comment == 'Submit' ? null : itemResponses[13].getResponse();
 
   var options = {
     'method' : 'post',
@@ -65,12 +65,20 @@ function onSubmit(e) {
   };
   var userEmail = "meetalocaltest@gmail.com";
   var date = "2019-11-20";
-  var subject = "Meet a local turisto forma";
-  var message = "URL: " + url + ", POST request:" + JSON.stringify(data);
+  var subject = "Meet a local savanorio registracija";
+  var salomejaEmail = "schomicenkiene@gmail.com";
+  var message = "Užsiregistravo naujas savanoris. Išsiuntė laišką į  " + url + ". Išsiuntė laišką su tekstu " + JSON.stringify(data);
+
+  var options = {
+    'method' : 'post',
+    'contentType': 'application/json',
+    'payload' : JSON.stringify(data)
+  };
 
   MailApp.sendEmail (userEmail, subject, message);
+  MailApp.sendEmail (salomejaEmail, subject, message);
 
-  var url = "https://localhost:8080/registration/meets";
+  var url = "http://meetalocal.lt/vilnius-temp/registration/meets";
   UrlFetchApp.fetch(url, options);
 }
 
