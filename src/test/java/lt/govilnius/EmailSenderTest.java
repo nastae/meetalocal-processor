@@ -19,6 +19,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -112,9 +113,20 @@ public class EmailSenderTest {
     }
 
     @Test
-    public void send_VolunteerEvaluation_ShouldSend() {
+    public void send_VolunteerRelocationEvaluation_ShouldSend() {
+        Meet meet = sampleMeet();
+        meet.setPurpose(Purpose.RELOCATION);
         final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
+        emailSender.send(new Mail(RECEIVER), config);
+    }
+
+    @Test
+    public void send_VolunteerTourismEvaluation_ShouldSend() {
+        Meet meet = sampleMeet();
+        meet.setPurpose(Purpose.TOURISM);
+        final EmailSenderConfig config =
+                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
@@ -122,8 +134,8 @@ public class EmailSenderTest {
         return new Meet(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", "meetalocaltest@gmail.com",
-                "123", "Lithuania", new Date(2019, 11, 11),
+                "name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com",
+                "123", "Lithuania", new Date(2025, 11, 11),
                 new Time(20, 10, 10),
                 1, "19-20", new HashSet<>(),
                 ImmutableSet.<MeetLanguage>builder()
@@ -144,8 +156,8 @@ public class EmailSenderTest {
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
                 "name", "surname", new Date(cal.getTimeInMillis()),
-                "123", "meetalocaltest@gmail.com", ImmutableSet.of(sampleVolunteerLanguage(language)),
-                "description", true, new HashSet<>());
+                "123", "meetalocaltest@gmail.com", new HashSet<>(),
+                "description", true, new HashSet<>(), new HashSet<>());
     }
 
     public static MeetLanguage sampleMeetLanguage(Language language) {

@@ -3,7 +3,6 @@ package lt.govilnius;
 import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domain.reservation.VolunteerDto;
-import lt.govilnius.facadeService.reservation.VolunteerLanguageService;
 import lt.govilnius.facadeService.reservation.VolunteerService;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.Assert;
@@ -30,9 +29,6 @@ public class VolunteerServiceTest {
     @Mock
     private VolunteerRepository volunteerRepository;
 
-    @Mock
-    private VolunteerLanguageService volunteerLanguageService;
-
     @InjectMocks
     private VolunteerService volunteerService;
 
@@ -41,7 +37,6 @@ public class VolunteerServiceTest {
         VolunteerDto volunteerDto = sampleVolunteerDto();
         Volunteer volunteer = sampleVolunteer();
         when(volunteerRepository.save(any())).thenReturn(volunteer);
-        when(volunteerLanguageService.create(any(), any())).thenReturn(Optional.empty());
         when(volunteerRepository.findById(any())).thenReturn(Optional.of(volunteer));
         Optional<Volunteer> result = volunteerService.create(volunteerDto);
         Assert.assertTrue(result.isPresent());

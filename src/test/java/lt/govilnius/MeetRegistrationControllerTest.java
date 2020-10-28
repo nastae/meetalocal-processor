@@ -41,8 +41,6 @@ public class MeetRegistrationControllerTest {
     public void newMeet_Meet_ShoudCreateNew() throws Exception {
         MeetDto meet = sampleMeetDto();
 
-        System.out.println(objectMapper.writeValueAsString(meet));
-
         mvc.perform(post(URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)

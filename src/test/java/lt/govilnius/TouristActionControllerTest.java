@@ -1,7 +1,6 @@
 package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -22,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.persistence.EntityManager;
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,19 +58,11 @@ public class TouristActionControllerTest {
     private static final String ERROR_MESSAGE_CURRENTLY_SELECTED = "Unfortunately, you've currently selected the option!";
 
     @Autowired
-    private MeetEngagementRepository meetEngagementRepository;
-
-    @Autowired
-    private MeetRepository meetRepository;
-
-    @Autowired
-    private VolunteerRepository volunteerRepository;
+    private EntityManager manager;
 
     @After
     public void cleanEachTest() {
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
+        manager.clear();
     }
 
     @Test
@@ -78,7 +70,7 @@ public class TouristActionControllerTest {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, true);
 
@@ -105,7 +97,7 @@ public class TouristActionControllerTest {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
@@ -145,7 +137,7 @@ public class TouristActionControllerTest {
         MeetDto meetDto = sampleMeetDto();
         Meet meet = meetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,9 +37,9 @@ public class Volunteer implements Serializable {
 
     private String email;
 
-    @Column(nullable = true)
-    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<VolunteerLanguage> languages;
+    @Column
+    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VolunteerLanguage> languages = new HashSet<>();
 
     @Lob
     private String description;
@@ -46,8 +47,12 @@ public class Volunteer implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
+    @Column
+    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VolunteerPurpose> purposes = new HashSet<>();
+
     @JsonIgnore
-    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<MeetEngagement> meetEngagements;
 
     public Volunteer() {
@@ -55,7 +60,7 @@ public class Volunteer implements Serializable {
 
     public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
-                     String description, Boolean active, Set<MeetEngagement> meetEngagements) {
+                     String description, Boolean active, Set<VolunteerPurpose> purposes, Set<MeetEngagement> meetEngagements) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
@@ -66,6 +71,7 @@ public class Volunteer implements Serializable {
         this.languages = languages;
         this.description = description;
         this.active = active;
+        this.purposes = purposes;
         this.meetEngagements = meetEngagements;
     }
 
@@ -167,5 +173,13 @@ public class Volunteer implements Serializable {
 
     public Long getAge() {
         return DateUtils.yearsFromNow(dateOfBirth);
+    }
+
+    public Set<VolunteerPurpose> getPurposes() {
+        return purposes;
+    }
+
+    public void setPurposes(Set<VolunteerPurpose> purposes) {
+        this.purposes = purposes;
     }
 }

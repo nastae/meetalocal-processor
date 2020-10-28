@@ -1,9 +1,6 @@
 package lt.govilnius.domainService.schedule;
 
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
-import lt.govilnius.domain.reservation.Status;
-import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
@@ -75,7 +72,8 @@ public class VolunteerMailProcessor {
                 emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledMeetDateNotValidConfig(meet));
             } else if (!isNightTime(meet)) {
                 LOGGER.info("Process the new meet with id " + meet.getId());
-                final List<MeetEngagement> engagements = createEngagements(volunteerFilter.filterByMeet(meet), meet);
+                final List<MeetEngagement> engagements = createEngagements(
+                        matchPurpose(volunteerFilter.filterByMeet(meet), meet.getPurpose()), meet);
                 if (engagements.size() > 0) {
                     meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
                     meetService.edit(meet.getId(), meet);
@@ -91,6 +89,13 @@ public class VolunteerMailProcessor {
                 }
             }
         });
+    }
+
+    private List<Volunteer> matchPurpose(List<Volunteer> volunteers, Purpose purpose) {
+        return volunteers
+                .stream()
+                .filter(v -> v.getPurposes().stream().anyMatch(p -> p.getPurpose().equals(purpose)))
+                .collect(toList());
     }
 
     private boolean isNightTime(Meet meet) {
@@ -211,7 +216,7 @@ public class VolunteerMailProcessor {
 
     private EmailSenderConfig prepareSentTouristRequestConfig(Meet meet, List<MeetEngagement> meetEngagements) {
         LOGGER.info("Send volunteers requests of the meet with id " + meet.getId() + " to tourist");
-        meet.setStatus(Status.SENT_TOURIST_REQUEST);
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meetService.edit(meet.getId(), meet);
         return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, meetEngagements, websiteUrl);
     }

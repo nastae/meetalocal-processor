@@ -17,8 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Date;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
@@ -125,7 +124,7 @@ public class MeetServiceTest {
     }
 
     public static MeetDto sampleMeetDto() {
-        return new MeetDto("name", "surname", "meetalocaltest@gmail.com", "123",
+        return new MeetDto("name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com", "123",
                 "Lithuania", new Date(2019, 1, 1),
                 LocalTime.of(11, 11, 11),
                 1, "18-29", ImmutableList.of(AgeGroup.YOUTH),
@@ -133,9 +132,11 @@ public class MeetServiceTest {
     }
 
     public static VolunteerDto sampleVolunteerDto() {
+        List<String> purposes = new ArrayList<>();
+        purposes.add("Relocation");
         return new VolunteerDto(1L,
                 "name", "surname", new Date(1999, 11, 11),
                 "123", "meetalocaltest@gmail.com", ImmutableList.of(Language.ENGLISH.name()),
-                "description", true);
+                "description", true, purposes);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.persistence.EntityManager;
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,21 +43,6 @@ public class VolunteerActionControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private MeetRepository meetRepository;
-
-    @Autowired
-    private VolunteerRepository volunteerRepository;
-
-    @Autowired
-    private MeetEngagementRepository meetEngagementRepository;
-
-    @Autowired
-    private MeetAgeGroupRepository meetAgeGroupRepository;
-
-    @Autowired
-    private MeetLanguageRepository meetLanguageRepository;
-
-    @Autowired
     private MeetService meetService;
 
     @Autowired
@@ -68,13 +54,12 @@ public class VolunteerActionControllerTest {
     private static final String ERROR_MESSAGE_RUN_OUT_OF_TIME = "Deja, Jums pritrūko laiko.";
     private static final String ERROR_MESSAGE_CURRENTLY_SELECTED = "Jūsų pasirinkimas jau užfiksuotas!";
 
+    @Autowired
+    private EntityManager manager;
+
     @After
     public void cleanEachTest() {
-        meetAgeGroupRepository.findAll().forEach(age -> meetAgeGroupRepository.delete(age));
-        meetLanguageRepository.findAll().forEach(meetLanguage -> meetLanguageRepository.delete(meetLanguage));
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
+        manager.clear();
     }
 
     @Test

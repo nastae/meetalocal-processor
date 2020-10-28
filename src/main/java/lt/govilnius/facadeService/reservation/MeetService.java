@@ -32,6 +32,7 @@ public class MeetService {
         entity.setChangedAt(new Timestamp(System.currentTimeMillis()));
         entity.setName(meet.getName());
         entity.setSurname(meet.getSurname());
+        entity.setPurpose(meet.getPurpose());
         entity.setEmail(meet.getEmail());
         entity.setPhoneNumber(meet.getPhoneNumber());
         entity.setCountry(meet.getCountry());

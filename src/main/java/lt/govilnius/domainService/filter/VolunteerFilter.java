@@ -21,7 +21,13 @@ public class VolunteerFilter {
         return volunteerRepository
                 .findAll()
                 .stream()
+                .peek(v -> {
+                    System.out.println(existJointLanguage(meet.getLanguages(), v.getLanguages()));
+                    meet.getLanguages().forEach(l -> System.out.println("Language: " + l.getLanguage().getName()));
+                    v.getLanguages().forEach(l -> System.out.println("VLanguage: " + l.getLanguage().getName()));
+                } )
                 .filter(v -> existJointLanguage(meet.getLanguages(), v.getLanguages()))
+                .peek(v -> System.out.println(isBetweenAgeGroup(meet.getMeetAgeGroups(), DateUtils.yearsFromNow(v.getDateOfBirth()))))
                 .filter(v -> isBetweenAgeGroup(meet.getMeetAgeGroups(), DateUtils.yearsFromNow(v.getDateOfBirth())))
                 .collect(toList());
     }

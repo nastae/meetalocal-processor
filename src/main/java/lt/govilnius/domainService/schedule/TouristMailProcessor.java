@@ -43,7 +43,7 @@ public class TouristMailProcessor {
 
     @Transactional
     public void processRequests() {
-        meetService.findByStatus(Status.SENT_TOURIST_REQUEST).forEach(meet -> {
+        meetService.findByStatus(Status.SENT_LOCAL_REQUEST).forEach(meet -> {
             LOGGER.info("Try process tourist request of the meet with id " + meet.getId());
             if (System.currentTimeMillis() - meet.getChangedAt().getTime() >= sentTouristRequestWaiting) {
                 sendCancellations(meet);

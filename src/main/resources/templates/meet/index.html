@@ -7,10 +7,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .td-text {
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: clip;
+            white-space: nowrap;
+        }
+        .td-buttons {
+            min-width: 80px
+        }
+    </style>
 </head>
 <body>
 <th:block th:include="fragments/header :: body"></th:block>
-<div class="container" style="padding-top: 100px; width: 100%">
+<div class="container" style="padding-top: 100px; width: 1420px">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
             <div class="panel panel-default">
@@ -18,31 +29,33 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Phone Number</th>
-                        <th>Email</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>People count</th>
-                        <th>Age</th>
-                        <th>Status</th>
+                        <th class="td-text">First Name</th>
+                        <th class="td-text">Last Name</th>
+                        <th class="td-text">Phone Number</th>
+                        <th class="td-text">Email</th>
+                        <th class="td-text">Date</th>
+                        <th class="td-text">Time</th>
+                        <th class="td-text">People count</th>
+                        <th class="td-text">Age</th>
+                        <th class="td-text">Purpose</th>
+                        <th class="td-text">Status</th>
                     </tr>
                     </thead>
                     <tbody>
                     <div th:if="!${#lists.isEmpty(meets)}">
                         <tr th:each = "meet : ${meets}">
-                            <td th:text = "${meet.id}"></td>
-                            <td th:text = "${meet.name}"></td>
-                            <td th:text = "${meet.surname}"></td>
-                            <td th:text = "${meet.phoneNumber}"></td>
-                            <td th:text = "${meet.email}"></td>
-                            <td th:text = "${meet.date}"></td>
-                            <td th:text = "${meet.time}"></td>
-                            <td th:text = "${meet.peopleCount}"></td>
-                            <td th:text = "${meet.age}"></td>
-                            <td th:text = "${meet.status}"></td>
-                            <td>
+                            <td class="td-text" th:text = "${meet.id}"></td>
+                            <td class="td-text" th:text = "${meet.name}"></td>
+                            <td class="td-text" th:text = "${meet.surname}"></td>
+                            <td class="td-text" th:text = "${meet.phoneNumber}"></td>
+                            <td class="td-text" th:text = "${meet.email}"></td>
+                            <td class="td-text" th:text = "${meet.date}"></td>
+                            <td class="td-text" th:text = "${meet.time}"></td>
+                            <td class="td-text" th:text = "${meet.peopleCount}"></td>
+                            <td class="td-text" th:text = "${meet.age}"></td>
+                            <td class="td-text" th:text = "${meet.purpose.name}"></td>
+                            <td class="td-text" th:text = "${meet.status}"></td>
+                            <td class="td-buttons">
                                 <div class="btn-group" role="group" aria-label="...">
                                     <form th:action="@{'/meet-management/view'}" method="GET" style='display:inline;'>
                                         <input type="hidden" name="id" th:value="${meet.id}">

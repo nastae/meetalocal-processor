@@ -10,13 +10,19 @@ import lt.govilnius.repository.reservation.MeetRepository;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +30,7 @@ import java.util.Optional;
 import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static lt.govilnius.EmailSenderTest.sampleVolunteer;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles(profiles = "dev")
 public class MeetEngagementServiceTest {
@@ -41,12 +47,8 @@ public class MeetEngagementServiceTest {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    @After
-    public void cleanEachTest() {
-        meetEngagementRepository.findAll().forEach(volunteer -> meetEngagementRepository.delete(volunteer));
-        meetRepository.findAll().forEach(meet -> meetRepository.delete(meet));
-        volunteerRepository.findAll().forEach(volunteer -> volunteerRepository.delete(volunteer));
-    }
+    @Autowired
+    private EntityManager manager;
 
     @Test
     public void create_MeetEngagement_ShouldBeCreated() {
@@ -61,6 +63,7 @@ public class MeetEngagementServiceTest {
 
     @Test
     public void getAll_MeetEngagements_ShouldGet() {
+        volunteerRepository.findAll().forEach(v -> volunteerRepository.delete(v));
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
         Meet meet = meetRepository.save(sampleMeet());
         Time time = new Time(10, 10, 10);
