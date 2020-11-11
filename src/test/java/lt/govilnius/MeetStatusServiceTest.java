@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static lt.govilnius.LiveEmailSenderTest.sampleLiveMeet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +33,7 @@ public class MeetStatusServiceTest {
 
     @Test
     public void create_Status_ShouldBeCreated() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         MeetStatus status = new MeetStatus(new Timestamp(100L), meet, Status.NEW);
         when(repository.save(any())).thenReturn(status);
         MeetStatus result = meetStatusService.create(meet, Status.NEW).get();
@@ -43,7 +43,7 @@ public class MeetStatusServiceTest {
 
     @Test
     public void getByMeetId_Statuses_ShouldGet() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setId(1L);
         MeetStatus status = new MeetStatus(new Timestamp(100L), meet, Status.NEW);
         when(repository.findByMeetId(meet.getId())).thenReturn(ImmutableList.of(status, status));

@@ -33,9 +33,11 @@
                         <th class="td-text">First Name</th>
                         <th class="td-text">Last Name</th>
                         <th class="td-text">Phone Number</th>
+                        <th class="td-text">Skype</th>
                         <th class="td-text">Email</th>
                         <th class="td-text">Date of Birth</th>
                         <th class="td-text">Purpose</th>
+                        <th class="td-text">Meet Type</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,11 +47,17 @@
                             <td class="td-text" th:text = "${volunteer.name}"></td>
                             <td class="td-text" th:text = "${volunteer.surname}"></td>
                             <td class="td-text" th:text = "${volunteer.phoneNumber}"></td>
+                            <td class="td-text" th:text = "${volunteer.skypeName}"></td>
                             <td class="td-text" th:text = "${volunteer.email}"></td>
                             <td class="td-text" th:text = "${volunteer.dateOfBirth}"></td>
                             <td class="td-text">
                                 <div th:each = "purpose, status : ${volunteer.purposes}">
                                     <span th:text = "!${status.last} ? ${purpose.purpose.name} + ',' : ${purpose.purpose.name}"></span>
+                                </div>
+                            </td>
+                            <td class="td-text">
+                                <div th:each = "meetType, status : ${volunteer.meetTypes}">
+                                    <span th:text = "!${status.last} ? ${meetType.meetType.name} + ',' : ${meetType.meetType.name}"></span>
                                 </div>
                             </td>
                             <td class="td-buttons">

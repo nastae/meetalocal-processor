@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
+import lt.govilnius.domainService.mail.EmailSenderConfigFactory;
 import lt.govilnius.domainService.mail.Mail;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,130 +20,120 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Ignore
 @ActiveProfiles(profiles = "dev")
-public class EmailSenderTest {
+public class OnlineEmailSenderTest {
+
 
     @Autowired
     private EmailSender emailSender;
+
+    @Autowired
+    private EmailSenderConfigFactory configFactory;
 
     private static final String RECEIVER = "meetalocaltest@gmail.com";
     private static final String WEBSITE_URL = "test";
 
     @Test
     public void send_VolunteerRequest_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(sampleMeet(), "TOKEN", WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getVolunteerRequestConfig(sampleOnlineMeet(), "TOKEN", WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristRequest_ShouldSend() {
-        Meet meet = sampleMeet();
+        OnlineMeet meet = sampleOnlineMeet();
         Volunteer volunteer = sampleVolunteer();
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
-                        meet, ImmutableList.of(
-                                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false)), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getLocalRequestConfig(meet, ImmutableList.of(
+                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristRequest_With_Another_Time_ShouldSend() {
-        Meet meet = sampleMeet();
+        OnlineMeet meet = sampleOnlineMeet();
         Volunteer volunteer = sampleVolunteer();
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(
-                        meet, ImmutableList.of(
-                                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false),
-                                new MeetEngagement(meet, volunteer, new Time(5, 5, 5), "TOKEN", true, false)), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getLocalRequestConfig(meet, ImmutableList.of(
+                new MeetEngagement(meet, volunteer, meet.getTime(), "TOKEN", true, false),
+                new MeetEngagement(meet, volunteer, new Time(5, 5, 5), "TOKEN", true, false)), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristCancellation_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getLocalCancellationConfig(sampleOnlineMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristCancellationNotSelected_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getLocalCancellationNotSelectedConfig(sampleOnlineMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristInformation_ShouldSend() {
-        Meet meet = sampleMeet();
+        OnlineMeet meet = sampleOnlineMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true, false);
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
+        final EmailSenderConfig config = configFactory.getLocalInformationConfig(meet, volunteer, meetEngagement);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_TouristEvaluation_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(
-                        new MeetEngagement(sampleMeet(), sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
+        OnlineMeet meet = sampleOnlineMeet();
+        final EmailSenderConfig config = configFactory.getLocalEvaluationConfig(meet, new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_VolunteerCancellation_ShouldSend() {
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(sampleMeet(), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getVolunteerCancellationConfig(sampleOnlineMeet(), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_VolunteerInformation_ShouldSend() {
-        Meet meet = sampleMeet();
+        OnlineMeet meet = sampleOnlineMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, meet.getTime(), null, true, false);
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, meetEngagement);
+        final EmailSenderConfig config = configFactory.getVolunteerInformationConfig(meet, volunteer, meetEngagement);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
     public void send_VolunteerRelocationEvaluation_ShouldSend() {
-        Meet meet = sampleMeet();
+        OnlineMeet meet = sampleOnlineMeet();
         meet.setPurpose(Purpose.RELOCATION);
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getVolunteerEvaluationConfig(meet, new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
     @Test
-    public void send_VolunteerTourismEvaluation_ShouldSend() {
-        Meet meet = sampleMeet();
+    public void send_VolunteerTourivsmEvaluation_ShouldSend() {
+        OnlineMeet meet = sampleOnlineMeet();
         meet.setPurpose(Purpose.TOURISM);
-        final EmailSenderConfig config =
-                EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
+        final EmailSenderConfig config = configFactory.getVolunteerEvaluationConfig(meet, new MeetEngagement(meet, sampleVolunteer(), new Time(10, 10, 10), "", true, false), WEBSITE_URL);
         emailSender.send(new Mail(RECEIVER), config);
     }
 
-    public static Meet sampleMeet() {
-        return new Meet(
+    public static OnlineMeet sampleOnlineMeet() {
+        return new OnlineMeet(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com",
-                "123", "Lithuania", new Date(2025, 11, 11),
-                new Time(20, 10, 10),
-                1, "19-20", new HashSet<>(),
+                "name", "surname", "meetalocaltest@gmail.com", Purpose.RELOCATION,
+                "Lithuania" , new Date(2025, 11, 11),
+                new Time(20, 10, 10), "19-20", "123", "123",
+                new HashSet<>(),
                 ImmutableSet.<MeetLanguage>builder()
                         .add(new MeetLanguage(Language.ENGLISH, null))
                         .build(),
-                "preferences", "additionalPreferences", Status.NEW,
-                false, null, new HashSet<>(), new HashSet<>());
+                new HashSet<>(), new HashSet<>(), sampleVolunteer(), Status.NEW, false,
+                "12313");
     }
 
     public static Volunteer sampleVolunteer() {
@@ -155,9 +146,9 @@ public class EmailSenderTest {
         return new Volunteer(
                 new Timestamp(2019, 1, 1, 1, 1, 1, 1),
                 new Timestamp(2019, 1, 1, 1, 1, 1, 2),
-                "name", "surname", new Date(cal.getTimeInMillis()),
+                "name", "surname", new Date(cal.getTimeInMillis()), "name",
                 "123", "meetalocaltest@gmail.com", new HashSet<>(),
-                "description", true, new HashSet<>(), new HashSet<>());
+                "description", true, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     public static MeetLanguage sampleMeetLanguage(Language language) {

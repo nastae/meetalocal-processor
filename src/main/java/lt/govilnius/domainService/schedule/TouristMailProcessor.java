@@ -6,6 +6,7 @@ import lt.govilnius.domain.reservation.Status;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.mail.EmailSender;
 import lt.govilnius.domainService.mail.EmailSenderConfig;
+import lt.govilnius.domainService.mail.EmailSenderConfigFactory;
 import lt.govilnius.domainService.mail.Mail;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -41,6 +42,9 @@ public class TouristMailProcessor {
     @Value("${waiting.sent.tourist.request.milliseconds}")
     private Long sentTouristRequestWaiting;
 
+    @Autowired
+    private EmailSenderConfigFactory emailSenderConfigFactory;
+
     @Transactional
     public void processRequests() {
         meetService.findByStatus(Status.SENT_LOCAL_REQUEST).forEach(meet -> {
@@ -63,11 +67,11 @@ public class TouristMailProcessor {
             meetService.edit(meet.getId(), meet);
             final MeetEngagement engagement = meetEngagement.get();
             LOGGER.info("Send information of the meet with id " + meet.getId() + " to tourist");
-            EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
+            EmailSenderConfig emailSenderConfig = emailSenderConfigFactory.getLocalInformationConfig(meet, volunteer, engagement);
             emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
             LOGGER.info("Send information of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
-            emailSenderConfig = EmailSenderConfig.VOLUNTEER_INFORMATION_CONFIG.apply(meet, volunteer, engagement);
+            emailSenderConfig = emailSenderConfigFactory.getVolunteerInformationConfig(meet, volunteer, engagement);
             emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
 
             meetEngagementService.getConfirmedByMeetId(meet.getId())
@@ -76,7 +80,7 @@ public class TouristMailProcessor {
                     .forEach(e -> {
                         final Volunteer v  = e.getVolunteer();
                         LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
-                        emailSender.send(new Mail(v.getEmail()), EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(meet, websiteUrl));
+                        emailSender.send(new Mail(v.getEmail()), emailSenderConfigFactory.getVolunteerCancellationConfig(meet, websiteUrl));
                     });
             return Optional.of(meet);
         } else {
@@ -89,12 +93,12 @@ public class TouristMailProcessor {
         meet.setStatus(Status.CANCELED);
         meetService.edit(meet.getId(), meet);
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist" );
-        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_CANCELLATION_NOT_SELECTED_CONFIG.apply(meet, registrationUrl);
+        EmailSenderConfig emailSenderConfig = emailSenderConfigFactory.getLocalCancellationNotSelectedConfig(meet, registrationUrl);
         emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to volunteers ");
         meetEngagementService.getByMeetId(meet.getId()).forEach(e -> {
-            EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(meet, websiteUrl);
+            EmailSenderConfig config = emailSenderConfigFactory.getVolunteerCancellationConfig(meet, websiteUrl);
             final Volunteer v  = e.getVolunteer();
             LOGGER.info("Send cancellation for the meet with id " + meet.getId() + " to volunteer with id " + v.getId());
             emailSender.send(new Mail(v.getEmail()), config);

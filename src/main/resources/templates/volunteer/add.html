@@ -35,9 +35,21 @@
                             </th:block>
                         </div><br>
                         <div class="form-group">
+                            <label for="inputMeetTypes">Meet Type</label><br>
+                            <th:block th:each="availableMeetType : ${availableMeetTypes}">
+                                <input type="checkbox" th:field="*{meetTypes}" name="meetTypes" th:value="${availableMeetType.name}" id="inputMeetTypes" />
+                                <label th:text="${availableMeetType.name}"></label>
+                            </th:block>
+                        </div><br>
+                        <div class="form-group">
                             <label for="inputDateOfBirth">Date of Birth</label>
                             <input type="date" class="form-control" id="inputDateOfBirth" placeholder="Date of Time" th:field="*{dateOfBirth}" name="dateOfBirth" />
                             <span  class="help-block" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{surname}">Date of Birth Error</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSkypeName">Skype Name</label>
+                            <input type="text" class="form-control" id="inputSkypeName" placeholder="Skype Name" th:field="*{skypeName}" name="skypeName" />
+                            <span  class="help-block" th:if="${#fields.hasErrors('skypeName')}" th:errors="*{skypeName}">Skype Name Error</span>
                         </div>
                         <div class="form-group">
                             <label for="inputPhoneNumber">Phone Number</label>

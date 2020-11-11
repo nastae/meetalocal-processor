@@ -10,11 +10,9 @@ public class MeetDto {
     private String surname;
     private Purpose purpose;
     private String email;
-    private String phoneNumber;
     private String country;
     private Date date;
     private LocalTime time;
-    private Integer peopleCount;
     private String age;
     private List<AgeGroup> ageGroups;
     private List<Language> languages;
@@ -24,19 +22,17 @@ public class MeetDto {
     public MeetDto() {
     }
 
-    public MeetDto(String name, String surname, Purpose purpose, String email, String phoneNumber,
-                   String country, Date date, LocalTime time, Integer peopleCount,
+    public MeetDto(String name, String surname, Purpose purpose, String email,
+                   String country, Date date, LocalTime time,
                    String age, List<AgeGroup> ageGroups, List<Language> languages,
                    String preferences, String additionalPreferences) {
         this.name = name;
         this.surname = surname;
         this.purpose = purpose;
         this.email = email;
-        this.phoneNumber = phoneNumber;
         this.country = country;
         this.date = date;
         this.time = time;
-        this.peopleCount = peopleCount;
         this.age = age;
         this.ageGroups = ageGroups;
         this.languages = languages;
@@ -68,14 +64,6 @@ public class MeetDto {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getCountry() {
         return country;
     }
@@ -90,14 +78,6 @@ public class MeetDto {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Integer getPeopleCount() {
-        return peopleCount;
-    }
-
-    public void setPeopleCount(Integer peopleCount) {
-        this.peopleCount = peopleCount;
     }
 
     public String getAge() {

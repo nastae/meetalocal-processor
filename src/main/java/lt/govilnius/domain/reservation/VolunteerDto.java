@@ -16,6 +16,8 @@ public class VolunteerDto {
 
     private Date dateOfBirth;
 
+    private String skypeName;
+
     private String phoneNumber;
 
     private String email;
@@ -28,28 +30,34 @@ public class VolunteerDto {
 
     private List<String> purposes = new ArrayList<>();
 
+    private List<String> meetTypes = new ArrayList<>();
+
     public VolunteerDto() {}
 
     public VolunteerDto(Volunteer volunteer) {
-        this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getPhoneNumber(),
-                volunteer.getEmail(), volunteer.getLanguages().stream().map(l -> l.getLanguage().getName()).collect(toList()),
+        this(volunteer.getId(), volunteer.getName(), volunteer.getSurname(), volunteer.getDateOfBirth(), volunteer.getSkypeName(),
+                volunteer.getPhoneNumber(), volunteer.getEmail(),
+                volunteer.getLanguages().stream().map(l -> l.getLanguage().getName()).collect(toList()),
                 volunteer.getDescription(), volunteer.getActive(),
-                volunteer.getPurposes().stream().map(l -> l.getPurpose().getName()).collect(toList()));
+                volunteer.getPurposes().stream().map(l -> l.getPurpose().getName()).collect(toList()),
+                volunteer.getMeetTypes().stream().map(l -> l.getMeetType().getName()).collect(toList()));
     }
 
-    public VolunteerDto(Long id, String name, String surname, Date dateOfBirth, String phoneNumber,
+    public VolunteerDto(Long id, String name, String surname, Date dateOfBirth, String skypeName, String phoneNumber,
                         String email, List<String> languages,
-                        String description, Boolean active, List<String> purposes) {
+                        String description, Boolean active, List<String> purposes, List<String> meetTypes) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
+        this.skypeName = skypeName;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.languages = languages;
         this.description = description;
         this.active = active;
         this.purposes = purposes;
+        this.meetTypes = meetTypes;
     }
 
     public Long getId() {
@@ -130,5 +138,21 @@ public class VolunteerDto {
 
     public void setPurposes(List<String> purposes) {
         this.purposes = purposes;
+    }
+
+    public String getSkypeName() {
+        return skypeName;
+    }
+
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
+    }
+
+    public List<String> getMeetTypes() {
+        return meetTypes;
+    }
+
+    public void setMeetTypes(List<String> meetTypes) {
+        this.meetTypes = meetTypes;
     }
 }

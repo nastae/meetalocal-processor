@@ -2,10 +2,7 @@ package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lt.govilnius.domain.reservation.*;
-import lt.govilnius.facadeService.reservation.MeetEngagementService;
-import lt.govilnius.facadeService.reservation.MeetService;
-import lt.govilnius.facadeService.reservation.VolunteerService;
-import lt.govilnius.repository.reservation.*;
+import lt.govilnius.facadeService.reservation.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,8 +20,7 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
-import static lt.govilnius.MeetServiceTest.sampleMeetDto;
-import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
+import static lt.govilnius.MeetServiceTest.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +42,12 @@ public class VolunteerActionControllerTest {
     private MeetService meetService;
 
     @Autowired
+    private LiveMeetService liveMeetService;
+
+    @Autowired
+    private OnlineMeetService onlineMeetService;
+
+    @Autowired
     private VolunteerService volunteerService;
 
     @Autowired
@@ -63,9 +65,34 @@ public class VolunteerActionControllerTest {
     }
 
     @Test
-    public void agree_Token_ShoudOpenAgreement() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void agree_Token_ShoudOpenAgreement_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/volunteer/agreements?token=" + params.get("token"))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+    }
+
+    @Test
+    public void agree_Token_ShoudOpenAgreement_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -101,9 +128,34 @@ public class VolunteerActionControllerTest {
     }
 
     @Test
-    public void cancel_Token_ShoudOpenCancellation() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void cancel_Token_ShoudOpenCancellation_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/volunteer/cancellations?token=" + params.get("token"))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+    }
+
+    @Test
+    public void cancel_Token_ShoudOpenCancellation_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -139,9 +191,34 @@ public class VolunteerActionControllerTest {
     }
 
     @Test
-    public void editEngagement_Token_ShoudOpenChange() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void editEngagement_Token_ShoudOpenChange_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/volunteer/engagements?token=" + params.get("token"))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+    }
+
+    @Test
+    public void editEngagement_Token_ShoudOpenChange_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -176,9 +253,35 @@ public class VolunteerActionControllerTest {
         Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
     }
 
-    public void evaluate_PostToken_ShouldEvaluate() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void evaluate_PostToken_ShouldEvaluate_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.FINISHED);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, false);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        meetEngagement.setConfirmed(true);
+        meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
+
+        MvcResult result = mvc.perform(post("/volunteer/evaluations")
+                .with(csrf())
+                .param("comment", "comment")
+                .param("token", meetEngagement.getToken()))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+    }
+
+    public void evaluate_PostToken_ShouldEvaluate_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.FINISHED);
         meet = meetService.edit(meet.getId(), meet).get();

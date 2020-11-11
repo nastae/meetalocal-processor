@@ -1,0 +1,15 @@
+{
+  "name": "Aurimas",
+  "surname": "Ananasas",
+  "purpose": "TOURISM",
+  "email": "saauris@gmail.com",
+  "country": "Lithuania",
+  "date": "2020-11-20",
+  "time": "18:00:00",
+  "age": "30-39",
+  "ageGroups": ["YOUTH","JUNIOR_ADULTS","SENIORS"],
+  "languages": ["ENGLISH","RUSSIAN"],
+  "preferences": "Arts & Culture, Hidden gems, Coffee & Conversation",
+  "additionalPreferences": "more and more",
+  "skypeName": "saauris"
+}

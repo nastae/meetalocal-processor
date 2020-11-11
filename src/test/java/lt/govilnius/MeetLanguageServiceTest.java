@@ -1,9 +1,9 @@
 package lt.govilnius;
 
-import lt.govilnius.domain.reservation.*;
-import lt.govilnius.facadeService.reservation.MeetAgeGroupService;
+import lt.govilnius.domain.reservation.Language;
+import lt.govilnius.domain.reservation.Meet;
+import lt.govilnius.domain.reservation.MeetLanguage;
 import lt.govilnius.facadeService.reservation.MeetLanguageService;
-import lt.govilnius.repository.reservation.MeetAgeGroupRepository;
 import lt.govilnius.repository.reservation.MeetLanguageRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static lt.govilnius.LiveEmailSenderTest.sampleLiveMeet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +31,7 @@ public class MeetLanguageServiceTest {
 
     @Test
     public void create_MeetAgeGroup_ShouldCreateEntity() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         final Language language = Language.ENGLISH;
         final MeetLanguage meetLanguage = new MeetLanguage(language, meet);
         when(repository.save(any())).thenReturn(meetLanguage);
@@ -41,7 +41,7 @@ public class MeetLanguageServiceTest {
 
     @Test
     public void create_MeetAgeGroup_ShouldHandleException() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         final Language language = Language.ENGLISH;
         when(repository.save(any())).thenThrow(new RuntimeException());
         final Optional<MeetLanguage> result = service.create(language, meet);

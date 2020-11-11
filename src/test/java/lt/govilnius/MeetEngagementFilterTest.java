@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.sql.Time;
 import java.util.List;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static lt.govilnius.LiveEmailSenderTest.sampleLiveMeet;
 
 @RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles(profiles = "dev")
@@ -25,7 +25,7 @@ public class MeetEngagementFilterTest {
 
     @Test
     public void filterForMail_MeetEngagements_ShouldReturnOnly5() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setTime(new Time(10, 10, 10));
         List<MeetEngagement> meetEngagements = ImmutableList.of(
                 new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),
@@ -42,7 +42,7 @@ public class MeetEngagementFilterTest {
 
     @Test
     public void filterForMail_MeetEngagements_ShouldReturnOrderByTime() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setTime(new Time(10, 10, 10));
         List<MeetEngagement> meetEngagements = ImmutableList.of(
                 new MeetEngagement(meet, null, new Time(10, 10, 10), "", false, false),

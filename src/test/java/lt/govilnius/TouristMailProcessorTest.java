@@ -1,9 +1,6 @@
 package lt.govilnius;
 
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
-import lt.govilnius.domain.reservation.Status;
-import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.schedule.TouristMailProcessor;
 import lt.govilnius.facadeService.reservation.MeetService;
 import lt.govilnius.facadeService.reservation.VolunteerActionService;
@@ -21,8 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 import java.sql.Time;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,6 +30,9 @@ public class TouristMailProcessorTest {
 
     @Autowired
     private MeetRepository meetRepository;
+
+    @Autowired
+    private LiveMeetRepository liveMeetRepository;
 
     @Autowired
     private MeetLanguageRepository meetLanguageRepository;
@@ -75,10 +74,10 @@ public class TouristMailProcessorTest {
     public void processTouristRequest_SentMeetToTourist_ShouldSendAgreement() {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
-        Meet meet = sampleMeet();
+        LiveMeet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setVolunteer(volunteer);
-        meetRepository.save(meet);
+        liveMeetRepository.save(meet);
 
         MeetEngagement meetEngagement = new MeetEngagement(meet, volunteer, new Time(12, 12, 12), "", false, false);
         meetEngagement = meetEngagementRepository.save(meetEngagement);
@@ -94,10 +93,10 @@ public class TouristMailProcessorTest {
         Volunteer volunteer = sampleVolunteer();
         volunteer = volunteerRepository.save(volunteer);
 
-        Meet meet = sampleMeet();
+        LiveMeet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setVolunteer(volunteer);
-        meet = meetRepository.save(meet);
+        meet = liveMeetRepository.save(meet);
 
         touristMailProcessor.processRequest(volunteer, meet);
         Assert.assertEquals(meetRepository.findAll().size(), 1);

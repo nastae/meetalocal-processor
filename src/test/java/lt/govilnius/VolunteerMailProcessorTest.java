@@ -1,13 +1,12 @@
 package lt.govilnius;
 
 import com.google.common.collect.ImmutableList;
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
-import lt.govilnius.domain.reservation.Status;
-import lt.govilnius.domain.reservation.Volunteer;
+import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
 import lt.govilnius.domainService.mail.EmailSender;
+import lt.govilnius.domainService.mail.EmailSenderConfigFactory;
+import lt.govilnius.domainService.mail.LiveEmailSenderConfig;
 import lt.govilnius.domainService.schedule.VolunteerMailProcessor;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
@@ -25,8 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.sql.Time;
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.*;
@@ -49,6 +47,9 @@ public class VolunteerMailProcessorTest {
 
     @Mock
     private VolunteerFilter volunteerFilter;
+
+    @Mock
+    private EmailSenderConfigFactory emailSenderConfigFactory;
 
     @InjectMocks
     private VolunteerMailProcessor volunteerMailProcessor;
@@ -73,11 +74,12 @@ public class VolunteerMailProcessorTest {
 
     @Test
     public void processNews_Meet_ShouldChangeStatusAndSend() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
-        when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of(volunteer));
+        MeetType meetType = MeetType.LIVE;
+        when(volunteerFilter.filterByMeet(meet, meetType)).thenReturn(ImmutableList.of(volunteer));
         when(meetEngagementService.create(any(), any(), any())).thenReturn(Optional.of(engagement));
         when(meetEngagementService.setFreezed(any(), anyBoolean())).thenReturn(engagement);
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
@@ -91,12 +93,14 @@ public class VolunteerMailProcessorTest {
 
     @Test
     public void processNews_Meet_ShouldCancel() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
-        when(volunteerFilter.filterByMeet(meet)).thenReturn(ImmutableList.of());
+        MeetType meetType = MeetType.LIVE;
+        when(volunteerFilter.filterByMeet(meet, meetType)).thenReturn(ImmutableList.of());
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
+        when(emailSenderConfigFactory.getLocalNotValidDateCancellationConfig(any(), any())).thenReturn( LiveEmailSenderConfig.TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG.apply((LiveMeet) meet, "TEST"));
         doNothing().when(emailSender).send(any(), any());
         Assert.assertEquals(meet.getStatus(), Status.NEW);
         volunteerMailProcessor.processNews();

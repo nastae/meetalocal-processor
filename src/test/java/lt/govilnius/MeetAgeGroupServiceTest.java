@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
+import static lt.govilnius.LiveEmailSenderTest.sampleLiveMeet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -32,7 +32,7 @@ public class MeetAgeGroupServiceTest {
 
     @Test
     public void create_MeetAgeGroup_ShouldCreateEntity() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         final AgeGroup ageGroup = AgeGroup.JUNIOR_ADULTS;
         final MeetAgeGroup meetAgeGroup = new MeetAgeGroup(ageGroup, meet);
         when(repository.save(any())).thenReturn(meetAgeGroup);
@@ -42,7 +42,7 @@ public class MeetAgeGroupServiceTest {
 
     @Test
     public void create_MeetAgeGroup_ShouldHandleException() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         final AgeGroup ageGroup = AgeGroup.JUNIOR_ADULTS;
         when(repository.save(any())).thenThrow(new RuntimeException());
         final Optional<MeetAgeGroup> result = service.create(meet, ageGroup);
@@ -51,7 +51,7 @@ public class MeetAgeGroupServiceTest {
 
     @Test
     public void delete_MeetAgeGroup_ShouldBeDeleted() {
-        MeetAgeGroup meetAgeGroup = new MeetAgeGroup(AgeGroup.YOUTH, sampleMeet());
+        MeetAgeGroup meetAgeGroup = new MeetAgeGroup(AgeGroup.YOUTH, sampleLiveMeet());
         meetAgeGroup.setId(1L);
         when(repository.findById(meetAgeGroup.getId())).thenReturn(Optional.of(meetAgeGroup));
         doNothing().when(repository).delete(meetAgeGroup);

@@ -7,10 +7,13 @@ import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.EnumSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "meet_entity")
+@Entity(name = "meet_entity")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="type",
+        discriminatorType = DiscriminatorType.STRING)
 public class Meet {
 
     @Id
@@ -30,16 +33,11 @@ public class Meet {
     @NotNull
     private String surname;
 
-    @Enumerated(EnumType.STRING)
-    private Purpose purpose;
-
     @NotNull
     private String email;
 
-    @NotNull
-    @Column(name = "phone_number", length = 1000)
-    @Lob
-    private String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private Purpose purpose;
 
     @NotNull
     @Column(name = "country")
@@ -54,18 +52,8 @@ public class Meet {
     private Time time;
 
     @NotNull
-    @Column(name = "people_count")
-    private Integer peopleCount;
-
-    @NotNull
     @Column(name = "age", nullable = false)
     private String age;
-
-    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<MeetAgeGroup> meetAgeGroups;
-
-    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<MeetLanguage> languages;
 
     private String preferences;
 
@@ -73,61 +61,59 @@ public class Meet {
     @Column(name = "additional_preferences", length = 1000)
     private String additionalPreferences;
 
+    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<MeetAgeGroup> meetAgeGroups;
+
+    @OneToMany(mappedBy="meet", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<MeetLanguage> languages;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<MeetEngagement> meetEngagements;
+
+    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<MeetStatus> statuses;
+
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="volunteer", nullable=true)
+    private Volunteer volunteer;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
     @NotNull
     private Boolean freezed;
 
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="volunteer", nullable=true)
-    private Volunteer volunteer;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<MeetEngagement> meetEngagements;
-
-    @OneToMany(mappedBy = "meet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<MeetStatus> statuses;
+    @Column(name="type", insertable = false, updatable = false)
+    private String type;
 
     public Meet() {}
 
-    public Meet(Timestamp createdAt, Timestamp changedAt,
-                @NotNull String name, @NotNull String surname, Purpose purpose, @NotNull String email,
-                @NotNull String phoneNumber, @NotNull String country, @NotNull Date date,
-                @NotNull Time time, @NotNull Integer peopleCount, @NotNull String age,
-                Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, String preferences, String additionalPreferences,
-                Status status, Boolean freezed, Volunteer volunteer, Set<MeetEngagement> meetEngagements,
-                Set<MeetStatus> statuses) {
+    // TODO: Ar reikia prideti type?
+    public Meet(Timestamp createdAt, Timestamp changedAt, @NotNull String name, @NotNull String surname,
+                @NotNull String email, Purpose purpose, @NotNull String country, @NotNull Date date,
+                @NotNull Time time, @NotNull String age, String preferences, String additionalPreferences,
+                Set<MeetAgeGroup> meetAgeGroups, Set<MeetLanguage> languages, Set<MeetEngagement> meetEngagements,
+                Set<MeetStatus> statuses, Volunteer volunteer, Status status, @NotNull Boolean freezed) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
         this.surname = surname;
-        this.purpose = purpose;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.purpose = purpose;
         this.country = country;
         this.date = date;
         this.time = time;
-        this.peopleCount = peopleCount;
         this.age = age;
-        this.meetAgeGroups = meetAgeGroups;
-        this.languages = languages;
         this.preferences = preferences;
         this.additionalPreferences = additionalPreferences;
-        this.status = status;
-        this.volunteer = volunteer;
+        this.meetAgeGroups = meetAgeGroups;
+        this.languages = languages;
         this.meetEngagements = meetEngagements;
         this.statuses = statuses;
+        this.volunteer = volunteer;
+        this.status = status;
         this.freezed = freezed;
-    }
-
-    public Purpose getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(Purpose purpose) {
-        this.purpose = purpose;
     }
 
     public Long getId() {
@@ -178,12 +164,12 @@ public class Meet {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public Purpose getPurpose() {
+        return purpose;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPurpose(Purpose purpose) {
+        this.purpose = purpose;
     }
 
     public String getCountry() {
@@ -210,20 +196,28 @@ public class Meet {
         this.time = time;
     }
 
-    public Integer getPeopleCount() {
-        return peopleCount;
-    }
-
-    public void setPeopleCount(Integer peopleCount) {
-        this.peopleCount = peopleCount;
-    }
-
     public String getAge() {
         return age;
     }
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    public String getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
+    }
+
+    public String getAdditionalPreferences() {
+        return additionalPreferences;
+    }
+
+    public void setAdditionalPreferences(String additionalPreferences) {
+        this.additionalPreferences = additionalPreferences;
     }
 
     public Set<MeetAgeGroup> getMeetAgeGroups() {
@@ -242,30 +236,6 @@ public class Meet {
         this.languages = languages;
     }
 
-    public String getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(String preferences) {
-        this.preferences = preferences;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Volunteer getVolunteer() {
-        return volunteer;
-    }
-
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
-    }
-
     public Set<MeetEngagement> getMeetEngagements() {
         return meetEngagements;
     }
@@ -282,6 +252,22 @@ public class Meet {
         this.statuses = statuses;
     }
 
+    public Volunteer getVolunteer() {
+        return volunteer;
+    }
+
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Boolean getFreezed() {
         return freezed;
     }
@@ -290,11 +276,11 @@ public class Meet {
         this.freezed = freezed;
     }
 
-    public String getAdditionalPreferences() {
-        return additionalPreferences;
+    public String getType() {
+        return type;
     }
 
-    public void setAdditionalPreferences(String additionalPreferences) {
-        this.additionalPreferences = additionalPreferences;
+    public void setType(String type) {
+        this.type = type;
     }
 }

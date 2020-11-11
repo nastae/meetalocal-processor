@@ -36,6 +36,7 @@ public class VolunteerController {
         model.addAttribute("activePage", "volunteers");
         model.addAttribute("availableLanguages", languages());
         model.addAttribute("availablePurposes", purposes());
+        model.addAttribute("availableMeetTypes", meetTypes());
         model.addAttribute("volunteerDto", new VolunteerDto());
         return "volunteer/add";
     }
@@ -61,6 +62,7 @@ public class VolunteerController {
         model.addAttribute("volunteer", volunteer);
         model.addAttribute("languages", checkedLanguages(volunteer.getLanguages()));
         model.addAttribute("availablePurposes", checkedPurposes(volunteer.getPurposes()));
+        model.addAttribute("availableMeetTypes", checkedMeetTypes(volunteer.getMeetTypes()));
         model.addAttribute("activePage", "volunteers");
         return "volunteer/view";
     }
@@ -105,6 +107,26 @@ public class VolunteerController {
         return checkedPurposes;
     }
 
+    private List<CheckedMeetType> checkedMeetTypes(Set<VolunteerMeetType> meetTypes) {
+        List<CheckedMeetType> checkedMeetTypes = meetTypes()
+                .stream()
+                .map(e -> new CheckedMeetType(e, false))
+                .collect(Collectors.toList());
+        for (int i = 0; i < checkedMeetTypes.size(); i++) {
+            for (MeetType checked : meetTypes
+                    .stream()
+                    .map(VolunteerMeetType::getMeetType)
+                    .collect(Collectors.toList())) {
+                if (checked.getName().equals(checkedMeetTypes.get(i).getMeetType().getName())) {
+                    final CheckedMeetType checkedMeetType = checkedMeetTypes.get(i);
+                    checkedMeetType.setChecked(true);
+                    checkedMeetTypes.set(i, checkedMeetType);
+                }
+            }
+        }
+        return checkedMeetTypes;
+    }
+
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editVolunteer(@RequestParam(name = "id") String id, Model model) {
         model.addAttribute("activePage", "volunteers");
@@ -113,6 +135,7 @@ public class VolunteerController {
             model.addAttribute("volunteerDto", new VolunteerDto(volunteer.get()));
             model.addAttribute("availableLanguages", checkedLanguages(volunteer.get().getLanguages()));
             model.addAttribute("availablePurposes", checkedPurposes(volunteer.get().getPurposes()));
+            model.addAttribute("availableMeetTypes", checkedMeetTypes(volunteer.get().getMeetTypes()));
             return "volunteer/edit";
         } else {
             return "redirect:/volunteer-management";
@@ -144,6 +167,14 @@ public class VolunteerController {
                 .<Purpose>builder()
                 .add(Purpose.TOURISM)
                 .add(Purpose.RELOCATION)
+                .build();
+    }
+
+    private List<MeetType> meetTypes() {
+        return ImmutableList
+                .<MeetType>builder()
+                .add(MeetType.LIVE)
+                .add(MeetType.ONLINE)
                 .build();
     }
 }

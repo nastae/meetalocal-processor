@@ -35,7 +35,7 @@ public class EmailSender {
             message.setTo(to);
             message.setSubject(config.getSubject());
             String text = VelocityEngineUtils.mergeTemplateIntoString(
-                    velocityEngine, config.getTemplate().getPath(), "Windows-1257", config.getModel());
+                    velocityEngine, config.getPath(), "Windows-1257", config.getModel());
             message.setText(text, true);
         };
         this.mailSender.send(preparator);

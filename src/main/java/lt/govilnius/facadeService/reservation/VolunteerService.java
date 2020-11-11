@@ -24,6 +24,7 @@ public class VolunteerService {
         Calendar date = Calendar.getInstance();
         date.setTime(volunteer.getDateOfBirth());
         entity.setDateOfBirth(new Date(date.getTimeInMillis()));
+        entity.setSkypeName(volunteer.getSkypeName());
         entity.setPhoneNumber(volunteer.getPhoneNumber());
         entity.setEmail(volunteer.getEmail());
         entity.setLanguages(new HashSet<>());
@@ -40,6 +41,12 @@ public class VolunteerService {
             Optional<Purpose> purposeOptional = Purpose.fromName(purpose);
             if (purposeOptional.isPresent()) {
                 entity.getPurposes().add(new VolunteerPurpose(purposeOptional.get(), entity));
+            }
+        }
+        for (String meetType : volunteer.getMeetTypes()) {
+            Optional<MeetType> meetTypeOptional = MeetType.fromName(meetType);
+            if (meetTypeOptional.isPresent()) {
+                entity.getMeetTypes().add(new VolunteerMeetType(meetTypeOptional.get(), entity));
             }
         }
         entity = volunteerRepository.save(entity);
@@ -83,9 +90,15 @@ public class VolunteerService {
             final Volunteer finalEntity = entity;
             Purpose.fromName(purpose).map(l -> new VolunteerPurpose(l, finalEntity)).ifPresent(p -> entity.getPurposes().add(p));
         }
+        entity.getMeetTypes().clear();
+        for (String meetType : newData.getMeetTypes()) {
+            final Volunteer finalEntity = entity;
+            MeetType.fromName(meetType).map(l -> new VolunteerMeetType(l, finalEntity)).ifPresent(p -> entity.getMeetTypes().add(p));
+        }
         Calendar date = Calendar.getInstance();
         date.setTime(newData.getDateOfBirth());
         entity.setDateOfBirth(new Date(date.getTimeInMillis()));
+        entity.setSkypeName(newData.getSkypeName());
         entity.setPhoneNumber(newData.getPhoneNumber());
         entity.setEmail(newData.getEmail());
         entity.getLanguages().clear();
@@ -100,5 +113,9 @@ public class VolunteerService {
 
     public List<Volunteer> findActive() {
         return volunteerRepository.findByActive(true);
+    }
+
+    public List<Volunteer> findByMeetType(MeetType meetType) {
+        return volunteerRepository.findByMeetTypes_MeetType(meetType);
     }
 }

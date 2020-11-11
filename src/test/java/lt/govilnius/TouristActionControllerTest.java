@@ -2,12 +2,7 @@ package lt.govilnius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lt.govilnius.domain.reservation.*;
-import lt.govilnius.facadeService.reservation.MeetEngagementService;
-import lt.govilnius.facadeService.reservation.MeetService;
-import lt.govilnius.facadeService.reservation.VolunteerService;
-import lt.govilnius.repository.reservation.MeetEngagementRepository;
-import lt.govilnius.repository.reservation.MeetRepository;
-import lt.govilnius.repository.reservation.VolunteerRepository;
+import lt.govilnius.facadeService.reservation.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,8 +21,7 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
-import static lt.govilnius.MeetServiceTest.sampleMeetDto;
-import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
+import static lt.govilnius.MeetServiceTest.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +43,12 @@ public class TouristActionControllerTest {
     private MeetService meetService;
 
     @Autowired
+    private LiveMeetService liveMeetService;
+
+    @Autowired
+    private OnlineMeetService onlineMeetService;
+
+    @Autowired
     private MeetEngagementService meetEngagementService;
 
     @Autowired
@@ -66,9 +66,9 @@ public class TouristActionControllerTest {
     }
 
     @Test
-    public void select_Token_ShoudOpenCurrentlySelected() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void select_Token_ShoudOpenCurrentlySelected_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -93,9 +93,64 @@ public class TouristActionControllerTest {
     }
 
     @Test
-    public void select_Token_ShoudOpenSelect() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void select_Token_ShoudOpenCurrentlySelected_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, true);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        meetEngagement.setConfirmed(true);
+        meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/tourist/selections?token=" + params.get("token")))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertTrue(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+    }
+
+    @Test
+    public void select_Token_ShoudOpenSelect_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, false);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        meetEngagement.setConfirmed(true);
+        meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/tourist/selections?token=" + params.get("token")))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+    }
+
+    @Test
+    public void select_Token_ShoudOpenSelect_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -133,9 +188,34 @@ public class TouristActionControllerTest {
     }
 
     @Test
-    public void evaluate_Token_ShoudOpenEvaluation() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void evaluate_Token_ShoudOpenEvaluation_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, false);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        Map<String, String> params = new HashMap<>();
+        params.put("token", meetEngagement.getToken());
+
+        MvcResult result = mvc.perform(get("/tourist/evaluations?token=" + params.get("token")))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+    }
+
+    @Test
+    public void evaluate_Token_ShoudOpenEvaluation_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
@@ -170,9 +250,37 @@ public class TouristActionControllerTest {
     }
 
     @Test
-    public void evaluate_PostToken_ShouldEvaluate() throws Exception {
-        MeetDto meetDto = sampleMeetDto();
-        Meet meet = meetService.create(meetDto).get();
+    public void evaluate_PostToken_ShouldEvaluate_WithLiveMeet() throws Exception {
+        LiveMeetDto meetDto = sampleLiveMeetDto();
+        Meet meet = liveMeetService.create(meetDto).get();
+
+        meet.setStatus(Status.FINISHED);
+        meet = meetService.edit(meet.getId(), meet).get();
+        meet = meetService.setFreezed(meet, false);
+
+        VolunteerDto volunteerDto = sampleVolunteerDto();
+        Volunteer volunteer = volunteerService.create(volunteerDto).get();
+
+        Time time = new Time(10, 10, 10);
+        MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
+        meetEngagement.setConfirmed(true);
+        meetEngagement = meetEngagementService.edit(meetEngagement.getId(), meetEngagement).get();
+
+        MvcResult result = mvc.perform(post("/tourist/evaluations")
+                .param("comment", "comment")
+                .param("token", meetEngagement.getToken())
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        String actualResponseBody = result.getResponse().getContentAsString();
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_CURRENTLY_SELECTED));
+        Assert.assertFalse(actualResponseBody.contains(ERROR_MESSAGE_RUN_OUT_OF_TIME));
+    }
+
+    @Test
+    public void evaluate_PostToken_ShouldEvaluate_WithOnlineMeet() throws Exception {
+        OnlineMeetDto meetDto = sampleOnlineMeetDto();
+        Meet meet = onlineMeetService.create(meetDto).get();
 
         meet.setStatus(Status.FINISHED);
         meet = meetService.edit(meet.getId(), meet).get();

@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.sampleVolunteer;
 import static lt.govilnius.MeetServiceTest.sampleVolunteerDto;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;

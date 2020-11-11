@@ -17,10 +17,12 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Date;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.sampleLiveMeet;
+import static lt.govilnius.LiveEmailSenderTest.sampleVolunteer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -44,19 +46,6 @@ public class MeetServiceTest {
     private MeetService meetService;
 
     @Test
-    public void create_Meet_ShouldBeCreated() {
-        Meet meet = sampleMeet();
-        meet.setId(1L);
-        when(meetRepository.save(any())).thenReturn(meet);
-        when(meetAgeGroupService.create(any(), any())).thenReturn(Optional.empty());
-        when(meetLanguageService.create(any(), any())).thenReturn(Optional.empty());
-        when(meetStatusService.create(any(), any())).thenReturn(Optional.empty());
-        when(meetRepository.findById(meet.getId())).thenReturn(Optional.of(meet));
-        Optional<Meet> result = meetService.create(sampleMeetDto());
-        Assert.assertTrue(result.isPresent());
-    }
-
-    @Test
     public void getAll_Meets_ShouldGet() {
         when(meetRepository.findAll()).thenReturn(ImmutableList.of(new Meet()));
         final List<Meet> meets = meetService.getAll();
@@ -65,7 +54,7 @@ public class MeetServiceTest {
 
     @Test
     public void setVolunteer_Meet_ShouldSetVolunteer() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setVolunteer(null);
         Volunteer volunteer = sampleVolunteer();
         when(meetRepository.save(meet)).thenReturn(meet);
@@ -75,7 +64,7 @@ public class MeetServiceTest {
 
     @Test
     public void setFreezed_Meet_ShouldSetVolunteer() {
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setFreezed(false);
         when(meetRepository.save(meet)).thenReturn(meet);
         final Meet result = meetService.setFreezed(meet, true);
@@ -84,7 +73,7 @@ public class MeetServiceTest {
 
     @Test
     public void get_Meet_ShouldGetById() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         when(meetRepository.findById(1L)).thenReturn(Optional.of(meet));
         final Optional<Meet> result = meetService.get(1L);
         Assert.assertTrue(result.isPresent());
@@ -93,7 +82,7 @@ public class MeetServiceTest {
 
     @Test
     public void get_Meet_ShouldNotGetById() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         when(meetRepository.findById(1L)).thenReturn(Optional.empty());
         final Optional<Meet> result = meetService.get(1L);
         Assert.assertFalse(result.isPresent());
@@ -101,10 +90,10 @@ public class MeetServiceTest {
 
     @Test
     public void edit_Meet_ShouldEdit() {
-        Meet oldMeet = sampleMeet();
+        Meet oldMeet = sampleLiveMeet();
         oldMeet.setId(1L);
         oldMeet.setStatus(Status.NEW);
-        Meet newMeet = sampleMeet();
+        Meet newMeet = sampleLiveMeet();
         newMeet.setId(2L);
         newMeet.setStatus(Status.CANCELED);
         when(meetStatusService.create(any(), any())).thenReturn(Optional.empty());
@@ -117,26 +106,37 @@ public class MeetServiceTest {
 
     @Test
     public void edit_NotExistMeet_ShouldNotEdit() {
-        final Meet meet = sampleMeet();
+        final Meet meet = sampleLiveMeet();
         when(meetRepository.findById(1L)).thenReturn(Optional.empty());
         final Optional<Meet> result = meetService.edit(1L, meet);
         Assert.assertFalse(result.isPresent());
     }
 
-    public static MeetDto sampleMeetDto() {
-        return new MeetDto("name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com", "123",
+    public static LiveMeetDto sampleLiveMeetDto() {
+        return new LiveMeetDto("name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com", "123",
                 "Lithuania", new Date(2019, 1, 1),
                 LocalTime.of(11, 11, 11),
                 1, "18-29", ImmutableList.of(AgeGroup.YOUTH),
                 ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "additionalPreferences");
     }
 
+    public static OnlineMeetDto sampleOnlineMeetDto() {
+        return new OnlineMeetDto("name", "surname", Purpose.RELOCATION, "meetalocaltest@gmail.com",
+                "Lithuania", new Date(2019, 1, 1),
+                LocalTime.of(11, 11, 11),
+                "18-29", ImmutableList.of(AgeGroup.YOUTH),
+                ImmutableList.<Language>builder().add(Language.ENGLISH).build(), "preferences", "more", "skype");
+    }
+
     public static VolunteerDto sampleVolunteerDto() {
         List<String> purposes = new ArrayList<>();
+        List<String> meetTypes = new ArrayList<>();
+        meetTypes.add(MeetType.LIVE.getName());
+        meetTypes.add(MeetType.ONLINE.getName());
         purposes.add("Relocation");
         return new VolunteerDto(1L,
-                "name", "surname", new Date(1999, 11, 11),
+                "name", "surname", new Date(1999, 11, 11), "A",
                 "123", "meetalocaltest@gmail.com", ImmutableList.of(Language.ENGLISH.name()),
-                "description", true, purposes);
+                "description", true, purposes, meetTypes);
     }
 }

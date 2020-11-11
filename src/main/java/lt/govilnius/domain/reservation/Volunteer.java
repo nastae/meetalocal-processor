@@ -32,13 +32,16 @@ public class Volunteer implements Serializable {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+    @Column(name = "skype_name")
+    private String skypeName;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
     private String email;
 
     @Column
-    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VolunteerLanguage> languages = new HashSet<>();
 
     @Lob
@@ -48,8 +51,12 @@ public class Volunteer implements Serializable {
     private Boolean active = true;
 
     @Column
-    @OneToMany(mappedBy="volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VolunteerPurpose> purposes = new HashSet<>();
+
+    @Column
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VolunteerMeetType> meetTypes = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -58,13 +65,15 @@ public class Volunteer implements Serializable {
     public Volunteer() {
     }
 
-    public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth,
+    public Volunteer(Timestamp createdAt, Timestamp changedAt, String name, String surname, Date dateOfBirth, String skypeName,
                      String phoneNumber, String email, Set<VolunteerLanguage> languages,
-                     String description, Boolean active, Set<VolunteerPurpose> purposes, Set<MeetEngagement> meetEngagements) {
+                     String description, Boolean active, Set<VolunteerPurpose> purposes, Set<VolunteerMeetType> meetTypes,
+                     Set<MeetEngagement> meetEngagements) {
         this.createdAt = createdAt;
         this.changedAt = changedAt;
         this.name = name;
         this.surname = surname;
+        this.skypeName = skypeName;
         this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -72,6 +81,7 @@ public class Volunteer implements Serializable {
         this.description = description;
         this.active = active;
         this.purposes = purposes;
+        this.meetTypes = meetTypes;
         this.meetEngagements = meetEngagements;
     }
 
@@ -181,5 +191,21 @@ public class Volunteer implements Serializable {
 
     public void setPurposes(Set<VolunteerPurpose> purposes) {
         this.purposes = purposes;
+    }
+
+    public String getSkypeName() {
+        return skypeName;
+    }
+
+    public void setSkypeName(String skypeName) {
+        this.skypeName = skypeName;
+    }
+
+    public Set<VolunteerMeetType> getMeetTypes() {
+        return meetTypes;
+    }
+
+    public void setMeetTypes(Set<VolunteerMeetType> meetTypes) {
+        this.meetTypes = meetTypes;
     }
 }

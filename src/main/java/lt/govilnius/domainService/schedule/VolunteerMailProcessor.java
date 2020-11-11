@@ -3,9 +3,7 @@ package lt.govilnius.domainService.schedule;
 import lt.govilnius.domain.reservation.*;
 import lt.govilnius.domainService.filter.MeetEngagementFilter;
 import lt.govilnius.domainService.filter.VolunteerFilter;
-import lt.govilnius.domainService.mail.EmailSender;
-import lt.govilnius.domainService.mail.EmailSenderConfig;
-import lt.govilnius.domainService.mail.Mail;
+import lt.govilnius.domainService.mail.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
 import org.slf4j.Logger;
@@ -64,6 +62,9 @@ public class VolunteerMailProcessor {
     @Value("${max.meet.waiting.hours}")
     private Long maxMeetWaitingHours;
 
+    @Autowired
+    private EmailSenderConfigFactory emailSenderConfigFactory;
+
     @Transactional
     public void processNews() {
         meetService.findByStatus(Status.NEW).forEach(meet -> {
@@ -72,20 +73,26 @@ public class VolunteerMailProcessor {
                 emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledMeetDateNotValidConfig(meet));
             } else if (!isNightTime(meet)) {
                 LOGGER.info("Process the new meet with id " + meet.getId());
-                final List<MeetEngagement> engagements = createEngagements(
-                        matchPurpose(volunteerFilter.filterByMeet(meet), meet.getPurpose()), meet);
-                if (engagements.size() > 0) {
-                    meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
-                    meetService.edit(meet.getId(), meet);
-                    engagements.forEach(engagement -> {
-                        engagement = meetEngagementService.setFreezed(engagement, false);
-                        LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
-                        final String token = engagement.getToken();
-                        emailSender.send(new Mail(engagement.getVolunteer().getEmail()), EmailSenderConfig.VOLUNTEER_REQUEST_CONFIG.apply(
-                                meet, token, websiteUrl));
-                    });
+                final Optional<MeetType> meetType = MeetType.fromName(meet.getType());
+                if (meetType.isPresent()) {
+                    LOGGER.info("Process the new meet with id " + meet.getId() + " and meet type " + meetType.get().getName());
+                    final List<MeetEngagement> engagements = createEngagements(
+                            matchPurpose(volunteerFilter.filterByMeet(meet, meetType.get()), meet.getPurpose()), meet);
+                    if (engagements.size() > 0) {
+                        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+                        meetService.edit(meet.getId(), meet);
+                        engagements.forEach(engagement -> {
+                            engagement = meetEngagementService.setFreezed(engagement, false);
+                            LOGGER.info("Created a meet engagement of the meet with id " + meet.getId());
+                            final String token = engagement.getToken();
+                            EmailSenderConfig config = emailSenderConfigFactory.getVolunteerRequestConfig(meet, token, websiteUrl);
+                            emailSender.send(new Mail(engagement.getVolunteer().getEmail()), config);
+                        });
+                    } else {
+                        emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
+                    }
                 } else {
-                    emailSender.send(new Mail(meet.getEmail()), prepareTouristCanceledConfig(meet));
+                    LOGGER.info("Do not process the new meet with id " + meet.getId() + ", because meet type does not exist!");
                 }
             }
         });
@@ -152,7 +159,7 @@ public class VolunteerMailProcessor {
                         MeetEngagement mEngagement = engagements.get(i);
                         LOGGER.info("Send cancellation form of the meet with id " + mEngagement.getMeet().getId() +
                                 " to volunteer with id " + mEngagement.getVolunteer().getId());
-                        EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(mEngagement.getMeet(), websiteUrl);
+                        EmailSenderConfig config = emailSenderConfigFactory.getVolunteerCancellationConfig(meet, websiteUrl);
                         emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
                     }
                 } else {
@@ -162,7 +169,7 @@ public class VolunteerMailProcessor {
                 for (MeetEngagement mEngagement : engagements) {
                     LOGGER.info("Send cancellation form of the meet with id " + mEngagement.getMeet().getId() +
                             " to volunteer with id " + mEngagement.getVolunteer().getId());
-                    EmailSenderConfig config = EmailSenderConfig.VOLUNTEER_CANCELLATION_CONFIG.apply(mEngagement.getMeet(), websiteUrl);
+                    EmailSenderConfig config = emailSenderConfigFactory.getVolunteerCancellationConfig(meet, websiteUrl);
                     emailSender.send(new Mail(mEngagement.getVolunteer().getEmail()), config);
                 }
                 emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
@@ -191,12 +198,12 @@ public class VolunteerMailProcessor {
                         MeetEngagement engagement = engagementOptional.get();
                         engagement = meetEngagementService.setFreezed(engagement, false);
                         LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to tourist");
-                        EmailSenderConfig emailSenderConfig = EmailSenderConfig.TOURIST_EVALUATION_CONFIG.apply(engagement, websiteUrl);
-                        emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
+                        EmailSenderConfig config = emailSenderConfigFactory.getLocalEvaluationConfig(meet, engagement, websiteUrl);
+                        emailSender.send(new Mail(meet.getEmail()), config);
 
                         LOGGER.info("Send evaluation form of the meet with id " + meet.getId() + " to volunteer with id " + volunteer.getId());
-                        emailSenderConfig = EmailSenderConfig.VOLUNTEER_EVALUATION_CONFIG.apply(engagement, websiteUrl);
-                        emailSender.send(new Mail(volunteer.getEmail()), emailSenderConfig);
+                        config = emailSenderConfigFactory.getVolunteerEvaluationConfig(meet, engagement, websiteUrl);
+                        emailSender.send(new Mail(volunteer.getEmail()), config);
 
                         meet.setStatus(Status.FINISHED);
                         meetService.edit(meet.getId(), meet);
@@ -218,7 +225,7 @@ public class VolunteerMailProcessor {
         LOGGER.info("Send volunteers requests of the meet with id " + meet.getId() + " to tourist");
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_REQUEST_CONFIG.apply(meet, meetEngagements, websiteUrl);
+        return emailSenderConfigFactory.getLocalRequestConfig(meet, meetEngagements, websiteUrl);
     }
 
     private EmailSenderConfig prepareTouristCanceledConfig(Meet meet) {
@@ -226,7 +233,7 @@ public class VolunteerMailProcessor {
         meet.setStatus(Status.CANCELED);
         meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_CANCELLATION_CONFIG.apply(meet, registrationUrl);
+        return emailSenderConfigFactory.getLocalCancellationConfig(meet, registrationUrl);
     }
 
     private EmailSenderConfig prepareTouristCanceledMeetDateNotValidConfig(Meet meet) {
@@ -234,6 +241,6 @@ public class VolunteerMailProcessor {
         meet.setStatus(Status.CANCELED);
         meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
-        return EmailSenderConfig.TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG.apply(meet, registrationUrl);
+        return emailSenderConfigFactory.getLocalNotValidDateCancellationConfig(meet, registrationUrl);
     }
 }

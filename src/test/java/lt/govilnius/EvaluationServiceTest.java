@@ -1,6 +1,8 @@
 package lt.govilnius;
 
-import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domain.reservation.Evaluation;
+import lt.govilnius.domain.reservation.MeetEngagement;
+import lt.govilnius.domain.reservation.UserType;
 import lt.govilnius.facadeService.reservation.EvaluationService;
 import lt.govilnius.repository.reservation.EvaluationRepository;
 import org.junit.Assert;
@@ -13,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

@@ -21,8 +21,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -48,16 +47,16 @@ public class TouristActionServiceTest {
     }
 
     @Test
-    public void select_Token_ShouldSelect() {
+    public void select_Token_ShouldSelect_WithLiveMeet() {
         String token = "A";
         Time time = new Time(10, 10, 10);
-        Meet meet = sampleMeet();
+        Meet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
         engagement.setId(1L);
-        Meet result = sampleMeet();
+        Meet result = sampleLiveMeet();
         result.setStatus(Status.SENT_LOCAL_REQUEST);
         result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         result.setVolunteer(sampleVolunteer());
@@ -70,10 +69,32 @@ public class TouristActionServiceTest {
     }
 
     @Test
-    public void select_TokenAndBadStatus_ShouldNotSelect() {
+    public void select_Token_ShouldSelect_WithOnlineMeet() {
         String token = "A";
         Time time = new Time(10, 10, 10);
-        Meet meet = sampleMeet();
+        Meet meet = sampleOnlineMeet();
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        meet.setVolunteer(null);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
+        engagement.setId(1L);
+        Meet result = sampleOnlineMeet();
+        result.setStatus(Status.SENT_LOCAL_REQUEST);
+        result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        result.setVolunteer(sampleVolunteer());
+        when(meetEngagementService.getByToken(token)).
+                thenReturn(Optional.of(engagement));
+        when(touristMailProcessor.processRequest(any(), any())).thenReturn(Optional.of(result));
+        Meet actual = touristActionService.select(token).get();
+        Assert.assertNotNull(actual.getVolunteer());
+        Assert.assertEquals(meet.getId(), actual.getId());
+    }
+
+    @Test
+    public void select_TokenAndBadStatus_ShouldNotSelect_WithLiveMeet() {
+        String token = "A";
+        Time time = new Time(10, 10, 10);
+        Meet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
@@ -85,10 +106,25 @@ public class TouristActionServiceTest {
     }
 
     @Test
-    public void select_TokenAndBadTime_ShouldNotSelect() {
+    public void select_TokenAndBadStatus_ShouldNotSelect_WithOnlineMeet() {
         String token = "A";
         Time time = new Time(10, 10, 10);
-        Meet meet = sampleMeet();
+        Meet meet = sampleOnlineMeet();
+        meet.setStatus(Status.SENT_VOLUNTEER_REQUEST);
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
+        engagement.setId(1L);
+        when(meetEngagementService.getByToken(token)).
+                thenReturn(Optional.of(engagement));
+        Optional<Meet> actual = touristActionService.select(token);
+        Assert.assertFalse(actual.isPresent());
+    }
+
+    @Test
+    public void select_TokenAndBadTime_ShouldNotSelect_WithLiveMeet() {
+        String token = "A";
+        Time time = new Time(10, 10, 10);
+        Meet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
@@ -100,16 +136,31 @@ public class TouristActionServiceTest {
     }
 
     @Test
-    public void select_TokenAndNotEngaged_ShouldNotSelect() {
+    public void select_TokenAndBadTime_ShouldNotSelect_WithOnlineMeet() {
         String token = "A";
         Time time = new Time(10, 10, 10);
-        Meet meet = sampleMeet();
+        Meet meet = sampleOnlineMeet();
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() - 550L));
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
+        engagement.setId(1L);
+        when(meetEngagementService.getByToken(token)).
+                thenReturn(Optional.of(engagement));
+        Optional<Meet> actual = touristActionService.select(token);
+        Assert.assertFalse(actual.isPresent());
+    }
+
+    @Test
+    public void select_TokenAndNotEngaged_ShouldNotSelect_WithLiveMeet() {
+        String token = "A";
+        Time time = new Time(10, 10, 10);
+        Meet meet = sampleLiveMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         meet.setVolunteer(null);
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
         engagement.setId(1L);
-        Meet result = sampleMeet();
+        Meet result = sampleLiveMeet();
         result.setStatus(Status.SENT_LOCAL_REQUEST);
         result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         result.setVolunteer(sampleVolunteer());
@@ -120,10 +171,47 @@ public class TouristActionServiceTest {
     }
 
     @Test
-    public void select_Token_ShouldFailEdit() {
+    public void select_TokenAndNotEngaged_ShouldNotSelect_WithOnlineMeet() {
         String token = "A";
         Time time = new Time(10, 10, 10);
-        Meet meet = sampleMeet();
+        Meet meet = sampleOnlineMeet();
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        meet.setVolunteer(null);
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, false, false);
+        engagement.setId(1L);
+        Meet result = sampleLiveMeet();
+        result.setStatus(Status.SENT_LOCAL_REQUEST);
+        result.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        result.setVolunteer(sampleVolunteer());
+        when(meetEngagementService.getByToken(token)).
+                thenReturn(Optional.of(engagement));
+        Optional<Meet> actual = touristActionService.select(token);
+        Assert.assertFalse(actual.isPresent());
+    }
+
+    @Test
+    public void select_Token_ShouldFailEdit_WithLiveMeet() {
+        String token = "A";
+        Time time = new Time(10, 10, 10);
+        Meet meet = sampleLiveMeet();
+        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
+        MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
+        engagement.setId(1L);
+        MeetEngagement result = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);
+        engagement.setId(1L);
+        when(meetEngagementService.getByToken(token)).
+                thenReturn(Optional.of(engagement));
+        Optional<Meet> actual = touristActionService.select(token);
+        Assert.assertFalse(actual.isPresent());
+    }
+
+    @Test
+    public void select_Token_ShouldFailEdit_WithOnlineMeet() {
+        String token = "A";
+        Time time = new Time(10, 10, 10);
+        Meet meet = sampleOnlineMeet();
         meet.setStatus(Status.SENT_LOCAL_REQUEST);
         meet.setChangedAt(new Timestamp(System.currentTimeMillis() + 10L));
         MeetEngagement engagement = new MeetEngagement(meet, sampleVolunteer(), time, token, true, false);

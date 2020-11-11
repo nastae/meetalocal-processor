@@ -4,35 +4,30 @@ import lt.govilnius.domain.reservation.Meet;
 import lt.govilnius.domain.reservation.MeetEngagement;
 import lt.govilnius.domain.reservation.Volunteer;
 import lt.govilnius.domainService.security.Encryptor;
+import lt.govilnius.facadeService.reservation.LiveMeetService;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.repository.reservation.MeetEngagementRepository;
-import lt.govilnius.repository.reservation.MeetRepository;
 import lt.govilnius.repository.reservation.VolunteerRepository;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
+import javax.transaction.Transactional;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
-import static lt.govilnius.EmailSenderTest.sampleMeet;
-import static lt.govilnius.EmailSenderTest.sampleVolunteer;
+import static lt.govilnius.LiveEmailSenderTest.sampleVolunteer;
+import static lt.govilnius.MeetServiceTest.sampleLiveMeetDto;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles(profiles = "dev")
+@Transactional
 public class MeetEngagementServiceTest {
 
     @Autowired
@@ -42,18 +37,15 @@ public class MeetEngagementServiceTest {
     private MeetEngagementRepository meetEngagementRepository;
 
     @Autowired
-    private MeetRepository meetRepository;
+    private LiveMeetService liveMeetService;
 
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    @Autowired
-    private EntityManager manager;
-
     @Test
     public void create_MeetEngagement_ShouldBeCreated() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
-        Meet meet = meetRepository.save(sampleMeet());
+        Meet meet = liveMeetService.create(sampleLiveMeetDto()).get();
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
         Assert.assertEquals(meetEngagement.getMeet().getId(), meet.getId());
@@ -62,21 +54,10 @@ public class MeetEngagementServiceTest {
     }
 
     @Test
-    public void getAll_MeetEngagements_ShouldGet() {
-        volunteerRepository.findAll().forEach(v -> volunteerRepository.delete(v));
-        Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
-        Meet meet = meetRepository.save(sampleMeet());
-        Time time = new Time(10, 10, 10);
-        meetEngagementService.create(meet, volunteer, time);
-        List<MeetEngagement> meetEngagements = meetEngagementService.getAll();
-        Assert.assertEquals(meetEngagements.size(), 1);
-    }
-
-    @Test
     public void getByMeetId_MeetEngagements_ShouldGet() {
         Volunteer volunteer1 = volunteerRepository.save(sampleVolunteer());
         Volunteer volunteer2 = volunteerRepository.save(sampleVolunteer());
-        Meet meet = meetRepository.save(sampleMeet());
+        Meet meet = liveMeetService.create(sampleLiveMeetDto()).get();
         Time time = new Time(10, 10, 10);
         meetEngagementService.create(meet, volunteer1, time);
         meetEngagementService.create(meet, volunteer2, time);
@@ -87,9 +68,9 @@ public class MeetEngagementServiceTest {
     @Test
     public void getByVolunteerId_MeetEngagements_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
-        Meet meet1 = meetRepository.save(sampleMeet());
-        Meet meet2 = meetRepository.save(sampleMeet());
-        Meet meet3 = meetRepository.save(sampleMeet());
+        Meet meet1 = liveMeetService.create(sampleLiveMeetDto()).get();
+        Meet meet2 = liveMeetService.create(sampleLiveMeetDto()).get();
+        Meet meet3 = liveMeetService.create(sampleLiveMeetDto()).get();
         Time time = new Time(10, 10, 10);
         meetEngagementService.create(meet1, volunteer, time);
         meetEngagementService.create(meet2, volunteer, time);
@@ -101,7 +82,7 @@ public class MeetEngagementServiceTest {
     @Test
     public void findByToken_MeetEngagements_ShouldGet() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
-        Meet meet = meetRepository.save(sampleMeet());
+        Meet meet = liveMeetService.create(sampleLiveMeetDto()).get();
         Time time = new Time(10, 10, 10);
         meetEngagementService.create(meet, volunteer, time);
         meetEngagementService.create(meet, volunteer, time);
@@ -111,9 +92,19 @@ public class MeetEngagementServiceTest {
     }
 
     @Test
+    public void getAll_MeetEngagements_ShouldGet() {
+        Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
+        Meet meet = liveMeetService.create(sampleLiveMeetDto()).get();
+        Time time = new Time(10, 10, 10);
+        meetEngagementService.create(meet, volunteer, time);
+        List<MeetEngagement> meetEngagements = meetEngagementService.getAll();
+        Assert.assertEquals(meetEngagements.size(), 1);
+    }
+
+    @Test
     public void edit_MeetEngagement_ShouldEdit() {
         Volunteer volunteer = volunteerRepository.save(sampleVolunteer());
-        Meet meet = meetRepository.save(sampleMeet());
+        Meet meet = liveMeetService.create(sampleLiveMeetDto()).get();
         Time time = new Time(10, 10, 10);
         MeetEngagement meetEngagement = meetEngagementService.create(meet, volunteer, time).get();
         Assert.assertEquals(meetEngagement.getConfirmed(), false);
