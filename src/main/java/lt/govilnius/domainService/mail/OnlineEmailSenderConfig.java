@@ -16,7 +16,7 @@ import static java.lang.String.format;
 
 public class OnlineEmailSenderConfig {
 
-    private static final String MAIL_TEMPLATE_PATH = "mails";
+    private static final String MAIL_TEMPLATE_PATH = "mails/online";
     private static final String SUBJECT = "Meet a Local Online Confirmation";
 
     public static final TriFunction<OnlineMeet, String, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, token, websiteUrl) -> {
@@ -82,7 +82,7 @@ public class OnlineEmailSenderConfig {
         return new EmailSenderConfig(Template.LOCAL_REQUEST.getPath(), model, format("%s # %07d", SUBJECT, meet.getId()));
     };
 
-    public static final TriFunction<Meet, Volunteer, MeetEngagement, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (meet, v, e) -> {
+    public static final TriFunction<OnlineMeet, Volunteer, MeetEngagement, EmailSenderConfig> TOURIST_INFORMATION_CONFIG = (meet, v, e) -> {
         Calendar date = Calendar.getInstance();
         date.setTime(meet.getDate());
         Calendar time = Calendar.getInstance();
@@ -167,7 +167,7 @@ public class OnlineEmailSenderConfig {
                             .build(),
                     format("%s # %07d", SUBJECT, meet.getId()));
 
-    public static final BiFunction<Meet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_SELECTED_CONFIG = (meet, registrationUrl) ->
+    public static final BiFunction<OnlineMeet, String, EmailSenderConfig> TOURIST_CANCELLATION_NOT_SELECTED_CONFIG = (meet, registrationUrl) ->
             new EmailSenderConfig(Template.LOCAL_CANCELLATION_NOT_SELECTED.getPath(),
                     ImmutableMap
                             .<String, Object>builder()

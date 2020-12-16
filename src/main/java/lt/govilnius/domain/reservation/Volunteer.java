@@ -59,7 +59,7 @@ public class Volunteer implements Serializable {
     private Set<VolunteerMeetType> meetTypes = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER)
     private Set<MeetEngagement> meetEngagements;
 
     public Volunteer() {

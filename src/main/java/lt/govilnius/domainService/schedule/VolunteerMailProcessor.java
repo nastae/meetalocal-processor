@@ -226,7 +226,7 @@ public class VolunteerMailProcessor {
 
     private EmailSenderConfig prepareSentTouristRequestConfig(Meet meet, List<MeetEngagement> meetEngagements) {
         LOGGER.info("Send volunteers requests of the meet with id " + meet.getId() + " to tourist");
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meetService.edit(meet.getId(), meet);
         return emailSenderConfigFactory.getLocalRequestConfig(meet, meetEngagements, websiteUrl);
     }

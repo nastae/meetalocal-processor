@@ -70,7 +70,7 @@ public class TouristActionControllerTest {
         LiveMeetDto meetDto = sampleLiveMeetDto();
         Meet meet = liveMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, true);
 
@@ -97,7 +97,7 @@ public class TouristActionControllerTest {
         OnlineMeetDto meetDto = sampleOnlineMeetDto();
         Meet meet = onlineMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, true);
 
@@ -124,7 +124,7 @@ public class TouristActionControllerTest {
         LiveMeetDto meetDto = sampleLiveMeetDto();
         Meet meet = liveMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
@@ -152,7 +152,7 @@ public class TouristActionControllerTest {
         OnlineMeetDto meetDto = sampleOnlineMeetDto();
         Meet meet = onlineMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
@@ -192,7 +192,7 @@ public class TouristActionControllerTest {
         LiveMeetDto meetDto = sampleLiveMeetDto();
         Meet meet = liveMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 
@@ -217,7 +217,7 @@ public class TouristActionControllerTest {
         OnlineMeetDto meetDto = sampleOnlineMeetDto();
         Meet meet = onlineMeetService.create(meetDto).get();
 
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet = meetService.edit(meet.getId(), meet).get();
         meet = meetService.setFreezed(meet, false);
 

@@ -59,7 +59,7 @@ public class MeetController {
                 .<String>builder()
                 .add(Status.NEW.name())
                 .add(Status.SENT_VOLUNTEER_REQUEST.name())
-                .add(Status.SENT_LOCAL_REQUEST.name())
+                .add(Status.SENT_TOURIST_REQUEST.name())
                 .add(Status.CANCELED.name())
                 .add(Status.AGREED.name())
                 .add(Status.FINISHED.name())

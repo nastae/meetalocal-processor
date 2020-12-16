@@ -31,7 +31,7 @@
                         <tr th:each = "engagement : ${engagements}">
                             <td th:text = "${engagement.id}"></td>
                             <td th:text = "${engagement.meet.id}"></td>
-                            <td th:text = "${engagement.volunteer.id}"></td>
+                            <td th:text = "${engagement.volunteer != null} ? ${engagement.volunteer.id} : ' '"></td>
                             <td th:text = "${engagement.time}"></td>
                             <td th:text = "${engagement.confirmed}"></td>
                             <td th:text = "${engagement.meet.status}"></td>

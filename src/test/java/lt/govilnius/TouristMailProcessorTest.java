@@ -75,7 +75,7 @@ public class TouristMailProcessorTest {
         Volunteer volunteer = sampleVolunteer();
         volunteerRepository.save(volunteer);
         LiveMeet meet = sampleLiveMeet();
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setVolunteer(volunteer);
         liveMeetRepository.save(meet);
 
@@ -83,7 +83,7 @@ public class TouristMailProcessorTest {
         meetEngagement = meetEngagementRepository.save(meetEngagement);
 
         touristMailProcessor.processRequest(meetEngagement.getVolunteer(), meetEngagement.getMeet());
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_LOCAL_REQUEST).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.AGREED).size(), 1);
     }
 
@@ -94,13 +94,13 @@ public class TouristMailProcessorTest {
         volunteer = volunteerRepository.save(volunteer);
 
         LiveMeet meet = sampleLiveMeet();
-        meet.setStatus(Status.SENT_LOCAL_REQUEST);
+        meet.setStatus(Status.SENT_TOURIST_REQUEST);
         meet.setVolunteer(volunteer);
         meet = liveMeetRepository.save(meet);
 
         touristMailProcessor.processRequest(volunteer, meet);
         Assert.assertEquals(meetRepository.findAll().size(), 1);
-        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_LOCAL_REQUEST).size(), 0);
+        Assert.assertEquals(meetRepository.findByStatus(Status.SENT_TOURIST_REQUEST).size(), 0);
         Assert.assertEquals(meetRepository.findByStatus(Status.CANCELED).size(), 1);
     }
 }

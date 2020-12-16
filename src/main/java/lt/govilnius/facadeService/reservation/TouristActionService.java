@@ -40,7 +40,7 @@ public class TouristActionService {
         LOGGER.info("Process selection of the meet engagement with token " + token);
         final Optional<MeetEngagement> engagement = meetEngagementService.getByToken(token);
         return engagement
-                .filter(e -> e.getMeet().getStatus().equals(Status.SENT_LOCAL_REQUEST))
+                .filter(e -> e.getMeet().getStatus().equals(Status.SENT_TOURIST_REQUEST))
                 .filter(MeetEngagement::getConfirmed)
                 .filter(e -> !e.getMeet().getFreezed())
                 .map(e -> {

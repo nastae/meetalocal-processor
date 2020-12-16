@@ -1,6 +1,8 @@
 package lt.govilnius.facadeService.reservation;
 
 import lt.govilnius.domain.reservation.*;
+import lt.govilnius.repository.reservation.MeetEngagementRepository;
+import lt.govilnius.repository.reservation.MeetRepository;
 import lt.govilnius.repository.reservation.VolunteerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,12 @@ public class VolunteerService {
 
     @Autowired
     private VolunteerRepository volunteerRepository;
+
+    @Autowired
+    private MeetEngagementRepository meetEngagementRepository;
+
+    @Autowired
+    private MeetRepository meetRepository;
 
     public Optional<Volunteer> create(VolunteerDto volunteer) {
         Volunteer entity = new Volunteer();
@@ -70,6 +78,12 @@ public class VolunteerService {
     public boolean delete(Long id) {
         Optional<Volunteer> volunteer = volunteerRepository.findById(id);
         if (volunteer.isPresent()) {
+            volunteer.get().getMeetEngagements().forEach(e -> {
+                e.setVolunteer(null);
+                meetEngagementRepository.save(e);
+                e.getMeet().setVolunteer(null);
+                meetRepository.save(e.getMeet());
+            });
             volunteerRepository.delete(volunteer.get());
             return true;
         }

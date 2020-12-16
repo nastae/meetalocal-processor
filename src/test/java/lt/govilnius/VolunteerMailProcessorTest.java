@@ -66,7 +66,8 @@ public class VolunteerMailProcessorTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(volunteerMailProcessor, "registrationUrl", "test", String.class);
+        ReflectionTestUtils.setField(volunteerMailProcessor, "liveRegistrationUrl", "test", String.class);
+        ReflectionTestUtils.setField(volunteerMailProcessor, "onlineRegistrationUrl", "test", String.class);
         ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingStartHours", mailAcceptingStartHours, Long.class);
         ReflectionTestUtils.setField(volunteerMailProcessor, "mailAcceptingEndHours", mailAcceptingEndHours, Long.class);
         ReflectionTestUtils.setField(volunteerMailProcessor, "maxMeetWaitingHours", -10000000L, Long.class);
@@ -74,14 +75,12 @@ public class VolunteerMailProcessorTest {
 
     @Test
     public void processNews_Meet_ShouldChangeStatusAndSend() {
-        Meet meet = sampleLiveMeet();
+        LiveMeet meet = sampleLiveMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
         MeetType meetType = MeetType.LIVE;
-        when(volunteerFilter.filterByMeet(meet, meetType)).thenReturn(ImmutableList.of(volunteer));
-        when(meetEngagementService.create(any(), any(), any())).thenReturn(Optional.of(engagement));
-        when(meetEngagementService.setFreezed(any(), anyBoolean())).thenReturn(engagement);
+        meet.setType(meetType.getName());
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
         doNothing().when(emailSender).send(any(), any());
         Assert.assertEquals(meet.getStatus(), Status.NEW);
@@ -93,12 +92,12 @@ public class VolunteerMailProcessorTest {
 
     @Test
     public void processNews_Meet_ShouldCancel() {
-        Meet meet = sampleLiveMeet();
+        LiveMeet meet = sampleLiveMeet();
         Volunteer volunteer = sampleVolunteer();
         MeetEngagement engagement = new MeetEngagement(meet, volunteer, new Time(10, 10, 10), "", false, false);
         when(meetService.findByStatus(Status.NEW)).thenReturn(ImmutableList.of(meet));
         MeetType meetType = MeetType.LIVE;
-        when(volunteerFilter.filterByMeet(meet, meetType)).thenReturn(ImmutableList.of());
+        meet.setType(meetType.getName());
         when(meetService.edit(any(), any())).thenReturn(Optional.of(meet));
         when(emailSenderConfigFactory.getLocalNotValidDateCancellationConfig(any(), any())).thenReturn( LiveEmailSenderConfig.TOURIST_CANCELLATION_NOT_VALID_MEET_DATE_CONFIG.apply((LiveMeet) meet, "TEST"));
         doNothing().when(emailSender).send(any(), any());

@@ -16,7 +16,7 @@ import static java.lang.String.format;
 
 public class LiveEmailSenderConfig {
 
-    private static final String MAIL_TEMPLATE_PATH = "mails";
+    private static final String MAIL_TEMPLATE_PATH = "mails/live";
     private static final String SUBJECT = "Meet a Local Live Confirmation";
 
     public static final TriFunction<LiveMeet, String, String, EmailSenderConfig> VOLUNTEER_REQUEST_CONFIG = (meet, token, websiteUrl) -> {
@@ -189,9 +189,12 @@ public class LiveEmailSenderConfig {
         LOCAL_CANCELLATION_NOT_SELECTED(MAIL_TEMPLATE_PATH + "/local-cancellation-not-selected.vm"),
         VOLUNTEER_CANCELLATION(MAIL_TEMPLATE_PATH + "/volunteer-cancellation.vm"),
         LOCAL_EVALUATION(MAIL_TEMPLATE_PATH + "/local-evaluation.vm"),
+
         VOLUNTEER_RELOCATION_EVALUATION(MAIL_TEMPLATE_PATH + "/relocation/volunteer-evaluation.vm"),
         VOLUNTEER_TOURISM_EVALUATION(MAIL_TEMPLATE_PATH + "/tourism/volunteer-evaluation.vm"),
+
         LOCAL_INFORMATION(MAIL_TEMPLATE_PATH + "/local-information.vm"),
+
         VOLUNTEER_RELOCATION_INFORMATION(MAIL_TEMPLATE_PATH + "/relocation/volunteer-information.vm"),
         VOLUNTEER_TOURISM_INFORMATION(MAIL_TEMPLATE_PATH + "/tourism/volunteer-information.vm");
 
