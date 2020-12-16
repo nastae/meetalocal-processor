@@ -44,8 +44,11 @@ public class VolunteerMailProcessor {
     @Value("${website.url}")
     private String websiteUrl;
 
-    @Value("${registration.url}")
-    private String registrationUrl;
+    @Value("${live.registration.url}")
+    private String liveRegistrationUrl;
+
+    @Value("${online.registration.url}")
+    private String onlineRegistrationUrl;
 
     @Value("${waiting.sent.volunteer.request.milliseconds}")
     private Long sentVolunteerRequestWaiting;
@@ -233,6 +236,7 @@ public class VolunteerMailProcessor {
         meet.setStatus(Status.CANCELED);
         meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
+        String registrationUrl = meet.getType().equals(MeetType.Name.LIVE) ? liveRegistrationUrl : onlineRegistrationUrl;
         return emailSenderConfigFactory.getLocalCancellationConfig(meet, registrationUrl);
     }
 
@@ -241,6 +245,7 @@ public class VolunteerMailProcessor {
         meet.setStatus(Status.CANCELED);
         meet.setFreezed(true);
         meetService.edit(meet.getId(), meet);
+        String registrationUrl = meet.getType().equals(MeetType.Name.LIVE) ? liveRegistrationUrl : onlineRegistrationUrl;
         return emailSenderConfigFactory.getLocalNotValidDateCancellationConfig(meet, registrationUrl);
     }
 }

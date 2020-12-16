@@ -1,13 +1,7 @@
 package lt.govilnius.domainService.schedule;
 
-import lt.govilnius.domain.reservation.Meet;
-import lt.govilnius.domain.reservation.MeetEngagement;
-import lt.govilnius.domain.reservation.Status;
-import lt.govilnius.domain.reservation.Volunteer;
-import lt.govilnius.domainService.mail.EmailSender;
-import lt.govilnius.domainService.mail.EmailSenderConfig;
-import lt.govilnius.domainService.mail.EmailSenderConfigFactory;
-import lt.govilnius.domainService.mail.Mail;
+import lt.govilnius.domain.reservation.*;
+import lt.govilnius.domainService.mail.*;
 import lt.govilnius.facadeService.reservation.MeetEngagementService;
 import lt.govilnius.facadeService.reservation.MeetService;
 import org.slf4j.Logger;
@@ -36,8 +30,11 @@ public class TouristMailProcessor {
     @Value("${website.url}")
     private String websiteUrl;
 
-    @Value("${registration.url}")
-    private String registrationUrl;
+    @Value("${live.registration.url}")
+    private String liveRegistrationUrl;
+
+    @Value("${online.registration.url}")
+    private String onlineRegistrationUrl;
 
     @Value("${waiting.sent.tourist.request.milliseconds}")
     private Long sentTouristRequestWaiting;
@@ -93,6 +90,7 @@ public class TouristMailProcessor {
         meet.setStatus(Status.CANCELED);
         meetService.edit(meet.getId(), meet);
         LOGGER.info("Send cancellation of the meet with id " + meet.getId() + " to tourist" );
+        String registrationUrl = meet.getType().equals(MeetType.Name.LIVE) ? liveRegistrationUrl : onlineRegistrationUrl;
         EmailSenderConfig emailSenderConfig = emailSenderConfigFactory.getLocalCancellationNotSelectedConfig(meet, registrationUrl);
         emailSender.send(new Mail(meet.getEmail()), emailSenderConfig);
 
